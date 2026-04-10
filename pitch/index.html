@@ -34,38 +34,362 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,30,61,0.9
 .doc-title{font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:700;color:var(--navy);letter-spacing:1px;text-transform:uppercase;}
 .doc-sub{font-size:10px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;}
 .doc-section-head{font-size:9px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.doc-section-head::after{content:'';flex:1;height:1px;background:var(--cream-dark);}
+.doc-msg{padding:10px 12px;border-radius:8px;margin-bottom:6px;border-left:3px solid;}
+.doc-msg.navy{border-color:var(--navy);background:rgba(26,47,90,0.04);}
+.doc-msg.orange{border-color:var(--orange);background:rgba(249,115,22,0.04);}
+.doc-msg .sender{font-size:10px;font-weight:700;margin-bottom:2px;}
+.doc-msg.navy .sender{color:var(--navy);}.doc-msg.orange .sender{color:var(--orange);}
+.doc-msg .badge{display:inline-block;background:#F0F0F0;border:1px solid #E0E0E0;border-radius:3px;padding:1px 6px;font-size:8px;color:#666;font-family:'DM Mono',monospace;margin-bottom:4px;}
+.doc-msg .text{font-size:11px;line-height:1.5;color:var(--text);}
+.doc-msg .ts{font-size:9px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;}
+.doc-cert{margin-top:18px;padding:12px;background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.18);border-radius:8px;}
+.doc-cert-title{font-size:9px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+.doc-cert-text{font-size:9px;color:var(--muted);line-height:1.5;}
+.doc-hash{font-family:'DM Mono',monospace;font-size:8px;color:var(--navy);margin-top:4px;opacity:0.5;}
+section{padding:100px 80px;}.section-inner{max-width:1100px;margin:0 auto;}
+.section-tag{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4vw,52px);font-weight:600;line-height:1.15;letter-spacing:-0.5px;margin-bottom:20px;color:var(--navy);}
+.section-title em{color:var(--orange);font-style:normal;}
+.problem{background:white;}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-top:56px;}
+.problem-left p{font-size:17px;line-height:1.8;color:var(--muted);margin-bottom:20px;}
+.pull-quote{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy);line-height:1.4;border-left:4px solid var(--orange);padding-left:24px;margin:32px 0;}
+.problem-cards{display:flex;flex-direction:column;gap:16px;}
+.problem-card{background:var(--cream);border-radius:12px;padding:24px;border-left:4px solid;}
+.problem-card.p1{border-color:#EF4444;}.problem-card.p2{border-color:#F59E0B;}.problem-card.p3{border-color:#8B5CF6;}
+.problem-card h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.problem-card p{font-size:13px;color:var(--muted);line-height:1.6;}
+.solution{background:var(--navy);}.solution .section-title{color:white;}
+.solution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;}
+.solution-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px 28px;transition:all 0.3s;}
+.solution-card:hover{background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.25);transform:translateY(-4px);}
+.solution-icon{width:48px;height:48px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px;}
+.solution-card h3{font-size:16px;font-weight:700;color:white;margin-bottom:10px;}
+.solution-card p{font-size:13px;color:rgba(255,255,255,0.52);line-height:1.7;}
+.how{background:var(--cream);}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:56px;position:relative;}
+.steps::before{content:'';position:absolute;top:32px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,var(--orange),rgba(249,115,22,0.15));z-index:0;}
+.step{position:relative;z-index:1;text-align:center;}
+.step-num{width:64px;height:64px;background:white;border:2px solid var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--navy);box-shadow:0 4px 20px rgba(249,115,22,0.15);}
+.step h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px;}.step p{font-size:12px;color:var(--muted);line-height:1.6;}
+.market{background:white;}
+.market-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;}
+.market-card{background:var(--cream);border-radius:16px;padding:36px;text-align:center;border:1px solid var(--cream-dark);transition:all 0.2s;}
+.market-card:hover{border-color:var(--orange);transform:translateY(-2px);}
+.market-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:700;color:var(--orange);line-height:1;margin-bottom:8px;}
+.market-label{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.market-sub{font-size:12px;color:var(--muted);line-height:1.5;}
+.founder{background:linear-gradient(150deg,#0a1628 0%,var(--navy) 100%);}
+.founder-grid{display:grid;grid-template-columns:340px 1fr;gap:80px;align-items:center;}
+.founder-photo-wrap{position:relative;}
+.founder-photo{width:100%;border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,0.4);display:block;}
+.founder-badge{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);background:var(--orange);color:white;font-size:11px;font-weight:700;padding:8px 20px;border-radius:100px;white-space:nowrap;letter-spacing:0.5px;box-shadow:0 8px 24px rgba(249,115,22,0.4);}
+.founder-content .section-title{color:white;margin-bottom:24px;}
+.founder-bio{font-size:16px;line-height:1.85;color:rgba(255,255,255,0.68);margin-bottom:20px;}
+.founder-creds{display:flex;gap:40px;margin-top:40px;flex-wrap:wrap;padding-top:32px;border-top:1px solid rgba(255,255,255,0.1);}
+.cred-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--orange);line-height:1;margin-bottom:4px;}
+.cred-label{font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.why{background:var(--cream);}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:56px;align-items:start;}
+.why-point{display:flex;gap:20px;margin-bottom:32px;}
+.why-icon{width:44px;height:44px;flex-shrink:0;background:white;border:2px solid var(--orange);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.why-point h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.why-point p{font-size:13px;color:var(--muted);line-height:1.6;}
+.why-box{background:white;border-radius:20px;padding:40px;border:1px solid var(--cream-dark);}
+.why-box h3{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy);margin-bottom:20px;}
+.check-list{list-style:none;}
+.check-list li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--cream-dark);font-size:14px;color:var(--text);line-height:1.5;}
+.check-list li:last-child{border-bottom:none;}
+.chk{width:22px;height:22px;flex-shrink:0;background:rgba(249,115,22,0.1);color:var(--orange);font-weight:700;font-size:12px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.cta-section{background:var(--navy);text-align:center;padding:120px 80px;}
+.cta-section .section-title{color:white;margin-bottom:16px;}
+.cta-sub{font-size:18px;color:rgba(255,255,255,0.62);max-width:520px;margin:0 auto 48px;line-height:1.75;}
+.cta-email{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--orange);text-decoration:none;display:block;margin-bottom:12px;}
+.cta-proto{font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:40px;}
+.cta-proto a{color:rgba(255,255,255,0.6);text-decoration:none;}
+.cta-proto a:hover{color:var(--orange);}
+.btn-big{background:var(--orange);color:white;padding:18px 52px;border-radius:100px;font-size:16px;font-weight:700;text-decoration:none;transition:all 0.25s;box-shadow:0 12px 40px rgba(249,115,22,0.35);display:inline-block;}
+.btn-big:hover{transform:translateY(-2px);box-shadow:0 16px 50px rgba(249,115,22,0.45);}
+footer{background:var(--navy-dark);padding:36px 80px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:white;}
+.footer-logo span{color:var(--orange);}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.3);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(24px);transition:all 0.65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+@media(max-width:960px){nav{padding:16px 24px;}.nav-badge{display:none;}.hero{grid-template-columns:1fr;padding:110px 24px 60px;}.hero-right{display:none;}section{padding:60px 24px;}.problem-grid,.founder-grid,.why-grid{grid-template-columns:1fr;gap:40px;}.solution-grid,.market-grid{grid-template-columns:1fr;}.steps{grid-template-columns:1fr 1fr;}.steps::before{display:none;}footer{padding:28px 24px;flex-direction:column;text-align:center;}.cta-section{padding:80px 24px;}}
 </style>
 </head>
-
 <body>
-
 <nav>
-  <div class="nav-logo">Recall<span>Text</span></div>
-  <div class="nav-badge">Verified Record</div>
-  <a class="nav-cta" href="#">Book Demo</a>
+  <div class="nav-logo">Recall<span>Text</span>™</div>
+  <div class="nav-badge">Patent Pending</div>
+  <a href="mailto:recalltext@gmail.com" class="nav-cta">Let's Talk →</a>
 </nav>
-
+ 
 <section class="hero">
-  <div>
-    <div class="hero-tag">One Transaction. One Record.</div>
-    <h1>Every conversation in <em>one verified record</em>.</h1>
-    <p class="hero-sub">
-      RecallText gives teams a single source of truth for high-stakes transactions.
-    </p>
+  <div class="hero-left">
+    <div class="hero-tag">Built by a Realtor. For Realtors.</div>
+    <h1>One Transaction.<br/><em>All Conversations.</em><br/>One Verified Record.</h1>
+    <p class="hero-sub">RecallText™ transforms everyday text communications into certified, carrier-authenticated legal records — privately, instantly, and without leaving the agent's device.</p>
+    <div class="hero-stats">
+      <div><div class="stat-num">1.6M</div><div class="stat-label">Licensed Realtors</div></div>
+      <div><div class="stat-num">28</div><div class="stat-label">Years Experience</div></div>
+      <div><div class="stat-num">$0</div><div class="stat-label">Server Storage. Ever.</div></div>
+    </div>
+    <div class="hero-actions">
+      <a href="mailto:recalltext@gmail.com" class="btn-primary">Let's Talk →</a>
+      <a href="https://recalltext.io" target="_blank" class="btn-ghost">View the Prototype</a>
+    </div>
   </div>
-
   <div class="hero-right">
     <div class="doc-mockup">
       <div class="doc-header">
-        <div class="doc-title">Verified Transaction Record</div>
-        <div class="doc-sub">RecallText™</div>
+        <div class="doc-title">RecallText™ — Communication Record</div>
+        <div class="doc-sub">Transaction: Alvarez Drive · Export ID: RT-20260407-001</div>
       </div>
-
-      <div class="doc-section-head">Summary</div>
-      <p>This is your pitch page.</p>
+      <div class="doc-section-head">Section 1 — Co-op Agent · (310) 555-0182</div>
+      <div class="doc-msg navy">
+        <div class="sender">Lauren Cotner</div>
+        <div class="badge">DRE #01242185 · Epique Realty</div>
+        <div class="text">Contingency removal signed and sent. All documented.</div>
+        <div class="ts">Mar 3, 2026 · 10:58 AM</div>
+      </div>
+      <div class="doc-msg orange">
+        <div class="sender">Buyer's Agent</div>
+        <div class="badge">Carrier #: (310) 555-0182</div>
+        <div class="text">My buyer was NEVER told about the roof issue.</div>
+        <div class="ts">Mar 14, 2026 · 4:01 PM</div>
+      </div>
+      <div class="doc-cert">
+        <div class="doc-cert-title">⚡ Chain of Custody Certification</div>
+        <div class="doc-cert-text">Carrier-authenticated. No messages altered, reordered, or omitted.</div>
+        <div class="doc-hash">SHA-256: a7f3d2c9e1b8...verified</div>
+      </div>
     </div>
   </div>
 </section>
-
+ 
+<section class="problem">
+  <div class="section-inner">
+    <div class="section-tag reveal">The Problem</div>
+    <h2 class="section-title reveal">Texts run the transaction.<br/><em>Screenshots fail the dispute.</em></h2>
+    <div class="problem-grid">
+      <div class="problem-left">
+        <p class="reveal">Real estate agents conduct business across dozens of simultaneous text conversations — buyers, sellers, inspectors, lenders, TCs, co-op agents. When disputes arise, there is no reliable way to reconstruct the complete communication record.</p>
+        <div class="pull-quote reveal">"I knew exactly what was said. I just couldn't prove it."</div>
+        <p class="reveal">Screenshots can be cropped, altered, and selectively presented. They carry no carrier authentication, no chain of custody, and no professional credibility in a DRE complaint or legal proceeding. Agents are exposed — and most don't realize it until it's too late.</p>
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card p1 reveal">
+          <h3>📸 Screenshots Are Not Evidence</h3>
+          <p>Out of order. No carrier authentication. Easy to claim they were altered or incomplete. Not credible in professional or legal settings.</p>
+        </div>
+        <div class="problem-card p2 reveal">
+          <h3>💬 Conversations Are Scattered</h3>
+          <p>One transaction involves dozens of separate threads across multiple parties. No existing tool consolidates them into a single authenticated record.</p>
+        </div>
+        <div class="problem-card p3 reveal">
+          <h3>⚖️ The Exposure Is Real</h3>
+          <p>DRE complaints, E&O claims, commission disputes. The documentation problem costs agents thousands — and there has been no professional solution. Until now.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="solution">
+  <div class="section-inner">
+    <div class="section-tag reveal">The Solution</div>
+    <h2 class="section-title reveal">RecallText™ — <em>DocuSign for conversations.</em></h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:17px;max-width:580px;line-height:1.75;margin-top:16px;" class="reveal">A transaction-based communication documentation system. Agents organize conversations by deal, export a certified multi-party record, and store it privately — all on their own device.</p>
+    <div class="solution-grid">
+      <div class="solution-card reveal">
+        <div class="solution-icon">📁</div>
+        <h3>Transaction-Based Organization</h3>
+        <p>Communications organized by deal — not by contact. Multiple conversations across all parties become one certified record. No other SMS tool does this.</p>
+      </div>
+      <div class="solution-card reveal">
+        <div class="solution-icon">🔐</div>
+        <h3>Zero-Server Architecture</h3>
+        <p>All processing happens on the user's device. Nothing stored on external servers. RecallText processes, produces, and disappears — leaving only the certified record with the agent.</p>
+      </div>
+      <div class="solution-card reveal">
+        <div class="solution-icon">📄</div>
+        <h3>Certified PDF — The Only Output</h3>
+        <p>PDF only by design. Non-editable. Carrier-authenticated sender IDs. SHA-256 hash verification. Chain of custody certification. Built for disputes.</p>
+      </div>
+      <div class="solution-card reveal">
+        <div class="solution-icon">📍</div>
+        <h3>Mark Beginning of Record</h3>
+        <p>Agents designate the exact message where the transaction record starts. Personal messages before that point excluded — without being deleted from the device.</p>
+      </div>
+      <div class="solution-card reveal">
+        <div class="solution-icon">🎙️</div>
+        <h3>Voicemail and Call Log Integration</h3>
+        <p>Voicemail transcriptions and native call log entries included in the certified record. Because disputes aren't just about texts.</p>
+      </div>
+      <div class="solution-card reveal">
+        <div class="solution-icon">🏠</div>
+        <h3>Built for Real Estate First</h3>
+        <p>Industry templates pre-populate party roles: buyer, seller, inspector, TC, lender, co-op agent. The workflow mirrors how agents actually work transactions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="how">
+  <div class="section-inner">
+    <div class="section-tag reveal">How It Works</div>
+    <h2 class="section-title reveal">From transaction to <em>certified record</em> in minutes.</h2>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Open and Index</h3>
+        <p>App opens and reads all messages from the device's native database. No manual import. No server connection. Everything already there.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3>Create Transaction</h3>
+        <p>Name the deal. Select a category. Industry templates pre-populate party roles automatically.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3>Add and Scope</h3>
+        <p>Select multiple conversations simultaneously. Set the exact start point. Add voicemails, call logs, and contemporaneous notes.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <h3>Export and Store</h3>
+        <p>One certified PDF. All parties. All conversations. SHA-256 verified. Stored in the agent's personal files only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="market">
+  <div class="section-inner">
+    <div class="section-tag reveal">The Market</div>
+    <h2 class="section-title reveal">Every professional who texts for business<br/><em>is exposed without this.</em></h2>
+    <div class="market-grid">
+      <div class="market-card reveal">
+        <div class="market-num">1.6M</div>
+        <div class="market-label">Licensed Realtors</div>
+        <div class="market-sub">NAR members. Every one texts for business. Every one faces dispute exposure without a certified record.</div>
+      </div>
+      <div class="market-card reveal">
+        <div class="market-num">1.3M</div>
+        <div class="market-label">Licensed Attorneys</div>
+        <div class="market-sub">Client communications, opposing counsel, mediators — all over text. All undocumented. Same problem, same solution.</div>
+      </div>
+      <div class="market-card reveal">
+        <div class="market-num">400K+</div>
+        <div class="market-label">Property Managers</div>
+        <div class="market-sub">Tenant disputes, vendor communications, owner instructions — the documentation need is identical.</div>
+      </div>
+    </div>
+    <div style="margin-top:48px;padding:32px 40px;background:var(--cream);border-radius:16px;border-left:4px solid var(--orange);" class="reveal">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--navy);line-height:1.5;">Just attorneys and Realtors alone — nearly 3 million professionals who rely on text for business with <em style="color:var(--orange);font-style:normal;">zero clean way to produce it as evidence.</em></p>
+    </div>
+  </div>
+</section>
+ 
+<section class="founder">
+  <div class="section-inner">
+    <div class="founder-grid">
+      <div class="founder-photo-wrap reveal">
+        <img src="6e2d71ed-1fa9-4b6d-a63e-8615f44f7f50-1_all_3604.jpg" alt="Lauren Cotner, Founder RecallText" class="founder-photo"/>
+        <div class="founder-badge">Founder &amp; CEO — RecallText LLC</div>
+      </div>
+      <div class="founder-content">
+        <div class="section-tag reveal">Who Built This</div>
+        <h2 class="section-title reveal">Built by someone who <em>lived it.</em></h2>
+        <p class="founder-bio reveal">Lauren Cotner has spent over 28 years in real estate working directly in the trenches — managing transactions, solving problems, and navigating the real-world complexities of deals, clients, and communication.</p>
+        <p class="founder-bio reveal">She built her business on relationships, accountability, and knowing how quickly small misunderstandings can turn into major disputes. Over the years she has seen firsthand how critical conversations get lost across scattered text threads — leaving agents exposed when it matters most.</p>
+        <p class="founder-bio reveal">RecallText™ was not created in theory. It came from years of experience in real situations where being able to clearly show what was said, when, and by whom would have changed the outcome. Lauren is not a tech founder guessing at a problem — she is a practitioner who lived it, understands it, and built the solution around it.</p>
+        <div class="founder-creds reveal">
+          <div><div class="cred-val">28</div><div class="cred-label">Years in Real Estate</div></div>
+          <div><div class="cred-val">DRE</div><div class="cred-label">#01242185</div></div>
+          <div><div class="cred-val">CA</div><div class="cred-label">Licensed Agent</div></div>
+          <div><div class="cred-val">Patent</div><div class="cred-label">Pending 2026</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="why">
+  <div class="section-inner">
+    <div class="section-tag reveal">Why Now</div>
+    <h2 class="section-title reveal">The compliance environment<br/><em>demands this tool.</em></h2>
+    <div class="why-grid">
+      <div>
+        <div class="why-point reveal">
+          <div class="why-icon">📋</div>
+          <div>
+            <h3>Post-NAR Settlement Landscape</h3>
+            <p>The 2024 NAR settlement changed how agent communications must be documented. Buyer agreements, compensation conversations, and disclosures now require clear records.</p>
+          </div>
+        </div>
+        <div class="why-point reveal">
+          <div class="why-icon">🛡️</div>
+          <div>
+            <h3>E&amp;O Insurance Implications</h3>
+            <p>One documented communication record can be the difference between a dismissed complaint and a six-figure E&amp;O claim. RecallText is protection infrastructure.</p>
+          </div>
+        </div>
+        <div class="why-point reveal">
+          <div class="why-icon">⚖️</div>
+          <div>
+            <h3>DRE Compliance Requirements</h3>
+            <p>California DRE increasingly requires documentation of agent communications. RecallText gives agents a professional, defensible record built into their existing workflow.</p>
+          </div>
+        </div>
+        <div class="why-point reveal">
+          <div class="why-icon">🔒</div>
+          <div>
+            <h3>Privacy by Architecture</h3>
+            <p>Zero-server means zero liability for the platform. No messages are ever stored, transmitted, or accessible to RecallText. The agent owns everything. Always.</p>
+          </div>
+        </div>
+      </div>
+      <div class="why-box reveal">
+        <h3>What a Strategic Partnership Looks Like</h3>
+        <ul class="check-list">
+          <li><div class="chk">✓</div>Non-exclusive founding partner status — available to all brokerages and associations</li>
+          <li><div class="chk">✓</div>Preferred pricing locked for partner members at founding rate</li>
+          <li><div class="chk">✓</div>Co-marketing and co-branding opportunities at launch</li>
+          <li><div class="chk">✓</div>White-label options available for brokerage-level deployment</li>
+          <li><div class="chk">✓</div>Web-based subscription model — no app store fees passed to partners</li>
+          <li><div class="chk">✓</div>Zero server architecture — zero data liability for the partner organization</li>
+          <li><div class="chk">✓</div>First institutional partner in the country to offer this protection to members</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="cta-section">
+  <div class="section-tag reveal">Let's Talk</div>
+  <h2 class="section-title reveal">Ready to protect<br/><em>your agents?</em></h2>
+  <p class="cta-sub reveal">RecallText™ is Patent Pending, fully prototyped, and ready for a founding partner conversation. Let's talk about what this looks like for your members.</p>
+  <a href="mailto:recalltext@gmail.com" class="cta-email reveal">recalltext@gmail.com</a>
+  <div class="cta-proto reveal">Live prototype at <a href="https://recalltext.io" target="_blank">recalltext.io</a></div>
+  <a href="mailto:recalltext@gmail.com" class="btn-big reveal">Start the Conversation →</a>
+</section>
+ 
+<footer>
+  <div class="footer-logo">Recall<span>Text</span>™</div>
+  <div class="footer-copy">© 2026 RecallText LLC. Patent Pending. All rights reserved.</div>
+  <div class="footer-copy">recalltext@gmail.com · recalltext.io</div>
+</footer>
+ 
+<script>
+const reveals=document.querySelectorAll('.reveal');
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*60);});},{threshold:0.08});
+reveals.forEach(r=>obs.observe(r));
+</script>
 </body>
 </html>
+ 
