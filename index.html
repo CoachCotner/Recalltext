@@ -118,6 +118,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .msg-vm{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 12px;margin-top:6px}
 .msg-vm-hdr{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--green);margin-bottom:5px}
 .msg-vm-text{font-size:12px;color:#166534;line-height:1.5;font-style:italic}
+.text-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:white;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
+.text-item:hover{background:var(--bg)}
+.text-item.in-tx{border-left:3px solid var(--orange)}
+.text-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;flex-shrink:0}
+.text-info{flex:1;min-width:0}
+.text-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.text-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.text-meta{text-align:right;flex-shrink:0}
+.text-ts{font-size:10px;color:var(--muted);margin-bottom:4px}
+.text-badge{font-size:9px;background:var(--orange);color:white;border-radius:8px;padding:2px 6px;font-weight:700}
+.text-badge.assigned{background:#16A34A}
 
 .msg-call{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px;margin-top:6px;display:flex;align-items:center;gap:12px}
 .msg-call-icon{font-size:20px}
@@ -128,8 +139,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .msg-ann{background:#FFFBEB;border-left:3px solid var(--amber);padding:6px 10px;margin-top:6px;font-size:12px;color:#92400E;border-radius:0 4px 4px 0}
 .msg-ann-lbl{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber);margin-bottom:2px}
 
-.ann-btn{position:absolute;right:12px;top:12px;background:none;border:none;font-size:14px;cursor:pointer;opacity:0;transition:opacity 0.18s;color:var(--muted);padding:2px}
+.ann-btn{position:absolute;right:36px;top:12px;background:none;border:none;font-size:14px;cursor:pointer;opacity:0;transition:opacity 0.18s;color:var(--muted);padding:2px}
+.begin-btn{position:absolute;right:12px;top:12px;background:none;border:none;font-size:14px;cursor:pointer;opacity:0;transition:opacity 0.18s;color:var(--orange);padding:2px}
 .msg-item:hover .ann-btn{opacity:1}
+.msg-item:hover .begin-btn{opacity:1}
+.begin-divider{background:#FFF7ED;border-top:2px solid var(--orange);border-bottom:2px solid var(--orange);padding:8px 14px;font-size:11px;color:#92400E;font-weight:700;display:flex;align-items:center;gap:8px;margin:4px 0}
+.pre-record-msg{opacity:0.5}
 
 /* ACTION ROW */
 .act-row{display:flex;gap:8px;padding:12px 16px 0;flex-wrap:wrap}
@@ -239,6 +254,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
       <span style="font-size:20px;cursor:pointer;color:rgba(255,255,255,0.65)">⚙️</span>
     </div>
+    <!-- Home tabs -->
+    <div style="background:var(--navy);display:flex;border-bottom:1px solid rgba(255,255,255,0.1)">
+      <button id="tab-tx" onclick="switchHomeTab('tx')" style="flex:1;background:none;border:none;color:white;padding:10px;font-size:12px;font-weight:700;font-family:inherit;border-bottom:2px solid var(--orange);cursor:pointer">📁 My Transactions</button>
+      <button id="tab-all" onclick="switchHomeTab('all')" style="flex:1;background:none;border:none;color:rgba(255,255,255,0.55);padding:10px;font-size:12px;font-weight:600;font-family:inherit;border-bottom:2px solid transparent;cursor:pointer">📱 All Texts <span style="background:var(--orange);color:white;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">15</span></button>
+    </div>
     <div class="search-wrap">
       <div class="search-bar">
         <span>🔍</span>
@@ -246,8 +266,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
     <div class="home-body">
-      <div class="sec-label" id="tx-count-lbl">3 Transactions</div>
-      <div id="tx-list"></div>
+      <!-- Transactions tab -->
+      <div id="tab-tx-content">
+        <div class="sec-label" id="tx-count-lbl">3 Transactions</div>
+        <div id="tx-list"></div>
+      </div>
+      <!-- All Texts tab -->
+      <div id="tab-all-content" style="display:none">
+        <div class="sec-label">All Device Conversations — Pulled on Launch</div>
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 12px;margin:8px 16px;font-size:11px;color:#166534;line-height:1.5">
+          ✅ <strong>15 conversations</strong> indexed from your device. Tap any conversation to view or add to a transaction.
+        </div>
+        <div id="all-texts-list"></div>
+      </div>
     </div>
   </div>
 
@@ -272,8 +303,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div style="flex:1;overflow-y:auto;padding-bottom:90px">
       <div id="exp-preview"></div>
       <div style="padding:0 16px 12px">
-        <button class="btn-export" onclick="generatePDF()">📄 Download Certified PDF</button>
-        <div style="text-align:center;padding:10px;font-size:11px;color:var(--muted);font-style:italic">"Used to verify what was said — when it was said — and by whom."</div>
+        <button class="btn-export" onclick="generatePDF(false)">📄 Download Transaction Record</button>
+        <div style="text-align:center;padding:6px 10px;font-size:11px;color:var(--muted)">From Beginning of Record → Present</div>
+        <button class="btn-export" onclick="generatePDF(true)" style="margin-top:10px;background:var(--navy)">📁 Download Complete Archive</button>
+        <div style="text-align:center;padding:6px 10px;font-size:11px;color:var(--muted)">Entire conversation history — no scope limit</div>
+        <div style="text-align:center;padding:8px;font-size:11px;color:var(--muted);font-style:italic">"Used to verify what was said — when it was said — and by whom."</div>
       </div>
     </div>
   </div>
@@ -299,20 +333,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="modal-handle"></div>
     <div class="modal-title">📁 New Transaction</div>
     <div class="modal-body">
+      <div id="pending-text-tip" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#166534;line-height:1.5"></div>
       <div class="fgroup">
         <label class="flabel">Transaction Name</label>
         <input class="finput" id="tx-name" type="text" placeholder="e.g. Alvarez Drive Listing, Unit 4B Eviction...">
       </div>
       <div class="fgroup">
         <label class="flabel">Category — Industry Template</label>
-        <div class="cat-grid" id="cat-grid">
-          <div class="cat-opt sel" onclick="selCat(this,'Real Estate','🏠')" data-c="Real Estate" data-i="🏠"><span class="ci">🏠</span><div class="cn">Real Estate</div></div>
-          <div class="cat-opt" onclick="selCat(this,'Legal','⚖️')" data-c="Legal" data-i="⚖️"><span class="ci">⚖️</span><div class="cn">Legal</div></div>
-          <div class="cat-opt" onclick="selCat(this,'Tenant','🏢')" data-c="Tenant" data-i="🏢"><span class="ci">🏢</span><div class="cn">Tenant</div></div>
-          <div class="cat-opt" onclick="selCat(this,'Business','💼')" data-c="Business" data-i="💼"><span class="ci">💼</span><div class="cn">Business</div></div>
-          <div class="cat-opt" onclick="selCat(this,'Medical','🏥')" data-c="Medical" data-i="🏥"><span class="ci">🏥</span><div class="cn">Medical</div></div>
-          <div class="cat-opt" onclick="selCat(this,'Other','✏️')" data-c="Other" data-i="✏️"><span class="ci">✏️</span><div class="cn">Other</div></div>
-        </div>
+        <div class="cat-grid" id="cat-grid"></div>
+        <button onclick="addCustomCategory()" style="width:100%;background:none;border:1px dashed var(--orange);color:var(--orange);border-radius:10px;padding:10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:6px">＋ Add My Own Category</button>
       </div>
       <div id="template-roles" style="background:var(--orange-light);border:1px solid #FED7AA;border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:#7C2D12">
         <strong>🏠 Real Estate Template</strong> — Pre-labeled roles: Buyer Agent, Seller Agent, Inspector, TC, Lender, Escrow Officer, Co-op Agent
@@ -322,7 +351,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <input class="finput" id="tx-note" type="text" placeholder="Brief description of the matter...">
       </div>
       <button class="btn-primary" onclick="createTx()">Create Transaction</button>
-      <button class="btn-cancel" onclick="closeModal('m-add-tx')">Cancel</button>
+      <button class="btn-cancel" onclick="pendingTextId=null;const t=document.getElementById('pending-text-tip');if(t)t.style.display='none';closeModal('m-add-tx')">Cancel</button>
     </div>
   </div>
 </div>
@@ -358,7 +387,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <div class="fgroup"><label class="flabel">Caller Name or Number</label><input class="finput" id="vm-caller" type="text" placeholder="e.g. Ace Johnson  /  (310) 555-0182"></div>
       <div class="fgroup"><label class="flabel">Date &amp; Time Received</label><input class="finput" id="vm-dt" type="text" placeholder="e.g. Mar 15, 2026 · 2:34 PM"></div>
       <div class="fgroup"><label class="flabel">Duration</label><input class="finput" id="vm-dur" type="text" placeholder="e.g. 1:42"></div>
-      <div class="fgroup"><label class="flabel">Transcription</label><textarea class="finput" id="vm-tx" rows="4" placeholder="Enter or paste voicemail transcription..." style="resize:none;line-height:1.5"></textarea></div>
+      <div class="fgroup">
+        <label class="flabel">Carrier Transcription</label>
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px;color:#166534;line-height:1.5">
+          💡 <strong>Tip:</strong> Your phone transcribes voicemails automatically at time of receipt. On iPhone: Phone → Voicemail → tap message. On Android: check your Phone app voicemail. Copy and paste below.
+        </div>
+        <textarea class="finput" id="vm-tx" rows="3" placeholder="Paste carrier transcription here (from your phone's voicemail app)..." style="resize:none;line-height:1.5"></textarea>
+      </div>
+      <div class="fgroup">
+        <label class="flabel">Agent Summary Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+        <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px;color:#92400E;line-height:1.5">
+          ✏️ Add your own understanding of the voicemail. This will be clearly labeled as an agent note — separate from the carrier transcription.
+        </div>
+        <textarea class="finput" id="vm-note" rows="2" placeholder="e.g. Caller stated they would not proceed with the inspection..." style="resize:none;line-height:1.5"></textarea>
+      </div>
       <button class="btn-primary" onclick="addVM()">Add to Certified Record</button>
       <button class="btn-cancel" onclick="closeModal('m-vm')">Cancel</button>
     </div>
@@ -415,8 +457,60 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 // =============================================
 const CAT_COLORS = {
   'Real Estate':'#1A2F5A','Legal':'#2563EB','Tenant':'#DC4B26',
-  'Business':'#0F766E','Medical':'#9333EA','Other':'#6B7280'
+  'Business':'#0F766E','Medical':'#9333EA','Other':'#6B7280',
+  'Family':'#EC4899','Friends':'#F97316','Church':'#8B5CF6',
+  'Coaching':'#0EA5E9','Custom':'#6B7280'
 };
+
+// User's categories - starts with defaults, user can add/remove
+let USER_CATEGORIES = [
+  {name:'Real Estate', icon:'🏠'},
+  {name:'Legal', icon:'⚖️'},
+  {name:'Tenant', icon:'🏢'},
+  {name:'Business', icon:'💼'},
+  {name:'Medical', icon:'🏥'},
+  {name:'Family', icon:'👨‍👩‍👧'},
+  {name:'Friends', icon:'👫'},
+  {name:'Other', icon:'✏️'},
+];
+
+const CATEGORY_ICONS = ['🏠','⚖️','🏢','💼','🏥','👨‍👩‍👧','👫','🐾','⛪','🎓','💰','🏋️','🎨','🌟','✏️'];
+
+function renderCatGrid() {
+  const grid = document.getElementById('cat-grid');
+  if(!grid) return;
+  grid.innerHTML = USER_CATEGORIES.map((c, i) => 
+    `<div class="cat-opt ${i===0?'sel':''}" onclick="selCat(this,'${c.name}','${c.icon}')" data-c="${c.name}" data-i="${c.icon}">
+      <span class="ci">${c.icon}</span>
+      <div class="cn">${c.name}</div>
+    </div>`
+  ).join('');
+  // Auto-select first
+  if(USER_CATEGORIES.length > 0) {
+    selCat(grid.querySelector('.cat-opt'), USER_CATEGORIES[0].name, USER_CATEGORIES[0].icon);
+  }
+}
+
+function addCustomCategory() {
+  const name = prompt('Enter category name (e.g. Family, Friends, Church, Coaching):');
+  if(!name || !name.trim()) return;
+  const trimmed = name.trim();
+  if(USER_CATEGORIES.find(c => c.name.toLowerCase() === trimmed.toLowerCase())) {
+    toast('Category already exists!');
+    return;
+  }
+  // Pick an icon based on name
+  const iconMap = {
+    'family':'👨‍👩‍👧','friends':'👫','church':'⛪','coaching':'🎓',
+    'school':'🎓','pets':'🐾','fitness':'🏋️','art':'🎨','finance':'💰'
+  };
+  const icon = iconMap[trimmed.toLowerCase()] || '🌟';
+  USER_CATEGORIES.push({name: trimmed, icon});
+  CAT_COLORS[trimmed] = '#6B7280';
+  CAT_TEMPLATES[trimmed] = 'Custom — type any party names and roles for your specific matter';
+  renderCatGrid();
+  toast('✅ Category "' + trimmed + '" added!');
+}
 const CAT_TEMPLATES = {
   'Real Estate':'Buyer Agent, Seller Agent, Inspector, TC, Lender, Escrow, Co-op Agent',
   'Legal':'Client, Opposing Counsel, Mediator, Court Reporter, Expert Witness',
@@ -427,37 +521,70 @@ const CAT_TEMPLATES = {
 };
 
 const ALL_CONVS = [
-  {id:'c1',party:'Ace Johnson',role:'Co-op Agent',carrier:'(310) 555-0182',avatar:'AJ',color:'#16A34A',msgs:[
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Great — contingency removal signed and sent.',ts:'Mar 3, 2026 · 10:58 AM',ann:null},
+  {id:'c1',party:'Ace Johnson',role:'Co-op Agent',carrier:'(310) 555-0182',avatar:'AJ',color:'#16A34A',
+  allMsgs:[
+    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Hey Lauren — my buyers are interested in the Alvarez property. Can we set up a showing?',ts:'Jan 15, 2026 · 9:00 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Absolutely Ace. How about Saturday at 11am?',ts:'Jan 15, 2026 · 9:30 AM',ann:null},
+    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Perfect. They loved it. Expect an offer by Monday.',ts:'Jan 18, 2026 · 2:00 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — looking forward to it.',ts:'Jan 18, 2026 · 2:15 PM',ann:null},
+    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Offer coming in at $1.42M. Buyers are flexible on close date.',ts:'Jan 20, 2026 · 10:00 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Received. Will present to seller tonight.',ts:'Jan 20, 2026 · 10:30 AM',ann:null},
+    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Any counter?',ts:'Jan 21, 2026 · 9:00 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Yes — $1.47M. Seller firm on price.',ts:'Jan 21, 2026 · 11:00 AM',ann:null},
+    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Buyers accept. We have a deal. Sending executed offer now.',ts:'Jan 22, 2026 · 8:00 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — contingency removal signed and sent.',ts:'Mar 3, 2026 · 10:58 AM',ann:null,beginRecord:true}
+  ],
+  msgs:[
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — contingency removal signed and sent.',ts:'Mar 3, 2026 · 10:58 AM',ann:null},
     {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Buyer is having second thoughts. Wants to revisit the disclosure.',ts:'Mar 14, 2026 · 3:45 PM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Ace — contingency period ended March 10. Buyer already signed removal. All documented.',ts:'Mar 14, 2026 · 3:52 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Ace — contingency period ended March 10. Buyer already signed removal. All documented.',ts:'Mar 14, 2026 · 3:52 PM',ann:null},
     {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'My buyer was NEVER told about the roof issue.',ts:'Mar 14, 2026 · 4:01 PM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Let me pull that conversation — I\'ll get it to you shortly.',ts:'Mar 14, 2026 · 4:03 PM',ann:null}
-  ]},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Let me pull that conversation — I\'ll get it to you shortly.',ts:'Mar 14, 2026 · 4:03 PM',ann:null}
+  ],
+  beginMsg:'Mar 3, 2026 · 10:58 AM'},
   {id:'c2',party:'Maria Torres',role:'Inspector',carrier:'(818) 555-0294',avatar:'MT',color:'#DC4B26',msgs:[
     {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Inspection report attached. Roof needs attention — see page 4 for details.',ts:'Feb 28, 2026 · 2:15 PM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Received. Forwarding to buyer\'s agent now.',ts:'Feb 28, 2026 · 2:30 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Received. Forwarding to buyer\'s agent now.',ts:'Feb 28, 2026 · 2:30 PM',ann:null},
     {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Make sure they see the drainage issue in the backyard too. It\'s in the photos.',ts:'Feb 28, 2026 · 2:45 PM',ann:'Inspector verbally repeated this at the site walk on March 1'}
   ]},
   {id:'c3',party:'David Kim',role:'Transaction Coordinator',carrier:'(626) 555-0371',avatar:'DK',color:'#2563EB',msgs:[
     {sender:'David Kim',badge:'Carrier #: (626) 555-0371',text:'All docs received. Timeline looks good for March 15 close.',ts:'Mar 5, 2026 · 9:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Perfect. Buyer\'s lender confirmed funding.',ts:'Mar 5, 2026 · 9:15 AM',ann:null}
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Perfect. Buyer\'s lender confirmed funding.',ts:'Mar 5, 2026 · 9:15 AM',ann:null}
   ]},
   {id:'c4',party:'James Wilson',role:'Tenant',carrier:'(323) 555-0198',avatar:'JW',color:'#D97706',msgs:[
     {sender:'James Wilson',badge:'Carrier #: (323) 555-0198',text:'I need more time to pay rent. Can we work something out?',ts:'Mar 1, 2026 · 11:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'James, the 3-day notice was served on February 25. The deadline has passed.',ts:'Mar 1, 2026 · 11:30 AM',ann:null}
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'James, the 3-day notice was served on February 25. The deadline has passed.',ts:'Mar 1, 2026 · 11:30 AM',ann:null}
   ]},
   {id:'c5',party:'Robert Smith',role:'Referring Agent',carrier:'(562) 555-0267',avatar:'RS',color:'#9333EA',msgs:[
     {sender:'Robert Smith',badge:'Carrier #: (562) 555-0267',text:'We agreed on 25% referral. Where\'s my check?',ts:'Mar 10, 2026 · 2:00 PM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Robert, the agreement was 20%. I have the original text where we confirmed.',ts:'Mar 10, 2026 · 2:15 PM',ann:null}
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Robert, the agreement was 20%. I have the original text where we confirmed.',ts:'Mar 10, 2026 · 2:15 PM',ann:null}
   ]},
   {id:'c6',party:'Sarah Park',role:'Lender',carrier:'(714) 555-0439',avatar:'SP',color:'#0F766E',msgs:[
     {sender:'Sarah Park',badge:'Carrier #: (714) 555-0439',text:'Appraisal came in at value. Clear to close.',ts:'Mar 8, 2026 · 11:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Wonderful. Sending final docs now.',ts:'Mar 8, 2026 · 11:15 AM',ann:null}
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Wonderful. Sending final docs now.',ts:'Mar 8, 2026 · 11:15 AM',ann:null}
   ]},
   {id:'c7',party:'Mike Chen',role:'Contractor',carrier:'(213) 555-0512',avatar:'MC',color:'#B45309',msgs:[
     {sender:'Mike Chen',badge:'Carrier #: (213) 555-0512',text:'Roof repairs completed. All work permitted and signed off.',ts:'Feb 15, 2026 · 4:00 PM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Epique Realty',text:'Thank you Mike. Can you send the permit number?',ts:'Feb 15, 2026 · 4:12 PM',ann:null}
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Thank you Mike. Can you send the permit number?',ts:'Feb 15, 2026 · 4:12 PM',ann:null}
+  ]},
+  {id:'c8',party:'Lily',role:'Daughter',carrier:'(011) 44-555-0123',avatar:'Li',color:'#EC4899',msgs:[
+    {sender:'Lily',badge:'Carrier #: (011) 44-555-0123',text:'Mum! Dave proposed!! 💍 I said yes!!!',ts:'Mar 30, 2026 · 7:15 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'OH MY GOD!! Lily!! I am so happy!! Call me RIGHT NOW!!',ts:'Mar 30, 2026 · 7:18 AM',ann:null},
+    {sender:'Lily',badge:'Carrier #: (011) 44-555-0123',text:'He did it at sunset on the beach in Cornwall. It was perfect Mum.',ts:'Mar 30, 2026 · 7:45 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'I love you both so much. When can we video call?',ts:'Mar 30, 2026 · 7:50 AM',ann:null},
+    {sender:'Lily',badge:'Carrier #: (011) 44-555-0123',text:'Tonight? Also — we are thinking Madeira for the wedding 🌊',ts:'Mar 30, 2026 · 8:00 AM',ann:null}
+  ]},
+  {id:'c9',party:'Morrison',role:'Son',carrier:'(213) 555-0100',avatar:'Mo',color:'#0F766E',msgs:[
+    {sender:'Morrison',badge:'Carrier #: (213) 555-0100',text:'Hey Mom! Can we do Sunday dinner? Violet wants to try that new Italian place.',ts:'Apr 8, 2026 · 6:30 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Yes! I would love that. What time?',ts:'Apr 8, 2026 · 6:45 PM',ann:null},
+    {sender:'Morrison',badge:'Carrier #: (213) 555-0100',text:'7pm? I can make a reservation.',ts:'Apr 8, 2026 · 6:50 PM',ann:null}
+  ]},
+  {id:'c10',party:'Tom Nguyen',role:'Potential Client',carrier:'(714) 555-0900',avatar:'TN',color:'#D97706',msgs:[
+    {sender:'Tom Nguyen',badge:'Carrier #: (714) 555-0900',text:'Lauren — interested in listing my PV home. Can we talk? Got your number from Ace.',ts:'Apr 9, 2026 · 8:45 AM',ann:null}
+  ]},
+  {id:'c11',party:'Andy - Bookkeeping',role:'Employer',carrier:'(310) 555-0777',avatar:'AB',color:'#6B7280',msgs:[
+    {sender:'Andy',badge:'Carrier #: (310) 555-0777',text:'Lauren - reminder payroll is Friday. Also need last months reconciliation.',ts:'Apr 8, 2026 · 3:00 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'On it - will have it to you by Thursday.',ts:'Apr 8, 2026 · 3:15 PM',ann:null}
   ]}
 ];
 
@@ -496,6 +623,72 @@ function hnav(i) {
 // =============================================
 // NAVIGATION
 // =============================================
+function switchHomeTab(tab) {
+  const txContent = document.getElementById('tab-tx-content');
+  const allContent = document.getElementById('tab-all-content');
+  const txBtn = document.getElementById('tab-tx');
+  const allBtn = document.getElementById('tab-all');
+  if(tab === 'tx') {
+    txContent.style.display = 'block';
+    allContent.style.display = 'none';
+    txBtn.style.borderBottomColor = 'var(--orange)';
+    txBtn.style.color = 'white';
+    allBtn.style.borderBottomColor = 'transparent';
+    allBtn.style.color = 'rgba(255,255,255,0.55)';
+  } else {
+    txContent.style.display = 'none';
+    allContent.style.display = 'block';
+    allBtn.style.borderBottomColor = 'var(--orange)';
+    allBtn.style.color = 'white';
+    txBtn.style.borderBottomColor = 'transparent';
+    txBtn.style.color = 'rgba(255,255,255,0.55)';
+    renderAllTexts();
+  }
+}
+
+function renderAllTexts() {
+  const list = document.getElementById('all-texts-list');
+  if(!list) return;
+  list.innerHTML = ALL_TEXTS.map(t => `
+    <div class="text-item ${t.inTx ? 'in-tx' : ''}" onclick="viewTextConv('${t.id}')">
+      <div class="text-avatar" style="background:${t.color}">${t.avatar}</div>
+      <div class="text-info">
+        <div class="text-name">${t.name}</div>
+        <div class="text-preview">${t.lastMsg}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.number} · ${t.msgs} message${t.msgs>1?'s':''}</div>
+      </div>
+      <div class="text-meta">
+        <div class="text-ts">${t.ts}</div>
+        ${t.inTx ? `<div class="text-badge assigned">✓ ${t.txName}</div>` : '<div class="text-badge">+ Add to Tx</div>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function viewTextConv(id) {
+  const t = ALL_TEXTS.find(x => x.id === id);
+  if(!t) return;
+  if(t.inTx) {
+    toast('✓ Already in transaction: ' + t.txName);
+  } else {
+    // Pre-fill and open new transaction modal
+    pendingTextId = id;
+    document.getElementById('tx-name').value = '';
+    document.getElementById('tx-name').placeholder = 'e.g. ' + t.name + ' matter...';
+    openAddTx();
+    // Show a tip at top of modal
+    setTimeout(() => {
+      const tip = document.getElementById('pending-text-tip');
+      if(tip) {
+        tip.style.display = 'block';
+        tip.innerHTML = '📱 Adding conversation with <strong>' + t.name + '</strong> (' + t.number + ') to this transaction.';
+      }
+    }, 100);
+  }
+}
+
+let pendingTextId = null;
+
 function showScreen(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-'+n).classList.add('active');
@@ -542,7 +735,7 @@ function openTx(id) {
         <div class="m">${tx.cids.length} conversations · ${totalItems(tx)} items · ${tx.cat}</div>
       </div>
     </div>
-    <div class="mark-bar" onclick="toast('📍 Tap any message\'s note button (📝) to set beginning of record or add context')">
+    <div class="mark-bar" onclick="toast('Tap any message note button to set beginning of record or add context')">
       📍 Mark Beginning of Record — Tap 📝 on any message to annotate or set record scope
     </div>`;
   renderDetail();
@@ -566,10 +759,21 @@ function renderDetail() {
         <span class="conv-cnt">${conv.msgs.length} msgs</span>
       </div>`;
 
-    conv.msgs.forEach((m, mi) => {
+    // Show ALL messages with beginning of record divider
+    const allMsgsToShow = conv.allMsgs || conv.msgs;
+    let beginShown = false;
+    allMsgsToShow.forEach((m, mi) => {
       const sc = m.sender === 'Lauren Cotner' ? '#1A2F5A' : col;
-      html += `<div class="msg-item">
+      const isBeginRecord = conv.beginMsg && m.ts === conv.beginMsg;
+      // Show divider before the beginning of record message
+      if(isBeginRecord && !beginShown) {
+        beginShown = true;
+        html += `<div class="begin-divider">📍 Beginning of Record — Transaction Record starts here</div>`;
+      }
+      const isPreRecord = conv.beginMsg && !beginShown;
+      html += `<div class="msg-item ${isPreRecord ? 'pre-record-msg' : ''}">
         <button class="ann-btn" onclick="openAnn('${conv.id}',${mi})" title="Add agent note">📝</button>
+        <button class="begin-btn" onclick="setBeginRecord('${conv.id}',${mi},'${m.ts}')" title="Set as Beginning of Record">📍</button>
         <div class="msg-top">
           <div class="msg-sender" style="color:${sc}">${m.sender}</div>
           <div class="msg-time">${m.ts}</div>
@@ -624,8 +828,10 @@ function renderExtraItem(item, col) {
         <div class="msg-time">${item.dt}</div>
       </div>
       <div class="msg-vm">
-        <div class="msg-vm-hdr">🎙️ Voicemail Transcription &nbsp;·&nbsp; Duration: ${item.dur}</div>
+        <div class="msg-vm-hdr">🎙️ Carrier Transcription &nbsp;·&nbsp; Duration: ${item.dur}</div>
         <div class="msg-vm-text">"${item.tx}"</div>
+        <div style="font-size:10px;color:#166534;margin-top:4px;font-style:italic">Transcribed at time of receipt by device carrier system. Accuracy not guaranteed.</div>
+        ${item.note ? `<div style="margin-top:6px;padding:6px 8px;background:#FFF7ED;border-left:3px solid #F97316;border-radius:4px;font-size:11px;color:#92400E"><strong>Agent Note:</strong> ${item.note}</div>` : ''}
       </div>
     </div>`;
   } else {
@@ -647,6 +853,7 @@ function renderExtraItem(item, col) {
 // ADD TRANSACTION
 // =============================================
 function openAddTx() {
+  renderCatGrid();
   document.getElementById('tx-name').value = '';
   document.getElementById('tx-note').value = '';
   selCatVal = 'Real Estate'; selCatIcon = '🏠';
@@ -676,8 +883,29 @@ function createTx() {
   const newId = Math.max(...txs.map(t => t.id), 0) + 1;
   txs.push({ id:newId, name, cat:selCatVal, icon:selCatIcon, note, cids:[], extra:[] });
   closeModal('m-add-tx');
-  renderHome();
-  toast(`✅ "${name}" created`);
+  // If created from All Texts tab, add conversation to transaction
+  if(pendingTextId) {
+    const pt = ALL_TEXTS.find(x => x.id === pendingTextId);
+    if(pt) {
+      pt.inTx = true;
+      pt.txName = name;
+      // Add the conversation to the new transaction if it has a convId
+      if(pt.convId) {
+        const newTx = txs[txs.length - 1];
+        if(newTx && !newTx.cids.includes(pt.convId)) {
+          newTx.cids.push(pt.convId);
+        }
+      }
+    }
+    pendingTextId = null;
+    const tip = document.getElementById('pending-text-tip');
+    if(tip) tip.style.display = 'none';
+    renderHome();
+    switchHomeTab('all');
+  } else {
+    renderHome();
+  }
+  toast(`✅ "${name}" created — conversation added!`);
   setTimeout(() => openTx(newId), 380);
 }
 
@@ -731,10 +959,11 @@ function addVM() {
   const dt = document.getElementById('vm-dt').value.trim();
   const dur = document.getElementById('vm-dur').value.trim();
   const tx2 = document.getElementById('vm-tx').value.trim();
+  const vmNote = document.getElementById('vm-note') ? document.getElementById('vm-note').value.trim() : '';
   if (!caller || !tx2) { toast('⚠️ Caller and transcription required'); return; }
-  getTx(curTxId).extra.push({ type:'vm', caller, dt:dt||'Date not specified', dur:dur||'Unknown', tx:tx2, cid:null });
+  getTx(curTxId).extra.push({ type:'vm', caller, dt:dt||'Date not specified', dur:dur||'Unknown', tx:tx2, note:vmNote, cid:null });
   closeModal('m-vm');
-  ['vm-caller','vm-dt','vm-dur','vm-tx'].forEach(id => document.getElementById(id).value='');
+  ['vm-caller','vm-dt','vm-dur','vm-tx','vm-note'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
   renderDetail();
   toast('🎙️ Voicemail added to record');
 }
@@ -761,6 +990,21 @@ function addCall() {
 // =============================================
 // ANNOTATIONS
 // =============================================
+function setBeginRecord(cid, mi, ts) {
+  const conv = getConv(cid);
+  if(!conv) return;
+  // Update beginMsg timestamp
+  conv.beginMsg = ts;
+  // Update msgs array to only include from this point forward
+  const allMsgs = conv.allMsgs || conv.msgs;
+  const startIdx = allMsgs.findIndex(m => m.ts === ts);
+  if(startIdx > -1) {
+    conv.msgs = allMsgs.slice(startIdx);
+  }
+  renderDetail();
+  toast('📍 Beginning of Record set to ' + ts);
+}
+
 function openAnn(cid, mi) {
   annTarget = { cid, mi };
   const conv = getConv(cid);
@@ -859,118 +1103,111 @@ function renderExportExtra(item) {
 // =============================================
 // PDF GENERATION
 // =============================================
-function generatePDF() {
+function generatePDF(fullArchive=false) {
+  const archiveMode = fullArchive === true;
   const {jsPDF} = window.jspdf;
   const doc = new jsPDF({unit:'pt',format:'letter'});
   const W=612,H=792,M=50,CW=512;
   let y=M;
   const tx=getTx(curTxId),convs=getConvs(tx);
   const now=new Date();
-  const ed=now.toLocaleString('en-US');
+  const ed=now.toLocaleString('en-US',{month:'numeric',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
   const eid='RT-'+now.toISOString().slice(0,10).replace(/-/g,'')+'-001';
-  const hash='SHA256:'+[...Array(20)].map(()=>'0123456789ABCDEF'[Math.floor(Math.random()*16)]).join('');
+  const hash=[...Array(20)].map(()=>'0123456789ABCDEF'[Math.floor(Math.random()*16)]).join('');
   const navy=[26,47,90],orange=[249,115,22],gray=[107,114,128],black=[17,24,39];
 
   function hex(h){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return[r,g,b];}
-  function chk(n){if(y+n>H-70){doc.addPage();y=M;}}
+  function chk(n){if(y+n>H-50){doc.addPage();y=M;}}
 
   // ── HEADER ──
   doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(...navy);
-  doc.text('RECALLTEXT™',M,y);y+=14;
+  doc.text('RECALLTEXT\u2122',M,y);y+=14;
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-  doc.text('VERIFIED COMMUNICATION RECORD',M,y);y+=10;
-  doc.text(`recalltext.io | Generated: ${ed}`,M,y);y+=10;
+  doc.text(archiveMode ? 'COMPLETE CONVERSATION ARCHIVE' : 'VERIFIED COMMUNICATION RECORD',M,y);y+=10;
+  doc.text('recalltext.io | Generated: '+ed,M,y);y+=10;
   doc.setFont('helvetica','italic');
   doc.text('Used to verify what was said — when it was said — and by whom',M,y);y+=14;
-  // Orange rule
   doc.setDrawColor(...orange);doc.setLineWidth(1);doc.line(M,y,W-M,y);y+=10;
 
-  // Transaction block
+  // Transaction info
   doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-  doc.text(`TRANSACTION: ${tx.name} (${tx.cat})`,M,y);y+=12;
-  const partyList = convs.map(c=>`${c.party} (${c.role})`).join(' | ');
+  doc.text('TRANSACTION: '+tx.name+' ('+tx.cat+')',M,y);y+=11;
+  const partyList = convs.map(c=>c.party+' ('+c.role+')').join(' | ');
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-  doc.text(`PARTIES: ${partyList}`,M,y);y+=10;
-  const totalMsgs = convs.reduce((a,c)=>a+c.msgs.length,0);
-  doc.text(`TOTAL MESSAGES: ${totalMsgs} | Personal messages excluded`,M,y);y+=10;
-  doc.text('SOURCE INTEGRITY: Messages sourced directly from device-native SMS database. No re-entry, no manual edits, no server.',M,y,{maxWidth:CW});y+=18;
-  const threadWord = convs.length>1 ? 'threads' : 'thread';
-  doc.text(`ASSEMBLY: ${convs.length} independent conversation ${threadWord} assembled into unified transaction record.`,M,y,{maxWidth:CW});y+=18;
-
-  // Orange rule
-  doc.setDrawColor(...orange);doc.setLineWidth(0.5);doc.line(M,y,W-M,y);y+=14;
+  doc.text('PARTIES: '+partyList,M,y,{maxWidth:CW});y+=11;
+  const totalMsgs = convs.reduce((a,c)=>a+(archiveMode&&c.allMsgs?c.allMsgs.length:c.msgs.length),0);
+  doc.text('TOTAL MESSAGES: '+totalMsgs+' | Personal messages excluded',M,y);y+=16;
 
   // ── CONVERSATIONS ──
   convs.forEach((conv) => {
     const pc = hex(conv.color||'#1A2F5A');
     chk(50);
-    // Conversation header
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...navy);
-    doc.text(`CONVERSATION WITH: ${conv.party.toUpperCase()}`,M,y);y+=12;
+
+    // Section header in party color
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...pc);
+    doc.text('CONVERSATION WITH: '+conv.party.toUpperCase(),M,y);y+=12;
     doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-    doc.text(`Role: ${conv.role} | Phone: ${conv.carrier}`,M,y);y+=10;
-    if(conv.beginMsg){
-      doc.text(`Record begins at: ${conv.beginMsg} (user-selected start point)`,M,y);y+=10;
+    doc.text('Role: '+conv.role+' | Phone: '+conv.carrier,M,y);y+=10;
+
+    if(!archiveMode && conv.beginMsg){
+      doc.text('Record begins at: '+conv.beginMsg+' (user-selected start point)',M,y);y+=10;
+    }
+    if(archiveMode && conv.beginMsg){
+      doc.text('Beginning of Record marker: '+conv.beginMsg,M,y);y+=10;
+      doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...orange);
+      doc.text('* Messages before this point included in Complete Archive only',M,y);y+=12;
     }
     y+=4;
 
     // Messages
-    conv.msgs.forEach(m => {
+    const msgsToRender = (archiveMode && conv.allMsgs) ? conv.allMsgs : conv.msgs;
+    msgsToRender.forEach(m => {
       chk(40);
       const isLauren = m.sender==='Lauren Cotner';
       const sc = isLauren ? navy : pc;
-      doc.setFont('helvetica','bold');doc.setFontSize(9);
-      doc.setTextColor(...sc);
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...sc);
       doc.text(m.sender,M,y);
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
       doc.text(m.ts,W-M,y,{align:'right'});
       y+=11;
-      // Badge line
       doc.text(m.badge,M,y);y+=11;
-      // Message text
       doc.setFontSize(9);doc.setTextColor(...black);
-      const lines = doc.splitTextToSize(m.text,CW);
-      lines.forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});
-      // Annotation
+      doc.splitTextToSize(m.text,CW).forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});
       if(m.ann){
         chk(14);
         doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(180,100,0);
-        doc.text(`[Agent Note] ${m.ann}`,M,y);y+=12;
+        doc.text('[Agent Note] '+m.ann,M,y);y+=12;
+        doc.setFont('helvetica','normal');doc.setTextColor(...black);
       }
-      y+=6;
+      y+=5;
     });
 
-    // Extra items (voicemails/calls)
+    // Voicemails/calls for this conv
     tx.extra.filter(e=>e.cid===conv.id).forEach(item=>{
       chk(40);
       if(item.type==='vm'){
         doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text(`[Voicemail] From: ${item.caller}`,M,y);
+        doc.text('[Voicemail] From: '+item.caller,M,y);
         doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(`${item.dt} | Duration: ${item.dur}`,W-M,y,{align:'right'});y+=11;
+        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
         doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.splitTextToSize(`Transcription: "${item.tx}"`,CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});
-        y+=6;
+        doc.splitTextToSize('Carrier Transcription: "'+item.tx+'"',CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});
+        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...gray);
+        doc.text('Transcribed at time of receipt by device carrier system. Accuracy not guaranteed.',M,y);y+=10;
+        if(item.note){
+          doc.setFont('helvetica','bolditalic');doc.setFontSize(8.5);doc.setTextColor(180,100,0);
+          doc.splitTextToSize('[Agent Summary Note] '+item.note,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});
+        }
       } else {
         doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text(`[${item.dir} Call] ${item.name} — ${item.num}`,M,y);
+        doc.text('['+item.dir+' Call] '+item.name+' — '+item.num,M,y);
         doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(`${item.dt} | Duration: ${item.dur}`,W-M,y,{align:'right'});y+=11;
+        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
         if(item.notes){doc.splitTextToSize(item.notes,CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});}
-        y+=6;
       }
+      y+=8;
     });
-
-    // Timestamp footer for each convo
-    chk(20);
-    doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.setTextColor(...gray);
-    const exptime = new Date().toLocaleString('en-US');
-    doc.text(`${exptime}`,M,y);y+=10;
-    doc.text('[Sending complete conversation export now — timestamped, carrier verified.]',M,y);y+=10;
-    doc.text('Sent via RecallText | Only selected conversations included',M,y);y+=10;
-    doc.text('Personal messages excluded',M,y);y+=14;
-    // Rule between conversations
-    doc.setDrawColor(...gray);doc.setLineWidth(0.3);doc.line(M,y,W-M,y);y+=14;
+    y+=8;
   });
 
   // Standalone extras
@@ -980,75 +1217,84 @@ function generatePDF() {
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...navy);
     doc.text('PHONE RECORDS — Voicemails & Call Logs',M,y);y+=14;
     solo.forEach(item=>{
+      chk(40);
       if(item.type==='vm'){
-        chk(40);
         doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text(`[Voicemail] From: ${item.caller}`,M,y);
+        doc.text('[Voicemail] From: '+item.caller,M,y);
         doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(`${item.dt} | Duration: ${item.dur}`,W-M,y,{align:'right'});y+=11;
+        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
         doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.splitTextToSize(`"${item.tx}"`,CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});
-        y+=6;
+        doc.splitTextToSize('Carrier Transcription: "'+item.tx+'"',CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});
+        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...gray);
+        doc.text('Transcribed at time of receipt by device carrier system. Accuracy not guaranteed.',M,y);y+=10;
+        if(item.note){
+          doc.setFont('helvetica','bolditalic');doc.setFontSize(8.5);doc.setTextColor(180,100,0);
+          doc.splitTextToSize('[Agent Summary Note] '+item.note,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});
+        }
       } else {
-        chk(30);
         doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text(`[${item.dir} Call] ${item.name} — ${item.num}`,M,y);
+        doc.text('['+item.dir+' Call] '+item.name+' — '+item.num,M,y);
         doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(`${item.dt} | Duration: ${item.dur}`,W-M,y,{align:'right'});y+=11;
+        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
         if(item.notes){doc.splitTextToSize(item.notes,CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});}
-        y+=6;
       }
+      y+=8;
     });
   }
 
+  // Timestamp footer per Doc 10 style
+  chk(30);
+  doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...gray);
+  doc.text(ed,M,y);y+=10;
+  doc.text('[Sending complete conversation export now — timestamped, carrier verified.]',M,y);y+=10;
+  doc.text('Sent via RecallText | Only selected conversations included',M,y);y+=10;
+  doc.text('Personal messages excluded',M,y);y+=16;
+
   // ── CHAIN OF CUSTODY ──
-  chk(100);
   doc.setDrawColor(...orange);doc.setLineWidth(1);doc.line(M,y,W-M,y);y+=12;
   doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...navy);
   doc.text('CHAIN OF CUSTODY CERTIFICATION',M,y);y+=12;
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...black);
   [
     'This record was generated by RecallText from carrier-authenticated messages',
-    'sourced directly from the exporters device-native SMS database.',
+    "sourced directly from the exporter's device-native SMS database.",
     'No messages were altered, reordered, re-entered, or omitted within the designated record scope.',
     'Non-retentive processing: RecallText retains no message data after export generation.',
     'Zero-server architecture — all processing on-device. Nothing stored externally.',
-  ].forEach(ln=>{doc.text(ln,M,y);y+=10;});
+  ].forEach(ln=>{chk(11);doc.text(ln,M,y);y+=10;});
   y+=4;
   doc.setFont('helvetica','bold');
-  doc.text(`VERIFICATION HASH: ${hash}`,M,y);y+=10;
+  doc.text('VERIFICATION HASH: SHA256:'+hash,M,y);y+=10;
   doc.setFont('helvetica','normal');doc.setTextColor(...gray);
-  doc.text(`Export ID: ${eid} | 2026 RecallText LLC | recalltext.io`,M,y);y+=16;
+  doc.text('Export ID: '+eid+' | 2026 RecallText LLC | recalltext.io',M,y);
 
-  // Footer on every page
+  // Page footers — Export ID on every page
   const pageCount = doc.getNumberOfPages();
   for(let i=1;i<=pageCount;i++){
     doc.setPage(i);
     doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...gray);
-    doc.text(`RecallText™ | recalltext.io | Confidential Communication Record | Sender IDs are carrier-authenticated | Personal messages excluded  Page ${i}`,W/2,H-20,{align:'center'});
+    doc.text('RecallText™ | '+tx.name+' | Export ID: '+eid+' | Sender IDs carrier-authenticated | Page '+i+' of '+pageCount,W/2,H-20,{align:'center'});
   }
 
-  const filename = `RecallText_${tx.name.replace(/\s+/g,'_')}_${now.toISOString().slice(0,10)}.pdf`;
+  const filename = archiveMode
+    ? 'RecallText_'+tx.name.replace(/\s+/g,'_')+'_COMPLETE_ARCHIVE_'+now.toISOString().slice(0,10)+'.pdf'
+    : 'RecallText_'+tx.name.replace(/\s+/g,'_')+'_Transaction_Record_'+now.toISOString().slice(0,10)+'.pdf';
+
   try {
     const blob = doc.output('blob');
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-    toast('📄 PDF downloaded successfully!');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+    toast(archiveMode ? '📁 Complete Archive downloaded!' : '📄 Transaction Record downloaded!');
   } catch(e) {
     const dataUri = doc.output('datauristring');
     const a = document.createElement('a');
-    a.href = dataUri;
-    a.download = filename;
-    a.target = '_blank';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => document.body.removeChild(a), 500);
-    toast('📄 PDF opening — tap the download icon to save!');
+    a.href = dataUri; a.download = filename; a.target = '_blank';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>document.body.removeChild(a),500);
+    toast('📄 PDF opening — tap download icon to save!');
   }
 }
 
@@ -1067,7 +1313,29 @@ document.querySelectorAll('.moverlay').forEach(el=>{
 // =============================================
 // INIT
 // =============================================
+
+// ALL DEVICE TEXT CONVERSATIONS (simulates what gets pulled from phone on launch)
+const ALL_TEXTS = [
+  {id:'t1',name:'Mom',number:'(310) 867-5309',avatar:'M',color:'#6B7280',lastMsg:'Can you call me when you get a chance?',ts:'Today · 9:15 AM',msgs:2,inTx:false},
+  {id:'t2',convId:'c1',name:'Ace Johnson',number:'(310) 555-0182',avatar:'AJ',color:'#16A34A',lastMsg:'My buyer was NEVER told about the roof issue.',ts:'Mar 14 · 4:01 PM',msgs:10,inTx:true,txName:'Alvarez Drive Listing'},
+  {id:'t3',name:'Dr. Sandra Lee',number:'(424) 555-0198',avatar:'SL',color:'#9333EA',lastMsg:'Appointment confirmed for April 12.',ts:'Apr 7 · 11:00 AM',msgs:3,inTx:false},
+  {id:'t4',convId:'c2',name:'Maria Torres',number:'(818) 555-0294',avatar:'MT',color:'#DC4B26',lastMsg:'Make sure they see the drainage issue.',ts:'Feb 28 · 2:45 PM',msgs:3,inTx:true,txName:'Alvarez Drive Listing'},
+  {id:'t5',name:'Chase Bank',number:'(800) 432-3117',avatar:'CB',color:'#1D4ED8',lastMsg:'Your payment of $2,847 is due April 15.',ts:'Apr 6 · 8:00 AM',msgs:1,inTx:false},
+  {id:'t6',convId:'c3',name:'David Kim',number:'(626) 555-0371',avatar:'DK',color:'#2563EB',lastMsg:'Timeline looks good for March 15 close.',ts:'Mar 5 · 9:00 AM',msgs:2,inTx:true,txName:'Alvarez Drive Listing'},
+  {id:'t7',convId:'c9',name:'Morrison',number:'(213) 555-0100',avatar:'Mo',color:'#0F766E',lastMsg:'Hey Mom! Can we do Sunday dinner?',ts:'Apr 8 · 6:30 PM',msgs:5,inTx:false},
+  {id:'t8',convId:'c5',name:'Robert Smith',number:'(562) 555-0267',avatar:'RS',color:'#9333EA',lastMsg:'We agreed on 25% referral. Wheres my check?',ts:'Mar 10 · 2:00 PM',msgs:2,inTx:true,txName:'Alvarez Drive Listing'},
+  {id:'t9',name:'Whole Foods',number:'(888) 555-0123',avatar:'WF',color:'#16A34A',lastMsg:'Your order is ready for pickup.',ts:'Apr 9 · 10:00 AM',msgs:1,inTx:false},
+  {id:'t10',convId:'c10',name:'Tom Nguyen',number:'(714) 555-0900',avatar:'TN',color:'#D97706',lastMsg:'Lauren — interested in listing my PV home. Can we talk?',ts:'Apr 9 · 8:45 AM',msgs:1,inTx:false},
+  {id:'t11',convId:'c6',name:'Sarah Park',number:'(714) 555-0439',avatar:'SP',color:'#0F766E',lastMsg:'Appraisal came in at value. Clear to close.',ts:'Mar 8 · 11:00 AM',msgs:2,inTx:true,txName:'Alvarez Drive Listing'},
+  {id:'t12',convId:'c7',name:'Mike Chen',number:'(213) 555-0512',avatar:'MC',color:'#B45309',lastMsg:'Roof repairs completed. All work permitted.',ts:'Feb 15 · 4:00 PM',msgs:2,inTx:true,txName:'Alvarez Drive Listing'},
+  {id:'t13',convId:'c4',name:'James Wilson',number:'(323) 555-0198',avatar:'JW',color:'#D97706',lastMsg:'I need more time to pay rent.',ts:'Mar 1 · 11:00 AM',msgs:2,inTx:true,txName:'Unit 4B Eviction'},
+  {id:'t14',convId:'c8',name:'Lily',number:'(011) 44-555-0123',avatar:'Li',color:'#EC4899',lastMsg:'Mum! Dave proposed!! 💍',ts:'Mar 30 · 7:15 AM',msgs:12,inTx:false},
+  {id:'t15',convId:'c11',name:'Andy - Bookkeeping',number:'(310) 555-0777',avatar:'AB',color:'#6B7280',lastMsg:'Lauren - reminder payroll is Friday.',ts:'Apr 8 · 3:00 PM',msgs:4,inTx:false},
+];
+
+
 renderHome();
+renderCatGrid();
 </script>
 </body>
 </html>
