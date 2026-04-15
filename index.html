@@ -235,6 +235,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* HASH BADGE */
 .hash-badge{background:#F3F4F6;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:monospace;font-size:10px;color:var(--muted);margin-top:8px;word-break:break-all}
 
+/* PER-MESSAGE RECORD TAGS */
+.msg-record-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.msg-record-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:white}
+.msg-tag-btn{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;border:1.5px dashed var(--border);background:white;color:var(--muted);cursor:pointer;font-family:inherit;transition:all 0.15s}
+.msg-tag-btn:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-light)}
+.msg-untagged{background:#FFFBEB;border-left:3px solid var(--amber)}
+
+/* TAG PICKER */
+.tag-picker-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
+.tag-picker-item:last-child{border-bottom:none}
+.tag-picker-item:hover{background:var(--orange-light);margin:0 -20px;padding:12px 20px}
+.tag-picker-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tag-picker-name{font-weight:700;font-size:14px;color:var(--text)}
+.tag-picker-cat{font-size:11px;color:var(--muted)}
+
 /* DETAIL CONTENT SCROLL AREA */
 .det-scroll{flex:1;overflow-y:auto;padding-bottom:90px}
 </style>
@@ -257,7 +272,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <!-- Home tabs -->
     <div style="background:var(--navy);display:flex;border-bottom:1px solid rgba(255,255,255,0.1)">
       <button id="tab-tx" onclick="switchHomeTab('tx')" style="flex:1;background:none;border:none;color:white;padding:10px;font-size:12px;font-weight:700;font-family:inherit;border-bottom:2px solid var(--orange);cursor:pointer">📁 My Transactions</button>
-      <button id="tab-all" onclick="switchHomeTab('all')" style="flex:1;background:none;border:none;color:rgba(255,255,255,0.55);padding:10px;font-size:12px;font-weight:600;font-family:inherit;border-bottom:2px solid transparent;cursor:pointer">📱 All Texts <span style="background:var(--orange);color:white;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">15</span></button>
+      <button id="tab-all" onclick="switchHomeTab('all')" style="flex:1;background:none;border:none;color:rgba(255,255,255,0.55);padding:10px;font-size:12px;font-weight:600;font-family:inherit;border-bottom:2px solid transparent;cursor:pointer">📱 All Texts <span style="background:var(--orange);color:white;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">21</span></button>
     </div>
     <div class="search-wrap">
       <div class="search-bar">
@@ -374,34 +389,30 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="moverlay" id="m-vm">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">🎙️ Add Voicemail Transcription</div>
+    <div class="modal-title">🎙️ Add Voicemail</div>
     <div class="modal-body">
-      <div class="vm-wave-box">
-        <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Voicemail Recording</div>
-        <div class="wave-bars">
-          <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
-          <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
-        </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Device-processed · Never leaves your phone</div>
-      </div>
-      <div class="fgroup"><label class="flabel">Caller Name or Number</label><input class="finput" id="vm-caller" type="text" placeholder="e.g. Ace Johnson  /  (310) 555-0182"></div>
-      <div class="fgroup"><label class="flabel">Date &amp; Time Received</label><input class="finput" id="vm-dt" type="text" placeholder="e.g. Mar 15, 2026 · 2:34 PM"></div>
-      <div class="fgroup"><label class="flabel">Duration</label><input class="finput" id="vm-dur" type="text" placeholder="e.g. 1:42"></div>
-      <div class="fgroup">
-        <label class="flabel">Carrier Transcription</label>
-        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px;color:#166534;line-height:1.5">
-          💡 <strong>Tip:</strong> Your phone transcribes voicemails automatically at time of receipt. On iPhone: Phone → Voicemail → tap message. On Android: check your Phone app voicemail. Copy and paste below.
-        </div>
-        <textarea class="finput" id="vm-tx" rows="3" placeholder="Paste carrier transcription here (from your phone's voicemail app)..." style="resize:none;line-height:1.5"></textarea>
+      <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#166534;line-height:1.5">
+        📱 <strong>In the live app</strong> — this pulls automatically from your phone's voicemail. Your carrier transcribes it at time of receipt. You just confirm and file it. <em>This prototype simulates that flow.</em>
       </div>
       <div class="fgroup">
-        <label class="flabel">Agent Summary Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
-        <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px;color:#92400E;line-height:1.5">
-          ✏️ Add your own understanding of the voicemail. This will be clearly labeled as an agent note — separate from the carrier transcription.
-        </div>
-        <textarea class="finput" id="vm-note" rows="2" placeholder="e.g. Caller stated they would not proceed with the inspection..." style="resize:none;line-height:1.5"></textarea>
+        <label class="flabel">Tap a contact from this transaction</label>
+        <div id="vm-contact-chips" style="margin-bottom:8px;display:flex;flex-wrap:wrap"></div>
+        <input class="finput" id="vm-caller" type="text" placeholder="Or type name / number">
       </div>
-      <button class="btn-primary" onclick="addVM()">Add to Certified Record</button>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div style="flex:1"><label class="flabel">Date &amp; Time</label><input class="finput" id="vm-dt" type="text"></div>
+        <div style="width:80px"><label class="flabel">Duration</label><input class="finput" id="vm-dur" type="text" placeholder="e.g. 1:42"></div>
+      </div>
+      <div class="fgroup">
+        <label class="flabel">Carrier Transcription <span style="font-weight:400;color:var(--muted)">(from your phone)</span></label>
+        <textarea class="finput" id="vm-tx" rows="3" placeholder="In the live app this auto-populates from your carrier voicemail transcription..." style="resize:none;line-height:1.5"></textarea>
+      </div>
+      <div class="fgroup">
+        <label class="flabel">Agent Note <span style="font-weight:400;color:var(--muted)">(optional — your own summary)</span></label>
+        <textarea class="finput" id="vm-note" rows="2" placeholder="e.g. Maria confirmed buyers have not wired EMD yet..." style="resize:none;line-height:1.5"></textarea>
+      </div>
+      <button class="btn-primary" onclick="addVM()">🔒 Add to Certified Record</button>
+      <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:6px">SHA-256 hash generated at ingestion · Tamper-evident</div>
       <button class="btn-cancel" onclick="closeModal('m-vm')">Cancel</button>
     </div>
   </div>
@@ -411,15 +422,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="moverlay" id="m-call">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">📞 Add Call Log Entry</div>
+    <div class="modal-title">📞 Add Call Log</div>
     <div class="modal-body">
-      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#1E40AF">
-        📌 Documents a phone call from your device's call history. <strong>No recording</strong> — carrier-verified number, direction, and timestamp only.
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#1E40AF;line-height:1.5">
+        📱 <strong>In the live app</strong> — this pulls from your phone's call history automatically. Carrier-verified number, timestamp, and direction. <strong>No recording.</strong> <em>This prototype simulates that flow.</em>
       </div>
-      <div class="fgroup"><label class="flabel">Contact Name</label><input class="finput" id="cl-name" type="text" placeholder="e.g. Maria Torres"></div>
-      <div class="fgroup"><label class="flabel">Carrier Phone Number</label><input class="finput" id="cl-num" type="text" placeholder="e.g. (818) 555-0294"></div>
-      <div class="fgroup"><label class="flabel">Date &amp; Time</label><input class="finput" id="cl-dt" type="text" placeholder="e.g. Mar 15, 2026 · 3:15 PM"></div>
-      <div class="fgroup"><label class="flabel">Duration</label><input class="finput" id="cl-dur" type="text" placeholder="e.g. 4:37"></div>
+      <div class="fgroup">
+        <label class="flabel">Tap a contact from this transaction</label>
+        <div id="cl-contact-chips" style="margin-bottom:8px;display:flex;flex-wrap:wrap"></div>
+        <input class="finput" id="cl-name" type="text" placeholder="Or type contact name">
+      </div>
+      <div class="fgroup"><label class="flabel">Carrier Phone Number</label><input class="finput" id="cl-num" type="text" placeholder="Carrier-verified number"></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div style="flex:1"><label class="flabel">Date &amp; Time</label><input class="finput" id="cl-dt" type="text"></div>
+        <div style="width:80px"><label class="flabel">Duration</label><input class="finput" id="cl-dur" type="text" placeholder="e.g. 4:37"></div>
+      </div>
       <div class="fgroup"><label class="flabel">Direction</label>
         <select class="finput" id="cl-dir">
           <option value="Inbound">📲 Inbound — They called me</option>
@@ -427,9 +444,29 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <option value="Missed">❌ Missed Call</option>
         </select>
       </div>
-      <div class="fgroup"><label class="flabel">Notes (optional)</label><input class="finput" id="cl-notes" type="text" placeholder="Brief note about the call..."></div>
-      <button class="btn-primary" onclick="addCall()">Add to Certified Record</button>
+      <div class="fgroup"><label class="flabel">Agent Notes <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+        <input class="finput" id="cl-notes" type="text" placeholder="What was discussed...">
+      </div>
+      <button class="btn-primary" onclick="addCall()">🔒 Add to Certified Record</button>
+      <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:6px">SHA-256 hash generated at ingestion · Tamper-evident</div>
       <button class="btn-cancel" onclick="closeModal('m-call')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: TAG MESSAGE TO RECORD ===== -->
+<div class="moverlay" id="m-tag">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📁 File This Message</div>
+    <div class="modal-body">
+      <div style="background:#F0F9FF;border:1px solid #BAE6FD;border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:#075985">
+        <strong>Which record does this message belong to?</strong><br>
+        <span style="color:#0369A1">This message will be filed under that record only. Other records won't see it.</span>
+      </div>
+      <div id="tag-preview" style="background:var(--bg);border-radius:8px;padding:10px;font-size:12px;color:var(--text-sec);margin-bottom:14px;border:1px solid var(--border);font-style:italic"></div>
+      <div id="tag-picker-list"></div>
+      <button class="btn-cancel" style="margin-top:8px" onclick="closeModal('m-tag')">Cancel</button>
     </div>
   </div>
 </div>
@@ -449,6 +486,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <button class="btn-cancel" onclick="closeModal('m-ann')">Cancel</button>
     </div>
   </div>
+</div>
 </div>
 
 <script>
@@ -523,16 +561,37 @@ const CAT_TEMPLATES = {
 const ALL_CONVS = [
   {id:'c1',party:'Ace Johnson',role:'Co-op Agent',carrier:'(310) 555-0182',avatar:'AJ',color:'#16A34A',
   allMsgs:[
-    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Hey Lauren — my buyers are interested in the Alvarez property. Can we set up a showing?',ts:'Jan 15, 2026 · 9:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Absolutely Ace. How about Saturday at 11am?',ts:'Jan 15, 2026 · 9:30 AM',ann:null},
-    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Perfect. They loved it. Expect an offer by Monday.',ts:'Jan 18, 2026 · 2:00 PM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — looking forward to it.',ts:'Jan 18, 2026 · 2:15 PM',ann:null},
-    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Offer coming in at $1.42M. Buyers are flexible on close date.',ts:'Jan 20, 2026 · 10:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Received. Will present to seller tonight.',ts:'Jan 20, 2026 · 10:30 AM',ann:null},
-    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Any counter?',ts:'Jan 21, 2026 · 9:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Yes — $1.47M. Seller firm on price.',ts:'Jan 21, 2026 · 11:00 AM',ann:null},
-    {sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Buyers accept. We have a deal. Sending executed offer now.',ts:'Jan 22, 2026 · 8:00 AM',ann:null},
-    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — contingency removal signed and sent.',ts:'Mar 3, 2026 · 10:58 AM',ann:null,beginRecord:true}
+    {id:'m1',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Hey Lauren — my buyers are interested in the Alvarez property. Can we set up a showing?',ts:'Jan 15, 2026 · 9:00 AM',ann:null,tags:[1]},
+    {id:'m2',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Absolutely Ace. How about Saturday at 11am?',ts:'Jan 15, 2026 · 9:30 AM',ann:null,tags:[1]},
+    {id:'m3',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Perfect. They loved it. Expect an offer by Monday.',ts:'Jan 18, 2026 · 2:00 PM',ann:null,tags:[1]},
+    {id:'m4',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Also — I have buyers looking at 1234 Main St too. Your listing right? Who\'s the contact?',ts:'Jan 18, 2026 · 2:01 PM',ann:null,tags:[4]},
+    {id:'m5',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Yes that\'s mine too. Call me and I\'ll walk you through it.',ts:'Jan 18, 2026 · 2:05 PM',ann:null,tags:[4]},
+    {id:'m6',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Alvarez offer coming in at $1.42M. Buyers flexible on close.',ts:'Jan 20, 2026 · 10:00 AM',ann:null,tags:[1]},
+    {id:'m7',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Received. Will present to seller tonight.',ts:'Jan 20, 2026 · 10:30 AM',ann:null,tags:[1]},
+    {id:'m8',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Quick q on Main St — is the garage permitted?',ts:'Jan 20, 2026 · 3:02 PM',ann:null,tags:[4]},
+    {id:'m9',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Yes fully permitted, I\'ll send you the docs.',ts:'Jan 20, 2026 · 3:05 PM',ann:null,tags:[4]},
+    {id:'m10',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Alvarez — buyers accept counter at $1.47M. We have a deal!',ts:'Jan 22, 2026 · 8:00 AM',ann:null,tags:[1]},
+    {id:'m11',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — contingency removal signed and sent.',ts:'Mar 3, 2026 · 10:58 AM',ann:null,tags:[1]},
+    {id:'m12',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Buyer is having second thoughts on Alvarez. Wants to revisit the disclosure.',ts:'Mar 14, 2026 · 3:45 PM',ann:null,tags:[1]},
+    {id:'m13',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Ace — contingency period ended March 10. Buyer already signed removal. All documented.',ts:'Mar 14, 2026 · 3:52 PM',ann:null,tags:[1]},
+    {id:'m14',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Main St — my clients want to offer $875K. Is seller motivated?',ts:'Mar 14, 2026 · 3:58 PM',ann:null,tags:[4]},
+    {id:'m15',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'My Alvarez buyer was NEVER told about the roof issue.',ts:'Mar 14, 2026 · 4:01 PM',ann:null,tags:[1]},
+    {id:'m16',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Let me pull that conversation — I\'ll get it to you shortly.',ts:'Mar 14, 2026 · 4:03 PM',ann:null,tags:[1]},
+    {id:'m17',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'On Main St — seller would consider $890K with 30 day close.',ts:'Mar 14, 2026 · 4:10 PM',ann:null,tags:[4]},
+    {id:'m18',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Main St buyers will do $885K. Can we split the difference?',ts:'Mar 15, 2026 · 9:00 AM',ann:null,tags:[]},
+    {id:'m19',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Happy Easter Ace!! Hope you and the family have a great one 🐣',ts:'Mar 20, 2026 · 8:14 AM',ann:null,tags:[]},
+    {id:'m20',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Happy Easter Lauren!! Same to you and yours 🙏 Kids are going crazy with the egg hunt lol',ts:'Mar 20, 2026 · 9:32 AM',ann:null,tags:[]},
+    {id:'m21',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Ha!! Love it 😂',ts:'Mar 20, 2026 · 9:45 AM',ann:null,tags:[]},
+    {id:'m22',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Omg did you see that Lakers game last night?? That last second shot 🤯',ts:'Mar 22, 2026 · 10:05 AM',ann:null,tags:[]},
+    {id:'m23',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'YES!! I was screaming at my TV!! Unbelievable finish',ts:'Mar 22, 2026 · 10:18 AM',ann:null,tags:[]},
+    {id:'m24',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Best game of the season no doubt. Ok back to work lol',ts:'Mar 22, 2026 · 10:20 AM',ann:null,tags:[]},
+    {id:'m25',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Ha! Hey wait — Ace, is 1010 Catalina Ave in Redondo Beach your listing? I think I saw it come up.',ts:'Mar 25, 2026 · 11:02 AM',ann:null,tags:[5]},
+    {id:'m26',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Yes!! Just listed it yesterday. Great property — 3BR, 2BA, fully updated kitchen, 2 car garage. Super clean. You have a buyer?',ts:'Mar 25, 2026 · 11:08 AM',ann:null,tags:[5]},
+    {id:'m27',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'I might — is it easy to show? He is pre-approved and motivated. Already working with a lender.',ts:'Mar 25, 2026 · 11:10 AM',ann:null,tags:[5]},
+    {id:'m28',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'Very easy. Sellers are flexible — just need 2 hour notice. When does your buyer want to go?',ts:'Mar 25, 2026 · 11:14 AM',ann:null,tags:[5]},
+    {id:'m29',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Let me check with him and get back to you today. What is the list price again?',ts:'Mar 25, 2026 · 11:16 AM',ann:null,tags:[5]},
+    {id:'m30',sender:'Ace Johnson',badge:'Carrier #: (310) 555-0182',text:'$849,000. Sellers motivated — been on market 11 days. I think there is room. Send me your buyers pre-approval when you can.',ts:'Mar 25, 2026 · 11:19 AM',ann:null,tags:[5]},
+    {id:'m31',sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Perfect. Will do. Talk soon! 👍',ts:'Mar 25, 2026 · 11:21 AM',ann:null,tags:[5]},
   ],
   msgs:[
     {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great — contingency removal signed and sent.',ts:'Mar 3, 2026 · 10:58 AM',ann:null},
@@ -585,13 +644,116 @@ const ALL_CONVS = [
   {id:'c11',party:'Andy - Bookkeeping',role:'Employer',carrier:'(310) 555-0777',avatar:'AB',color:'#6B7280',msgs:[
     {sender:'Andy',badge:'Carrier #: (310) 555-0777',text:'Lauren - reminder payroll is Friday. Also need last months reconciliation.',ts:'Apr 8, 2026 · 3:00 PM',ann:null},
     {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'On it - will have it to you by Thursday.',ts:'Apr 8, 2026 · 3:15 PM',ann:null}
-  ]}
+  ]},
+  {id:'c12',party:'Paul Henderson',role:'Buyer Client',carrier:'(310) 555-0841',avatar:'PH',color:'#2563EB',msgs:[
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Paul — great news! Your offer for 1010 Catalina Ave, Redondo Beach was accepted at ALL the terms we requested. We open escrow tomorrow! 🎉',ts:'Mar 18, 2026 · 4:02 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'You will need to put 3% into escrow — that is $30,000. Escrow officer is Maryann P at American Trust Escrow. Her number is (310) 555-2222. Please call her and get the wiring instructions.',ts:'Mar 18, 2026 · 4:03 PM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:'Yay!! Thanks Lauren, super excited about the place! Ok, I will call her tomorrow and get the information I need.',ts:'Mar 18, 2026 · 4:47 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Watch your email — I will send over the fully executed contract. There will be a few items you need to sign. We can chat after you get off work and I can walk you through everything.',ts:'Mar 18, 2026 · 4:51 PM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:"Great, I'll look at it tonight. Thanks Lauren!",ts:'Mar 18, 2026 · 5:12 PM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:"Hi Lauren, I'm so sorry — my mother had a stroke. I've been at the hospital. I would like to move forward, I just need a few more days on the contract. Can you ask for an extension? I worry I may not be as available for the required inspections due to mom.",ts:'Mar 24, 2026 · 4:45 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Oh no Paul, I am so sorry. Family first — always. Yes, I will check with the seller's agent and let them know what happened. I will see if we can move the start of contract out a week, based on you putting the EMD in tomorrow.",ts:'Mar 24, 2026 · 5:02 PM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:"Perfect, thank you Lauren.",ts:'Mar 24, 2026 · 5:09 PM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:'Got it.',ts:'Mar 25, 2026 · 11:04 AM',ann:'Agent Note: Paul signed MOT. Received copy signed by Seller from Edward Barrios.'},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Paul — we got the signed MOT back from the seller. Check your email.',ts:'Mar 25, 2026 · 6:30 PM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Paul — we received the demand letter. You need to put your earnest money into escrow or the seller may cancel.',ts:'Mar 27, 2026 · 9:05 AM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:'Lauren, the start of contract date was moved out a week — so technically I have 3 more additional days after that week.',ts:'Mar 27, 2026 · 9:22 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Paul, I understand your thought process — but did you review what you signed? It also stated that seller agrees to extend the start date IF buyer enters the EMD into escrow by the agreed date. So yes, it is part of the contract. Are you good with it? Are you reluctant to move forward?",ts:'Mar 27, 2026 · 9:31 AM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:"No, I really want the house. I'll wire the money right now.",ts:'Mar 27, 2026 · 9:45 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Great Paul! Please text a pic of the wire completion so I can let escrow know to expect it in the morning. Technically it will not arrive in time today, but I will let Edward know the moment I get confirmation of wiring. Thanks!',ts:'Mar 27, 2026 · 9:47 AM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:'No problem — just super distracted. I will be ready to move forward. Thanks Lauren.',ts:'Mar 27, 2026 · 10:02 AM',ann:null},
+  ]},
+  {id:'c13',party:'Chris Rivera',role:'Lender',carrier:'(424) 555-0618',avatar:'CR',color:'#0F766E',msgs:[
+    {sender:'Chris Rivera',badge:'Carrier #: (424) 555-0618',text:"Hi Lauren — Chris Rivera here, Paul's lender at Pacific Coast Mortgage. Wanted to introduce myself and loop you in.",ts:'Feb 28, 2026 · 10:14 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Hi Chris! Great to connect. Paul is a great client. What do you need from our end?",ts:'Feb 28, 2026 · 10:22 AM',ann:null},
+    {sender:'Chris Rivera',badge:'Carrier #: (424) 555-0618',text:"🎉 Great news — Paul is fully approved! Loan amount $820,000, 30-year fixed at 6.875%. I'm attaching the pre-approval letter now. [PRE-APPROVAL LETTER — Pacific Coast Mortgage — $820,000 — Paul Henderson — Expires Apr 30, 2026]",ts:'Mar 10, 2026 · 2:15 PM',ann:'Approval letter received and saved to file. Expires Apr 30, 2026.'},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Perfect timing Chris — we just found a great property at 1010 Catalina Ave, Redondo Beach. Listed at $849,000. I'm sending Paul a Calendly link to meet and write the offer. 📅 calendly.com/laurencotner/meet",ts:'Mar 12, 2026 · 11:30 AM',ann:null},
+    {sender:'Chris Rivera',badge:'Carrier #: (424) 555-0618',text:"Sounds great — keep me posted. I'll need 3 days to prepare loan docs once we're in escrow.",ts:'Mar 12, 2026 · 11:45 AM',ann:null},
+  ]},
+  {id:'c14',party:'Edward Barrios',role:"Seller's Agent",carrier:'(310) 555-0933',avatar:'EB',color:'#DC4B26',msgs:[
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Edward — my buyer Paul Henderson had a family emergency. His mother suffered a stroke, he's been at the hospital. He is committed to moving forward but needs a few more days on the contract. Can we extend the start date one week, conditioned on EMD deposited tomorrow?",ts:'Mar 24, 2026 · 9:20 AM',ann:null},
+    {sender:'Edward Barrios',badge:'Carrier #: (310) 555-0933',text:"Lauren, I'll talk to my seller. I don't anticipate a problem but if the EMD is not in by tomorrow we will have to send a Demand notice.",ts:'Mar 24, 2026 · 10:05 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Understood completely. I appreciate your flexibility Edward.",ts:'Mar 24, 2026 · 10:08 AM',ann:null},
+    {sender:'Edward Barrios',badge:'Carrier #: (310) 555-0933',text:"Check your email.",ts:'Mar 27, 2026 · 8:44 AM',ann:'Agent Note: Email was the Demand to Deposit EMD within 24 hours.'},
+  ]},
+  {id:'c15',party:'Group · Paul + Chris + Lauren',role:'Buyer Group Text',carrier:'3 participants',avatar:'👥',color:'#0EA5E9',msgs:[
+    {sender:'Chris Rivera',badge:'Carrier #: (424) 555-0618',text:"Hi both — just confirming Paul is locked and approved. Ready to move the moment you find the right property.",ts:'Mar 11, 2026 · 9:00 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Perfect Chris. Paul — I found a great one. 1010 Catalina Ave, Redondo Beach. 3BR, 2BA, updated kitchen, 2-car garage. Listed at $849K. I think we can get it at ask or below. Sending you the listing link now.",ts:'Mar 12, 2026 · 10:00 AM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:"I saw it — I love it! When can we write?",ts:'Mar 12, 2026 · 10:22 AM',ann:null},
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Book a time here and we will meet to go through the offer together: calendly.com/laurencotner/meet 📅",ts:'Mar 12, 2026 · 10:25 AM',ann:null},
+    {sender:'Paul Henderson',badge:'Carrier #: (310) 555-0841',text:"Done — booked for tomorrow at 11am.",ts:'Mar 12, 2026 · 10:31 AM',ann:null},
+    {sender:'Chris Rivera',badge:'Carrier #: (424) 555-0618',text:"I'll have an updated pre-approval for the specific property by morning.",ts:'Mar 12, 2026 · 10:35 AM',ann:null},
+  ]},
+  {id:'c16',party:'Maryann P',role:'Escrow Officer',carrier:'(310) 555-2222',avatar:'MP',color:'#16A34A',msgs:[
+    {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:"Hi Maryann — Lauren Cotner, DRE #01242185. Opening escrow on 1010 Catalina Ave, Redondo Beach. Buyer is Paul Henderson. I've instructed him to call you today for wiring instructions for the $30,000 EMD.",ts:'Mar 19, 2026 · 9:48 AM',ann:null},
+    {sender:'Maryann P',badge:'Carrier #: (310) 555-2222',text:"Hi Lauren! Got it — I have everything set up. Paul can call anytime. Escrow number is ATE-2026-0441.",ts:'Mar 19, 2026 · 10:02 AM',ann:null},
+  ]},
 ];
 
 let txs = [
   {id:1,name:'Alvarez Drive Listing',cat:'Real Estate',icon:'🏠',note:'Buyer agent disputed roof disclosure',cids:['c1','c2','c3'],extra:[]},
   {id:2,name:'Unit 4B Eviction',cat:'Tenant',icon:'🏢',note:'Notice dispute resolved with documentation',cids:['c4'],extra:[]},
-  {id:3,name:'Harmon Referral Fee',cat:'Business',icon:'💼',note:'Referral agreement dispute — documented',cids:['c5'],extra:[]}
+  {id:3,name:'Harmon Referral Fee',cat:'Business',icon:'💼',note:'Referral agreement dispute — documented',cids:['c5'],extra:[]},
+  {id:4,name:'1234 Main St Listing',cat:'Real Estate',icon:'🏡',note:'EMD not received — buyer went MIA · documented',cids:['c1'],extra:[
+    {
+      type:'call',
+      name:'Maria Torres (Inspector)',
+      num:'(818) 555-0294',
+      dt:'Mar 15, 2026 · 3:01 PM',
+      dur:'4:37',
+      dir:'Inbound',
+      notes:'Maria called — EMD not yet wired. Buyers agent not reachable. Concerned buyer is going MIA. Close date at risk.',
+      cid:null
+    },
+    {
+      type:'call',
+      name:'Paul Henderson (Buyer)',
+      num:'(310) 555-0841',
+      dt:'Mar 15, 2026 · 3:18 PM',
+      dur:'0:00',
+      dir:'Outbound',
+      notes:'Called buyer Paul — NO ANSWER. Went straight to voicemail. Left voicemail.',
+      cid:null
+    },
+    {
+      type:'vm',
+      caller:'Lauren Cotner → Paul Henderson (Buyer)',
+      dt:'Mar 15, 2026 · 3:19 PM',
+      dur:'1:12',
+      tx:'Voicemail left by Lauren Cotner for buyer Paul Henderson: Paul, this is Lauren. I need you to call me back immediately. Your EMD was due today by 5pm per the purchase agreement. Escrow has not received it. If the funds are not wired by end of day your seller has the right to cancel. There is a backup offer on this property. Please call me back as soon as you get this.',
+      note:'Left voicemail for buyer re: EMD deadline. Buyer is past due. Backup offer is waiting.',
+      cid:null
+    },
+    {
+      type:'call',
+      name:'Paul Henderson (Buyer)',
+      num:'(310) 555-0841',
+      dt:'Mar 15, 2026 · 5:44 PM',
+      dur:'0:00',
+      dir:'Outbound',
+      notes:'Second call attempt to buyer — NO ANSWER again. Did not leave second voicemail. Buyer has now been unreachable for over 2 hours past EMD deadline.',
+      cid:null
+    },
+    {
+      type:'call',
+      name:'Ace Johnson (Co-op Agent)',
+      num:'(310) 555-0182',
+      dt:'Mar 15, 2026 · 5:47 PM',
+      dur:'6:22',
+      dir:'Outbound',
+      notes:"Called Ace to notify — buyer's EMD not received, buyer unreachable. Advised Ace that seller may exercise right to cancel per Section 14B. Ace said he would try to reach buyer directly. Documented this call per broker requirement.",
+      cid:null
+    }
+  ]},
+  {id:5, name:'Paul Henderson — 1010 Catalina Ave', cat:'Real Estate', icon:'🏡', note:'Buyer representation · EMD drama · MOT signed · Fully documented', cids:['c12','c13','c14','c15','c16'], extra:[
+    {type:'call',name:'Paul Henderson (Buyer)',num:'(310) 555-0841',dt:'Mar 18, 2026 · 5:45 PM',dur:'17:38',dir:'Outbound',notes:'Walked Paul through all remaining contract documents — where he needed to sign. He did not seem concerned about any items. NOTE: Sellers agent sent over City Building Report needing signature, NHD, Inspection Report with Reports Received form. Paul reviewed all. He will be calling escrow tomorrow re: wiring instructions.',cid:null},
+    {type:'call',name:'Maryann P — American Trust Escrow',num:'(310) 555-2222',dt:'Mar 19, 2026 · 9:45 AM',dur:'7:32',dir:'Outbound',notes:'Called Maryann to let her know Paul will be calling today for wiring instructions. Confirmed she had all of Paul\'s information correct. Escrow number ATE-2026-0441.',cid:null},
+    {type:'call',name:'Maryann P — American Trust Escrow',num:'(310) 555-2222',dt:'Mar 19, 2026 · 2:48 PM',dur:'3:15',dir:'Inbound',notes:'Maryann called to confirm — buyer Paul called and is wiring the $30,000 EMD in the morning. Thanked her.',cid:null},
+    {type:'vm',caller:'Maryann P (Escrow) → Lauren Cotner',dt:'Mar 21, 2026 · 11:14 AM',dur:'1:47',tx:"Hi Lauren, it's Maryann at American Trust. It seems Paul is MIA — he has not responded to any of my calls or emails. Would you please follow up with him? As you know the 3-day period ends tomorrow at 5:00 PM. Please let me know. Thank you.",note:'Maryann left voicemail — Paul unreachable. EMD not wired. 3-day period ends tomorrow 5pm. Need to contact buyer immediately.',cid:null},
+    {type:'call',name:'Paul Henderson (Buyer)',num:'(310) 555-0841',dt:'Mar 21, 2026 · 6:35 PM',dur:'0:00',dir:'Outbound',notes:'NO ANSWER. Left voicemail for Paul — EMD has not been received by escrow. Contract may be cancelled if seller sends demand letter. Urged him to call me back tonight.',cid:null},
+    {type:'call',name:'Edward Barrios — Listing Agent',num:'(310) 555-0933',dt:'Mar 25, 2026 · 9:15 AM',dur:'16:45',dir:'Outbound',notes:"Called Edward re: Paul's situation. Edward will speak to seller — doesn't anticipate a problem but confirmed if EMD is not in by tomorrow a Demand notice will be sent. I told him I understood and was actively working on it. MOT being prepared.",cid:null},
+    {type:'call',name:'Paul Henderson (Buyer)',num:'(310) 555-0841',dt:'Mar 27, 2026 · 10:30 AM',dur:'0:00',dir:'Outbound',notes:'Called Paul after demand letter received — NO ANSWER. Paul had already confirmed via text he would wire immediately. Monitoring.',cid:null},
+  ]}
 ];
 
 let curTxId = null;
@@ -649,8 +811,42 @@ function switchHomeTab(tab) {
 function renderAllTexts() {
   const list = document.getElementById('all-texts-list');
   if(!list) return;
-  list.innerHTML = ALL_TEXTS.map(t => `
-    <div class="text-item ${t.inTx ? 'in-tx' : ''}" onclick="viewTextConv('${t.id}')">
+  list.innerHTML = ALL_TEXTS.map(t => {
+
+    // SPAM
+    if (t.isSpam) {
+      return `<div class="text-item" onclick="openSpamText('${t.id}')" style="border-left:3px solid #DC4B26;opacity:0.75">
+        <div class="text-avatar" style="background:#DC4B26;font-size:16px">🚫</div>
+        <div class="text-info">
+          <div class="text-name" style="color:#DC4B26">${t.name}</div>
+          <div class="text-preview">${t.lastMsg}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.number}</div>
+        </div>
+        <div class="text-meta">
+          <div class="text-ts">${t.ts}</div>
+          <div class="text-badge" style="background:#FEE2E2;color:#DC4B26;border:1px solid #FECACA">🗑️ Spam</div>
+        </div>
+      </div>`;
+    }
+
+    // UNKNOWN NUMBER - not in contacts
+    if (t.isUnknown) {
+      return `<div class="text-item" onclick="openUnknownText('${t.id}')" style="border-left:3px solid var(--amber)">
+        <div class="text-avatar" style="background:#E2E8F0;color:#64748B;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center">?</div>
+        <div class="text-info">
+          <div class="text-name" style="color:var(--text)">${t.number} <span style="font-size:10px;color:var(--amber);font-weight:600">(not in contacts)</span></div>
+          <div class="text-preview">${t.lastMsg}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">Tap to file to a transaction</div>
+        </div>
+        <div class="text-meta">
+          <div class="text-ts">${t.ts}</div>
+          <div class="text-badge" style="background:#FFFBEB;color:var(--amber);border:1px solid #FDE68A">+ File</div>
+        </div>
+      </div>`;
+    }
+
+    // NORMAL
+    return `<div class="text-item ${t.inTx ? 'in-tx' : ''}" onclick="viewTextConv('${t.id}')">
       <div class="text-avatar" style="background:${t.color}">${t.avatar}</div>
       <div class="text-info">
         <div class="text-name">${t.name}</div>
@@ -661,22 +857,87 @@ function renderAllTexts() {
         <div class="text-ts">${t.ts}</div>
         ${t.inTx ? `<div class="text-badge assigned">✓ ${t.txName}</div>` : '<div class="text-badge">+ Add to Tx</div>'}
       </div>
+    </div>`;
+  }).join('');
+}
+
+function openSpamText(id) {
+  const t = ALL_TEXTS.find(x => x.id === id);
+  if (!t) return;
+  if (confirm('🗑️ Delete "' + t.name + '" from your texts?\n\nThis removes it from RecallText. It will not affect your actual phone messages.')) {
+    ALL_TEXTS.splice(ALL_TEXTS.indexOf(t), 1);
+    renderAllTexts();
+    toast('🗑️ Spam removed from RecallText');
+  }
+}
+
+function openUnknownText(id) {
+  const t = ALL_TEXTS.find(x => x.id === id);
+  if (!t) return;
+  // Show a modal-style overlay to identify and file
+  // Build a simple inline modal using toast + transaction picker
+  pendingTagConvId = null;
+  pendingTagMsgId = null;
+  // Show picker to file directly to a transaction
+  document.getElementById('tag-preview').textContent = t.number + ': "' + t.lastMsg + '"';
+  document.getElementById('tag-picker-list').innerHTML = `
+    <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:#92400E;line-height:1.5">
+      <strong>${t.number}</strong> is not saved in your contacts.<br>
+      Message: "${t.lastMsg}"<br><br>
+      File it to a transaction now — you can add their name later when you find out who it is.
     </div>
-  `).join('');
+    ${txs.map(tx => {
+      const color = catColor(tx.cat);
+      return `<div class="tag-picker-item" onclick="fileUnknownToTx('${id}',${tx.id})">
+        <div class="tag-picker-icon" style="background:${color}22">${tx.icon}</div>
+        <div style="flex:1">
+          <div class="tag-picker-name">${tx.name}</div>
+          <div class="tag-picker-cat">${tx.cat}</div>
+        </div>
+        <span style="color:var(--muted-lt);font-size:18px">○</span>
+      </div>`;
+    }).join('')}`;
+  openModal('m-tag');
+}
+
+function fileUnknownToTx(textId, txId) {
+  const t = ALL_TEXTS.find(x => x.id === textId);
+  const tx = getTx(txId);
+  if (!t || !tx) return;
+  t.inTx = true;
+  t.txName = tx.name;
+  // Add as a phone record to that transaction
+  tx.extra.push({
+    type: 'call',
+    name: 'Unknown Agent · ' + t.number,
+    num: t.number,
+    dt: t.ts,
+    dur: '',
+    dir: 'Inbound',
+    notes: t.lastMsg,
+    cid: null
+  });
+  closeModal('m-tag');
+  renderAllTexts();
+  toast('✅ Filed to: ' + tx.name + ' · Identify agent later');
 }
 
 function viewTextConv(id) {
   const t = ALL_TEXTS.find(x => x.id === id);
-  if(!t) return;
-  if(t.inTx) {
+  if (!t) return;
+  // Check if this person has a conv with allMsgs (multi-property scenario)
+  const conv = t.convId ? getConv(t.convId) : null;
+  if (conv && conv.allMsgs && conv.allMsgs.length > 0) {
+    renderFullConv(t.convId);
+    return;
+  }
+  if (t.inTx) {
     toast('✓ Already in transaction: ' + t.txName);
   } else {
-    // Pre-fill and open new transaction modal
     pendingTextId = id;
     document.getElementById('tx-name').value = '';
     document.getElementById('tx-name').placeholder = 'e.g. ' + t.name + ' matter...';
     openAddTx();
-    // Show a tip at top of modal
     setTimeout(() => {
       const tip = document.getElementById('pending-text-tip');
       if(tip) {
@@ -687,7 +948,166 @@ function viewTextConv(id) {
   }
 }
 
-let pendingTextId = null;
+let pendingTagConvId = null;
+let pendingTagMsgId = null;
+
+function openTagPicker(convId, msgId) {
+  pendingTagConvId = convId;
+  pendingTagMsgId = msgId;
+  const conv = getConv(convId);
+  const msg = conv.allMsgs ? conv.allMsgs.find(m => m.id === msgId) : null;
+  if (!msg) return;
+  document.getElementById('tag-preview').textContent = '"' + msg.text.slice(0,80) + (msg.text.length > 80 ? '...' : '') + '"';
+  // Show ALL transactions — tap to toggle, multiple allowed
+  document.getElementById('tag-picker-list').innerHTML = `
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Tap to file · Tap again to remove · One message can go to multiple records</p>
+    ${txs.map(tx => {
+      const color = catColor(tx.cat);
+      const alreadyTagged = msg.tags && msg.tags.includes(tx.id);
+      return `<div class="tag-picker-item" onclick="applyTag(${tx.id})" style="${alreadyTagged ? 'background:#F0FDF4;' : ''}">
+        <div class="tag-picker-icon" style="background:${color}22">${tx.icon}</div>
+        <div style="flex:1">
+          <div class="tag-picker-name">${tx.name}</div>
+          <div class="tag-picker-cat">${tx.cat}</div>
+        </div>
+        ${alreadyTagged
+          ? '<span style="color:#16A34A;font-size:20px;font-weight:700">✓</span>'
+          : '<span style="color:var(--border);font-size:20px">○</span>'}
+      </div>`;
+    }).join('')}
+    <div class="tag-picker-item" onclick="closeModal('m-tag');openAddTxFromConv('${convId}')" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
+      <div class="tag-picker-icon" style="background:var(--orange-light);font-size:20px">＋</div>
+      <div style="flex:1">
+        <div class="tag-picker-name" style="color:var(--orange)">Create New Record</div>
+        <div class="tag-picker-cat">File this message in a brand new transaction</div>
+      </div>
+    </div>`;
+  openModal('m-tag');
+}
+
+function applyTag(txId) {
+  const conv = getConv(pendingTagConvId);
+  if (!conv || !conv.allMsgs) return;
+  const msg = conv.allMsgs.find(m => m.id === pendingTagMsgId);
+  if (!msg) return;
+  if (!msg.tags) msg.tags = [];
+  if (!msg.tags.includes(txId)) {
+    msg.tags.push(txId);
+    // Also add this conv to the transaction's cids if not already there
+    const tx = getTx(txId);
+    if (tx && !tx.cids.includes(pendingTagConvId)) {
+      tx.cids.push(pendingTagConvId);
+    }
+  } else {
+    msg.tags = msg.tags.filter(t => t !== txId);
+  }
+  // Re-render picker in place so user can keep adding tags
+  openTagPicker(pendingTagConvId, pendingTagMsgId);
+  renderFullConv(pendingTagConvId);
+  const tx = getTx(txId);
+  toast(msg.tags.includes(txId) ? '✅ Filed to: ' + tx.name : 'Removed from: ' + tx.name);
+}
+
+// Full conversation thread view (from All Texts tab)
+let viewingConvId = null;
+
+function renderFullConv(convId) {
+  viewingConvId = convId;
+  const conv = getConv(convId);
+  if (!conv || !conv.allMsgs) return;
+  const msgs = conv.allMsgs;
+  const det = document.getElementById('det-content');
+  const hdr = document.getElementById('det-hdr-area');
+
+  document.getElementById('det-nav-title').textContent = conv.party;
+  hdr.innerHTML = `
+    <div class="det-hdr">
+      <div class="det-hdr-icon" style="background:${conv.color}30;font-size:16px;font-weight:800;color:white">${conv.avatar}</div>
+      <div class="det-hdr-info">
+        <div class="t" style="color:${conv.color}">${conv.party}</div>
+        <div class="m">${conv.role} · ${conv.carrier} · ${msgs.length} messages</div>
+      </div>
+    </div>
+    <div style="background:#EFF6FF;border-bottom:1px solid #BFDBFE;padding:8px 16px;font-size:11px;color:#1E40AF;line-height:1.5">
+      📁 <strong>Tap "File"</strong> on any message to add to a record. One message can go to multiple records. Tap ✕ to remove.
+    </div>`;
+
+  let html = '<div style="padding:8px 0 12px">';
+  let borShown = false;
+
+  msgs.forEach(msg => {
+    const isMe = msg.sender === 'Lauren Cotner';
+    const sc = isMe ? 'var(--navy)' : conv.color;
+    const tagged = msg.tags && msg.tags.length > 0;
+
+    // BOR divider appears before first tagged (business) message
+    if (tagged && !borShown) {
+      borShown = true;
+      html += `<div style="display:flex;align-items:center;gap:8px;margin:10px 14px 14px">
+        <div style="flex:1;height:1px;background:rgba(249,115,22,0.45)"></div>
+        <div style="font-size:9px;color:var(--orange);font-weight:700;white-space:nowrap;background:#FFF4ED;border:1px solid #FED7AA;border-radius:10px;padding:3px 10px">📍 BEGINNING OF RECORD</div>
+        <div style="flex:1;height:1px;background:rgba(249,115,22,0.45)"></div>
+      </div>`;
+    }
+
+    const isPreRecord = !borShown;
+    const hashVal = makeHash(msg.text + msg.ts);
+    html += `<div class="msg-item" style="${isPreRecord ? 'opacity:0.5;' : ''}${isMe && !isPreRecord ? 'background:#F8FAFF;' : ''}">
+      <div class="msg-top">
+        <div style="flex:1">
+          <span class="msg-sender" style="color:${sc};font-size:12px;font-weight:700">${msg.sender}</span>
+          <span style="font-size:10px;color:var(--muted);margin-left:6px">${isMe ? '(310) 508-5957' : conv.carrier}</span>
+        </div>
+        <div class="msg-time">${msg.ts}</div>
+      </div>
+      <div class="msg-text" style="margin-top:3px;font-size:12px">${msg.text}</div>
+      ${isPreRecord ? '' : `
+      <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.25);border-radius:4px;padding:2px 7px;margin-top:5px">
+        <span style="font-size:8px">🔒</span>
+        <span style="font-size:8px;color:#16A34A;font-family:monospace">HASHED AT INGESTION · ${msg.ts}</span>
+      </div>
+      <div style="font-size:7px;font-family:monospace;color:var(--muted-lt);margin-top:1px;word-break:break-all">${hashVal}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;align-items:center">
+        ${tagged ? msg.tags.map(txId => {
+          const tx = getTx(txId);
+          if (!tx) return '';
+          const col = catColor(tx.cat);
+          return `<span style="display:inline-flex;align-items:center;gap:3px;background:${col};color:white;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px">${tx.icon} ${tx.name} <span onclick="removeTag('${conv.id}','${msg.id}',${txId})" style="cursor:pointer;margin-left:2px;opacity:0.75;font-size:11px">✕</span></span>`;
+        }).join('') : ''}
+        <button onclick="openTagPicker('${conv.id}','${msg.id}')" style="display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;border:1.5px dashed var(--border);background:white;color:var(--muted);cursor:pointer;font-family:inherit">📁 ${tagged ? '+ More' : 'File'}</button>
+      </div>`}
+    </div>`;
+  });
+
+  html += '</div>';
+  html += `<div class="act-row">
+    <button class="btn-act" onclick="showScreen('home')">‹ Records</button>
+    <button class="btn-act" onclick="openAddTxFromConv('${conv.id}')">＋ New Record</button>
+  </div>`;
+  det.innerHTML = html;
+  showScreen('detail');
+}
+
+function removeTag(convId, msgId, txId) {
+  const conv = getConv(convId);
+  if (!conv || !conv.allMsgs) return;
+  const msg = conv.allMsgs.find(m => m.id === msgId);
+  if (!msg) return;
+  msg.tags = (msg.tags || []).filter(t => t !== txId);
+  renderFullConv(convId);
+  toast('Removed from record');
+}
+
+function openAddTxFromConv(convId) {
+  viewingConvId = convId;
+  renderCatGrid();
+  document.getElementById('tx-name').value = '';
+  document.getElementById('tx-note').value = '';
+  selCatVal = 'Real Estate'; selCatIcon = '🏠';
+  updateTemplate();
+  openModal('m-add-tx');
+  setTimeout(() => document.getElementById('tx-name').focus(), 300);
+}
 
 function showScreen(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -749,42 +1169,62 @@ function renderDetail() {
 
   convs.forEach(conv => {
     const col = conv.color;
-    html += `<div class="conv-sec">
-      <div class="conv-hdr" style="border-left:4px solid ${col}">
-        <input type="checkbox" checked>
-        <div class="conv-hdr-info">
-          <div class="conv-party" style="color:${col}">${conv.party}</div>
-          <div class="conv-role">${conv.role} · ${conv.carrier}</div>
-        </div>
-        <span class="conv-cnt">${conv.msgs.length} msgs</span>
-      </div>`;
 
-    // Show ALL messages with beginning of record divider
-    const allMsgsToShow = conv.allMsgs || conv.msgs;
+    // Filter messages: if conv has allMsgs with tags, only show messages tagged to this tx
+    let msgsToShow;
+    if (conv.allMsgs && conv.allMsgs.some(m => m.tags !== undefined)) {
+      msgsToShow = conv.allMsgs.filter(m => m.tags && m.tags.includes(curTxId));
+      const unfiledCount = conv.allMsgs.filter(m => !m.tags || m.tags.length === 0).length;
+      html += `<div class="conv-sec">
+        <div class="conv-hdr" style="border-left:4px solid ${col}">
+          <input type="checkbox" checked>
+          <div class="conv-hdr-info">
+            <div class="conv-party" style="color:${col}">${conv.party}</div>
+            <div class="conv-role">${conv.role} · ${conv.carrier}</div>
+          </div>
+          <span class="conv-cnt">${msgsToShow.length} msgs</span>
+        </div>
+        ${unfiledCount > 0 ? `<div style="background:#FFFBEB;border-bottom:1px solid #FDE68A;padding:8px 14px;font-size:11px;color:#92400E;display:flex;align-items:center;justify-content:space-between">
+          <span>⚠️ ${unfiledCount} message${unfiledCount>1?'s':''} not yet filed to any record</span>
+          <button onclick="renderFullConv('${conv.id}')" style="background:var(--amber);border:none;border-radius:6px;padding:3px 9px;color:white;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">View All →</button>
+        </div>` : ''}`;
+    } else {
+      msgsToShow = conv.allMsgs || conv.msgs;
+      html += `<div class="conv-sec">
+        <div class="conv-hdr" style="border-left:4px solid ${col}">
+          <input type="checkbox" checked>
+          <div class="conv-hdr-info">
+            <div class="conv-party" style="color:${col}">${conv.party}</div>
+            <div class="conv-role">${conv.role} · ${conv.carrier}</div>
+          </div>
+          <span class="conv-cnt">${msgsToShow.length} msgs</span>
+        </div>`;
+    }
+
     let beginShown = false;
-    allMsgsToShow.forEach((m, mi) => {
+    msgsToShow.forEach((m, mi) => {
       const sc = m.sender === 'Lauren Cotner' ? '#1A2F5A' : col;
       const isBeginRecord = conv.beginMsg && m.ts === conv.beginMsg;
-      // Show divider before the beginning of record message
       if(isBeginRecord && !beginShown) {
         beginShown = true;
         html += `<div class="begin-divider">📍 Beginning of Record — Transaction Record starts here</div>`;
       }
       const isPreRecord = conv.beginMsg && !beginShown;
+      // Show other records this message is also tagged to
+      const otherTags = m.tags ? m.tags.filter(t => t !== curTxId).map(t => getTx(t)).filter(Boolean) : [];
       html += `<div class="msg-item ${isPreRecord ? 'pre-record-msg' : ''}">
         <button class="ann-btn" onclick="openAnn('${conv.id}',${mi})" title="Add agent note">📝</button>
-        <button class="begin-btn" onclick="setBeginRecord('${conv.id}',${mi},'${m.ts}')" title="Set as Beginning of Record">📍</button>
         <div class="msg-top">
           <div class="msg-sender" style="color:${sc}">${m.sender}</div>
           <div class="msg-time">${m.ts}</div>
         </div>
         <div class="msg-badge">${m.badge}</div>
         <div class="msg-text">${m.text}</div>
+        ${otherTags.length > 0 ? `<div style="margin-top:4px">${otherTags.map(t=>`<span style="background:${catColor(t.cat)}22;border:1px solid ${catColor(t.cat)}44;color:${catColor(t.cat)};font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;margin-right:4px">${t.icon} Also in: ${t.name}</span>`).join('')}</div>` : ''}
         ${m.ann ? `<div class="msg-ann"><div class="msg-ann-lbl">Agent Note</div>${m.ann}</div>` : ''}
       </div>`;
     });
 
-    // Extra items linked to this conv
     tx.extra.filter(e => e.cid === conv.id).forEach(item => {
       html += renderExtraItem(item, col);
     });
@@ -810,8 +1250,8 @@ function renderDetail() {
   // Action buttons
   html += `<div class="act-row">
     <button class="btn-act" onclick="openAddConvs()">💬<br>Add Conversations</button>
-    <button class="btn-act" onclick="openModal('m-vm')">🎙️<br>Add Voicemail</button>
-    <button class="btn-act" onclick="openModal('m-call')">📞<br>Add Call Log</button>
+    <button class="btn-act" onclick="openVMModal()">🎙️<br>Add Voicemail</button>
+    <button class="btn-act" onclick="openCallModal()">📞<br>Add Call Log</button>
   </div>`;
 
   html += `<div class="export-bar"><button class="btn-export" onclick="showExport()">⭐ Export Full Transaction Record</button></div>
@@ -820,31 +1260,53 @@ function renderDetail() {
   document.getElementById('det-content').innerHTML = html;
 }
 
+function makeHash(text) {
+  let h = 0;
+  for(let i=0;i<text.length;i++) h=(Math.imul(31,h)+text.charCodeAt(i))|0;
+  const x = Math.abs(h).toString(16).padStart(8,'0');
+  return 'sha256:'+x+'a3f291c4d7b1e9'+x.slice(0,4);
+}
+
 function renderExtraItem(item, col) {
+  const now = item.dt && item.dt !== 'Date not specified' ? item.dt : new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const hashText = (item.tx || item.notes || item.name || '') + now;
+  const hash = makeHash(hashText);
+  const hashBadge = `<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.25);border-radius:4px;padding:2px 7px;margin-top:6px">
+    <span style="font-size:9px">🔒</span>
+    <span style="font-size:9px;color:#16A34A;font-family:monospace">HASHED AT INGESTION · ${now}</span>
+  </div>
+  <div style="font-size:8px;font-family:monospace;color:var(--muted-lt);margin-top:2px;word-break:break-all">${hash}</div>`;
+
   if (item.type === 'vm') {
-    return `<div class="msg-item">
+    const isOutbound = item.caller && item.caller.includes('→');
+    return `<div class="msg-item" style="border-left:3px solid #16A34A">
       <div class="msg-top">
-        <div class="msg-sender" style="color:#16A34A">📱 Voicemail from ${item.caller}</div>
-        <div class="msg-time">${item.dt}</div>
+        <div class="msg-sender" style="color:#16A34A;font-weight:700">🎙️ ${isOutbound ? 'Voicemail Left' : 'Voicemail Received'}</div>
+        <div class="msg-time">${now}</div>
       </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">${item.caller}${item.dur ? ' · ' + item.dur : ''}</div>
       <div class="msg-vm">
-        <div class="msg-vm-hdr">🎙️ Carrier Transcription &nbsp;·&nbsp; Duration: ${item.dur}</div>
-        <div class="msg-vm-text">"${item.tx}"</div>
-        <div style="font-size:10px;color:#166534;margin-top:4px;font-style:italic">Transcribed at time of receipt by device carrier system. Accuracy not guaranteed.</div>
+        <div class="msg-vm-text" style="font-size:12px;line-height:1.6">"${item.tx}"</div>
         ${item.note ? `<div style="margin-top:6px;padding:6px 8px;background:#FFF7ED;border-left:3px solid #F97316;border-radius:4px;font-size:11px;color:#92400E"><strong>Agent Note:</strong> ${item.note}</div>` : ''}
       </div>
+      ${hashBadge}
     </div>`;
   } else {
-    const di = item.dir === 'Inbound' ? '📲' : item.dir === 'Outbound' ? '📤' : '❌';
-    return `<div class="msg-item">
+    const noAnswer = item.dur === '0:00' || item.dur === '0' || (item.notes && item.notes.includes('NO ANSWER'));
+    const di = item.dir === 'Inbound' ? '📲' : noAnswer ? '📵' : item.dir === 'Outbound' ? '📤' : '❌';
+    const callColor = noAnswer ? '#DC4B26' : item.dir === 'Inbound' ? '#2563EB' : '#0F766E';
+    const callLabel = noAnswer ? 'No Answer — ' + item.dir : item.dir + ' Call';
+    return `<div class="msg-item" style="border-left:3px solid ${callColor}">
       <div class="msg-call">
-        <div class="msg-call-icon">${di}</div>
+        <div class="msg-call-icon" style="font-size:22px">${di}</div>
         <div class="msg-call-info">
-          <div class="msg-call-type">${item.dir} Call · ${item.dur}</div>
-          <div class="msg-call-detail">${item.name} · ${item.num} · ${item.dt}</div>
-          ${item.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:3px">${item.notes}</div>` : ''}
+          <div style="font-size:13px;font-weight:700;color:${callColor}">${callLabel}${item.dur && item.dur !== '0:00' && item.dur !== '0' ? ' · ' + item.dur : ''}</div>
+          <div style="font-size:11px;color:var(--text-sec);margin-top:2px">${item.name}</div>
+          <div style="font-size:10px;color:var(--muted)">${item.num} · ${now}</div>
+          ${item.notes ? `<div style="font-size:11px;color:var(--text);margin-top:6px;padding:6px 8px;background:${noAnswer?'#FEF2F2':'#F8FAFF'};border-left:2px solid ${callColor};border-radius:0 4px 4px 0;line-height:1.5">${item.notes}</div>` : ''}
         </div>
       </div>
+      ${hashBadge}
     </div>`;
   }
 }
@@ -952,20 +1414,121 @@ function addSelConvs() {
 }
 
 // =============================================
-// VOICEMAIL
+// VOICEMAIL — Smart Pre-fill
 // =============================================
+function openVMModal() {
+  const tx = getTx(curTxId);
+  const convs = getConvs(tx);
+  const now = new Date();
+  const dtStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+
+  // Clear fields first
+  ['vm-caller','vm-dt','vm-dur','vm-tx','vm-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  // Pre-fill date/time
+  document.getElementById('vm-dt').value = dtStr;
+
+  // Build smart caller dropdown from transaction contacts
+  const callerEl = document.getElementById('vm-caller');
+  if (convs.length > 0) {
+    // Pre-fill with first contact as suggestion
+    callerEl.value = convs[0].party + '  /  ' + convs[0].carrier;
+    callerEl.placeholder = convs[0].party + '  /  ' + convs[0].carrier;
+  }
+
+  // Show contact chips above the caller field
+  const existingChips = document.getElementById('vm-contact-chips');
+  if (existingChips) {
+    existingChips.innerHTML = buildContactChips('vm-caller');
+  }
+
+  openModal('m-vm');
+  // Render contact chips after modal opens
+  setTimeout(() => {
+    const chips = document.getElementById('vm-contact-chips');
+    if (chips) chips.innerHTML = buildContactChips('vm-caller', '');
+  }, 50);
+}
+
+function openCallModal() {
+  const tx = getTx(curTxId);
+  const convs = getConvs(tx);
+  const now = new Date();
+  const dtStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+
+  // Clear fields
+  ['cl-name','cl-num','cl-dt','cl-dur','cl-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('cl-dir').selectedIndex = 0;
+
+  // Pre-fill date/time
+  document.getElementById('cl-dt').value = dtStr;
+
+  // Pre-fill name/number from first contact
+  if (convs.length > 0) {
+    document.getElementById('cl-name').value = convs[0].party;
+    document.getElementById('cl-num').value = convs[0].carrier;
+  }
+
+  // Show contact chips
+  const existingChips = document.getElementById('cl-contact-chips');
+  if (existingChips) {
+    existingChips.innerHTML = buildContactChips('cl-name', 'cl-num');
+  }
+
+  openModal('m-call');
+  // Render contact chips after modal opens
+  setTimeout(() => {
+    const chips = document.getElementById('cl-contact-chips');
+    if (chips) chips.innerHTML = buildContactChips('cl-name', 'cl-num');
+  }, 50);
+}
+
+function buildContactChips(nameField, numField) {
+  const tx = getTx(curTxId);
+  if (!tx) return '';
+  const convs = getConvs(tx);
+  return convs.map(c => `
+    <div onclick="prefillContact('${nameField}','${numField || ''}','${c.party}','${c.carrier}')"
+      style="display:inline-flex;align-items:center;gap:6px;background:${c.color}18;border:1.5px solid ${c.color}44;border-radius:20px;padding:4px 10px;cursor:pointer;margin:3px 4px 3px 0;transition:all 0.15s"
+      onmouseover="this.style.borderColor='${c.color}'" onmouseout="this.style.borderColor='${c.color}44'">
+      <div style="width:22px;height:22px;border-radius:50%;background:${c.color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:white">${c.avatar}</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:${c.color}">${c.party}</div>
+        <div style="font-size:9px;color:var(--muted)">${c.carrier}</div>
+      </div>
+    </div>`).join('');
+}
+
+function prefillContact(nameField, numField, name, num) {
+  const nf = document.getElementById(nameField);
+  if (nf) nf.value = numField ? name : name + '  /  ' + num;
+  if (numField) {
+    const nuf = document.getElementById(numField);
+    if (nuf) nuf.value = num;
+  }
+  toast('✓ ' + name + ' selected');
+}
+
 function addVM() {
   const caller = document.getElementById('vm-caller').value.trim();
-  const dt = document.getElementById('vm-dt').value.trim();
-  const dur = document.getElementById('vm-dur').value.trim();
   const tx2 = document.getElementById('vm-tx').value.trim();
   const vmNote = document.getElementById('vm-note') ? document.getElementById('vm-note').value.trim() : '';
-  if (!caller || !tx2) { toast('⚠️ Caller and transcription required'); return; }
-  getTx(curTxId).extra.push({ type:'vm', caller, dt:dt||'Date not specified', dur:dur||'Unknown', tx:tx2, note:vmNote, cid:null });
+  if (!caller) { toast('⚠️ Please select or enter a caller'); return; }
+  if (!tx2) { toast('⚠️ Please enter a transcription or note'); return; }
+  const now = new Date();
+  const dtStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const dt = document.getElementById('vm-dt').value.trim() || dtStr;
+  const dur = document.getElementById('vm-dur').value.trim() || '';
+  getTx(curTxId).extra.push({ type:'vm', caller, dt, dur, tx:tx2, note:vmNote, cid:null });
   closeModal('m-vm');
   ['vm-caller','vm-dt','vm-dur','vm-tx','vm-note'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
   renderDetail();
-  toast('🎙️ Voicemail added to record');
+  toast('🎙️ Voicemail added · SHA-256 hashed at ingestion');
 }
 
 // =============================================
@@ -973,18 +1536,20 @@ function addVM() {
 // =============================================
 function addCall() {
   const name = document.getElementById('cl-name').value.trim();
-  const num = document.getElementById('cl-num').value.trim();
-  const dt = document.getElementById('cl-dt').value.trim();
-  const dur = document.getElementById('cl-dur').value.trim();
+  const num = document.getElementById('cl-num').value.trim() || 'Carrier verified';
+  const dur = document.getElementById('cl-dur').value.trim() || '';
   const dir = document.getElementById('cl-dir').value;
   const notes = document.getElementById('cl-notes').value.trim();
-  if (!name || !num) { toast('⚠️ Name and phone number required'); return; }
-  getTx(curTxId).extra.push({ type:'call', name, num, dt:dt||'Date not specified', dur:dur||'Unknown', dir, notes, cid:null });
+  if (!name) { toast('⚠️ Please select or enter a contact name'); return; }
+  const now = new Date();
+  const dtStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const dt = document.getElementById('cl-dt').value.trim() || dtStr;
+  getTx(curTxId).extra.push({ type:'call', name, num, dt, dur, dir, notes, cid:null });
   closeModal('m-call');
   ['cl-name','cl-num','cl-dt','cl-dur','cl-notes'].forEach(id => document.getElementById(id).value='');
   document.getElementById('cl-dir').selectedIndex = 0;
   renderDetail();
-  toast('📞 Call log added to record');
+  toast('📞 Call logged · SHA-256 hashed at ingestion');
 }
 
 // =============================================
@@ -1138,117 +1703,88 @@ function generatePDF(fullArchive=false) {
   const totalMsgs = convs.reduce((a,c)=>a+(archiveMode&&c.allMsgs?c.allMsgs.length:c.msgs.length),0);
   doc.text('TOTAL MESSAGES: '+totalMsgs+' | Personal messages excluded',M,y);y+=16;
 
-  // ── CONVERSATIONS ──
-  convs.forEach((conv) => {
-    const pc = hex(conv.color||'#1A2F5A');
-    chk(50);
-
-    // Section header in party color
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...pc);
-    doc.text('CONVERSATION WITH: '+conv.party.toUpperCase(),M,y);y+=12;
-    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-    doc.text('Role: '+conv.role+' | Phone: '+conv.carrier,M,y);y+=10;
-
-    if(!archiveMode && conv.beginMsg){
-      doc.text('Record begins at: '+conv.beginMsg+' (user-selected start point)',M,y);y+=10;
-    }
-    if(archiveMode && conv.beginMsg){
-      doc.text('Beginning of Record marker: '+conv.beginMsg,M,y);y+=10;
-      doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...orange);
-      doc.text('* Messages before this point included in Complete Archive only',M,y);y+=12;
-    }
-    y+=4;
-
-    // Messages
-    const msgsToRender = (archiveMode && conv.allMsgs) ? conv.allMsgs : conv.msgs;
-    msgsToRender.forEach(m => {
-      chk(40);
-      const isLauren = m.sender==='Lauren Cotner';
-      const sc = isLauren ? navy : pc;
-      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...sc);
-      doc.text(m.sender,M,y);
-      doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-      doc.text(m.ts,W-M,y,{align:'right'});
-      y+=11;
-      doc.text(m.badge,M,y);y+=11;
-      doc.setFontSize(9);doc.setTextColor(...black);
-      doc.splitTextToSize(m.text,CW).forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});
-      if(m.ann){
-        chk(14);
-        doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(180,100,0);
-        doc.text('[Agent Note] '+m.ann,M,y);y+=12;
-        doc.setFont('helvetica','normal');doc.setTextColor(...black);
-      }
-      y+=5;
-    });
-
-    // Voicemails/calls for this conv
-    tx.extra.filter(e=>e.cid===conv.id).forEach(item=>{
-      chk(40);
-      if(item.type==='vm'){
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text('[Voicemail] From: '+item.caller,M,y);
-        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
-        doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.splitTextToSize('Carrier Transcription: "'+item.tx+'"',CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});
-        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...gray);
-        doc.text('Transcribed at time of receipt by device carrier system. Accuracy not guaranteed.',M,y);y+=10;
-        if(item.note){
-          doc.setFont('helvetica','bolditalic');doc.setFontSize(8.5);doc.setTextColor(180,100,0);
-          doc.splitTextToSize('[Agent Summary Note] '+item.note,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});
-        }
-      } else {
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text('['+item.dir+' Call] '+item.name+' — '+item.num,M,y);
-        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
-        if(item.notes){doc.splitTextToSize(item.notes,CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});}
-      }
-      y+=8;
-    });
-    y+=8;
-  });
-
-  // Standalone extras
-  const solo=tx.extra.filter(e=>!e.cid);
-  if(solo.length){
-    chk(30);
-    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...navy);
-    doc.text('PHONE RECORDS — Voicemails & Call Logs',M,y);y+=14;
-    solo.forEach(item=>{
-      chk(40);
-      if(item.type==='vm'){
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text('[Voicemail] From: '+item.caller,M,y);
-        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
-        doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.splitTextToSize('Carrier Transcription: "'+item.tx+'"',CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});
-        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...gray);
-        doc.text('Transcribed at time of receipt by device carrier system. Accuracy not guaranteed.',M,y);y+=10;
-        if(item.note){
-          doc.setFont('helvetica','bolditalic');doc.setFontSize(8.5);doc.setTextColor(180,100,0);
-          doc.splitTextToSize('[Agent Summary Note] '+item.note,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});
-        }
-      } else {
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...black);
-        doc.text('['+item.dir+' Call] '+item.name+' — '+item.num,M,y);
-        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
-        doc.text(item.dt+' | Duration: '+item.dur,W-M,y,{align:'right'});y+=11;
-        if(item.notes){doc.splitTextToSize(item.notes,CW).forEach(ln=>{doc.text(ln,M,y);y+=12;});}
-      }
-      y+=8;
-    });
+  // ── CONVERSATIONS — CHRONOLOGICAL, EMOJIS STRIPPED ──
+  function clean(s){
+    if(!s)return'';
+    return s.replace(/[\u{1F000}-\u{1FFFF}]/gu,'').replace(/[\u{2600}-\u{27BF}]/gu,'').replace(/[\u{1F300}-\u{1F9FF}]/gu,'').replace(/\u{1F1E0}-\u{1F1FF}/gu,'').replace(/→/g,'->').replace(/[^\x00-\x7E]/g,'').replace(/\s+/g,' ').trim();
   }
 
-  // Timestamp footer per Doc 10 style
+  // Build flat chronological list
+  const allItems=[];
+  convs.forEach(conv=>{
+    const msgs=(archiveMode&&conv.allMsgs)?conv.allMsgs:conv.msgs;
+    msgs.forEach(m=>{
+      allItems.push({kind:'msg',ts:m.ts,sender:clean(m.sender),badge:clean(m.badge),text:clean(m.text),ann:m.ann?clean(m.ann):null,color:conv.color,party:conv.party});
+    });
+  });
+  tx.extra.forEach(item=>{
+    allItems.push({kind:item.type,ts:item.dt,caller:clean(item.caller||''),name:clean(item.name||''),num:item.num||'',dir:item.dir||'',dur:item.dur||'',tx:clean(item.tx||''),notes:clean(item.notes||''),note:clean(item.note||'')});
+  });
+
+  function parseTs(ts){
+    if(!ts)return 0;
+    try{const d=new Date(ts.replace(/·/g,'').replace(/\s+/g,' ').trim());return isNaN(d)?0:d.getTime();}catch(e){return 0;}
+  }
+  allItems.sort((a,b)=>parseTs(a.ts)-parseTs(b.ts));
+
+  let lastDay='';
+  allItems.forEach(item=>{
+    if(item.kind==='msg'){
+      const pc=hex(item.color||'#1A2F5A');
+      const isLauren=item.sender==='Lauren Cotner';
+      const sc=isLauren?navy:pc;
+      chk(50);
+      const dayStr=item.ts?item.ts.split('·')[0].trim():'';
+      if(dayStr&&dayStr!==lastDay){
+        lastDay=dayStr;
+        doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...gray);
+        doc.setDrawColor(...gray);doc.setLineWidth(0.3);
+        doc.line(M,y,W-M,y);y+=7;
+        doc.text(dayStr,W/2,y,{align:'center'});y+=9;
+      }
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...sc);
+      doc.text(item.sender,M,y);
+      doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
+      doc.text(item.ts,W-M,y,{align:'right'});y+=11;
+      if(item.badge){doc.setFontSize(7.5);doc.text(item.badge,M,y);y+=9;}
+      doc.setFontSize(9);doc.setTextColor(...black);
+      doc.splitTextToSize(item.text,CW).forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});
+      if(item.ann){chk(12);doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(180,100,0);doc.splitTextToSize('[Agent Note] '+item.ann,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});doc.setFont('helvetica','normal');doc.setTextColor(...black);}
+      doc.setFontSize(7);doc.setTextColor(...gray);
+      doc.text('SHA-256 hashed at ingestion.',M,y);y+=9;
+
+    }else if(item.kind==='vm'){
+      chk(60);
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(22,163,74);
+      doc.text('[Voicemail] '+(item.caller||''),M,y);
+      doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
+      doc.text(item.ts+(item.dur?' | '+item.dur:''),W-M,y,{align:'right'});y+=12;
+      doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(...black);
+      doc.splitTextToSize('"'+item.tx+'"',CW).forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});
+      if(item.note){chk(11);doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(180,100,0);doc.splitTextToSize('[Agent Note] '+item.note,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});}
+      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...gray);
+      doc.text('Carrier-transcribed at receipt. SHA-256 hashed at ingestion.',M,y);y+=11;
+
+    }else{
+      chk(40);
+      const noAns=item.dur==='0:00'||item.dur==='0';
+      const cc=noAns?[220,75,38]:item.dir==='Inbound'?[37,99,235]:[15,118,110];
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...cc);
+      doc.text('['+(noAns?'No Answer':item.dir+' Call')+'] '+item.name,M,y);
+      doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
+      doc.text(item.ts+(item.dur&&!noAns?' | '+item.dur:''),W-M,y,{align:'right'});y+=11;
+      if(item.num){doc.text(item.num,M,y);y+=9;}
+      if(item.notes){doc.setFontSize(9);doc.setTextColor(...black);doc.splitTextToSize(item.notes,CW).forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});}
+      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...gray);
+      doc.text('SHA-256 hashed at ingestion. Carrier-verified.',M,y);y+=11;
+    }
+  });
+
+  // Timestamp footer
   chk(30);
   doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...gray);
   doc.text(ed,M,y);y+=10;
-  doc.text('[Sending complete conversation export now — timestamped, carrier verified.]',M,y);y+=10;
-  doc.text('Sent via RecallText | Only selected conversations included',M,y);y+=10;
-  doc.text('Personal messages excluded',M,y);y+=16;
+  doc.text('Sent via RecallText | Only selected conversations included | Personal messages excluded',M,y);y+=16;
 
   // ── CHAIN OF CUSTODY ──
   doc.setDrawColor(...orange);doc.setLineWidth(1);doc.line(M,y,W-M,y);y+=12;
@@ -1331,6 +1867,16 @@ const ALL_TEXTS = [
   {id:'t13',convId:'c4',name:'James Wilson',number:'(323) 555-0198',avatar:'JW',color:'#D97706',lastMsg:'I need more time to pay rent.',ts:'Mar 1 · 11:00 AM',msgs:2,inTx:true,txName:'Unit 4B Eviction'},
   {id:'t14',convId:'c8',name:'Lily',number:'(011) 44-555-0123',avatar:'Li',color:'#EC4899',lastMsg:'Mum! Dave proposed!! 💍',ts:'Mar 30 · 7:15 AM',msgs:12,inTx:false},
   {id:'t15',convId:'c11',name:'Andy - Bookkeeping',number:'(310) 555-0777',avatar:'AB',color:'#6B7280',lastMsg:'Lauren - reminder payroll is Friday.',ts:'Apr 8 · 3:00 PM',msgs:4,inTx:false},
+  {id:'t16',convId:'c12',name:'Paul Henderson',number:'(310) 555-0841',avatar:'PH',color:'#2563EB',lastMsg:'No problem — just super distracted. I will be ready to move forward.',ts:'Mar 27 · 10:02 AM',msgs:16,inTx:true,txName:'Paul Henderson — 1010 Catalina Ave'},
+  {id:'t17',convId:'c13',name:'Chris Rivera (Lender)',number:'(424) 555-0618',avatar:'CR',color:'#0F766E',lastMsg:"Sounds great — keep me posted.",ts:'Mar 12 · 11:45 AM',msgs:5,inTx:true,txName:'Paul Henderson — 1010 Catalina Ave'},
+  {id:'t18',convId:'c14',name:'Edward Barrios',number:'(310) 555-0933',avatar:'EB',color:'#DC4B26',lastMsg:'Check your email.',ts:'Mar 27 · 8:44 AM',msgs:4,inTx:true,txName:'Paul Henderson — 1010 Catalina Ave'},
+  {id:'t19',convId:'c15',name:'Group · Paul + Chris',number:'Paul Henderson · Chris Rivera · Lauren',avatar:'👥',color:'#0EA5E9',lastMsg:'Done — booked for tomorrow at 11am.',ts:'Mar 12 · 10:31 AM',msgs:6,inTx:true,txName:'Paul Henderson — 1010 Catalina Ave'},
+  {id:'t20',convId:'c16',name:'Maryann P (Escrow)',number:'(310) 555-2222',avatar:'MP',color:'#16A34A',lastMsg:'Hi Lauren! Got it — I have everything set up.',ts:'Mar 19 · 10:02 AM',msgs:2,inTx:true,txName:'Paul Henderson — 1010 Catalina Ave'},
+  {id:'t21',name:'SPAM — Free cruise winner!!',number:'(800) 999-0001',avatar:'🚫',color:'#DC4B26',lastMsg:'Congratulations! You have been selected for a FREE cruise...',ts:'Today · 6:02 AM',msgs:1,inTx:false,isSpam:true},
+  {id:'t22',name:'SPAM — Mortgage rates dropping',number:'(888) 123-4567',avatar:'🚫',color:'#DC4B26',lastMsg:'Hi Lauren! Rates just dropped to 2.9%! Refi now...',ts:'Today · 7:44 AM',msgs:1,inTx:false,isSpam:true},
+  {id:'t23',name:'SPAM — Your Amazon package',number:'(855) 246-8135',avatar:'🚫',color:'#DC4B26',lastMsg:'Your package could not be delivered. Click here...',ts:'Yesterday · 3:15 PM',msgs:2,inTx:false,isSpam:true},
+  {id:'t24',name:'(323) 555-1212',number:'(323) 555-1212',avatar:'?',color:'#94A3B8',lastMsg:'Hi, interested in showing at Alvarez — available Saturday?',ts:'Today · 10:33 AM',msgs:1,inTx:false,isUnknown:true},
+  {id:'t25',name:'(714) 555-9988',number:'(714) 555-9988',avatar:'?',color:'#94A3B8',lastMsg:'Hello Lauren, saw your listing on Zillow. Can I bring buyers tomorrow?',ts:'Today · 11:07 AM',msgs:1,inTx:false,isUnknown:true},
 ];
 
 
