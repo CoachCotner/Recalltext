@@ -114,6 +114,64 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .msg-badge{display:inline-block;background:#F3F4F6;border:1px solid #E5E7EB;border-radius:4px;padding:2px 8px;font-size:10px;color:#555;margin-bottom:6px;font-family:monospace}
 .msg-text{font-size:13px;line-height:1.55;color:var(--text)}
 
+/* ============= BUBBLE-STYLE MESSAGE VIEW (GilApps-inspired) ============= */
+.sort-toggle{display:flex;gap:0;background:var(--bg);border-radius:10px;margin:12px 16px 0;padding:3px}
+.sort-toggle button{flex:1;background:transparent;border:none;padding:9px 8px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;border-radius:8px;transition:all 0.15s}
+.sort-toggle button.active{background:white;color:var(--navy);box-shadow:var(--shadow-sm)}
+.sort-toggle button:hover:not(.active){color:var(--navy)}
+
+.party-strip{display:flex;align-items:center;gap:10px;padding:8px 14px 0;flex-wrap:wrap;background:white}
+.party-pill{display:inline-flex;align-items:center;gap:6px;background:white;border:1.5px solid var(--border);border-radius:14px;padding:4px 10px 4px 4px;font-size:11px;font-weight:600;color:var(--text-sec)}
+.party-pill-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:9px;flex-shrink:0}
+
+.bubble-list{padding:6px 0 8px;background:white}
+.bmsg-row{display:flex;gap:8px;padding:5px 14px;align-items:flex-start}
+.bmsg-row.out{flex-direction:row-reverse}
+.bmsg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:11px;flex-shrink:0;margin-top:16px;letter-spacing:-0.02em}
+.bmsg-col{display:flex;flex-direction:column;max-width:74%;min-width:60px}
+.bmsg-row.out .bmsg-col{align-items:flex-end}
+.bmsg-name{font-size:12px;font-weight:700;padding:0 13px 2px}
+.bmsg-bubble{padding:9px 13px 5px;border-radius:14px;font-size:14px;line-height:1.45;color:var(--text);position:relative;cursor:pointer;transition:all 0.12s;background:#EEF1F7}
+.bmsg-bubble.out{background:#FFF4E0}
+.bmsg-bubble:hover{filter:brightness(0.97)}
+.bmsg-bubble:active{transform:scale(0.99)}
+.bmsg-text{word-wrap:break-word;white-space:pre-wrap}
+.bmsg-time{font-size:10px;color:var(--muted);text-align:right;padding-top:4px;font-variant-numeric:tabular-nums}
+.bmsg-badge{display:inline-block;background:rgba(0,0,0,0.05);border-radius:4px;padding:1px 6px;font-size:9px;color:var(--muted);font-family:monospace;margin-bottom:5px}
+.bmsg-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;padding:0 13px;max-width:74%}
+.bmsg-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;color:white}
+.bmsg-ann{margin:4px 13px 0;padding:6px 10px;background:#FFFBEB;border-left:3px solid var(--amber);border-radius:0 6px 6px 0;font-size:11px;color:#92400E;max-width:74%}
+.bmsg-ann-lbl{font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber);margin-bottom:2px}
+.bdate-divider{display:flex;align-items:center;gap:10px;padding:16px 22px 10px;color:var(--muted-lt);font-size:11px;font-weight:700;letter-spacing:0.05em}
+.bdate-divider::before,.bdate-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.bdate-divider span{text-transform:uppercase}
+.bmsg-row.bor-marker{padding:0}
+.bmsg-bor{margin:6px 16px;padding:6px 12px;background:#FFF7ED;border:1.5px solid var(--orange);border-radius:8px;font-size:11px;color:#92400E;font-weight:700;display:flex;align-items:center;gap:6px;justify-content:center}
+.bmsg-bubble.pre-record{opacity:0.55}
+.bmsg-ann-btn{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:white;border:1.5px solid var(--border);cursor:pointer;font-size:11px;opacity:0;transition:opacity 0.18s;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.bmsg-bubble:hover .bmsg-ann-btn{opacity:1}
+.bmsg-ann-btn:hover{border-color:var(--orange);color:var(--orange)}
+
+.conv-party-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FAFBFD;border-bottom:1px solid var(--border)}
+.conv-party-bar-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:13px;flex-shrink:0}
+.conv-party-bar-info{flex:1;min-width:0}
+.conv-party-bar-name{font-size:14px;font-weight:700;color:var(--text)}
+.conv-party-bar-role{font-size:11px;color:var(--muted);margin-top:1px}
+.conv-party-bar-cnt{font-size:10px;background:white;border:1px solid var(--border);padding:3px 8px;border-radius:10px;color:var(--muted);font-weight:600}
+
+/* ============= ATTACHMENTS (photos, videos, PDFs inside bubbles) ============= */
+.bmsg-attachments{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.bmsg-attach{display:flex;flex-direction:column;border-radius:10px;overflow:hidden;background:white;border:1px solid rgba(0,0,0,0.08)}
+.bmsg-attach-image img{width:100%;max-width:280px;height:auto;display:block;border-bottom:1px solid rgba(0,0,0,0.06)}
+.bmsg-attach-cap{font-size:11px;color:var(--muted);padding:5px 10px;font-weight:500}
+.bmsg-attach-video-thumb{width:100%;max-width:280px;height:160px;background:linear-gradient(135deg,#3B4F6B 0%,#1A2F5A 100%);display:flex;align-items:center;justify-content:center;position:relative}
+.bmsg-attach-play{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.95);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:3px}
+.bmsg-attach-doc{flex-direction:row;align-items:center;gap:10px;padding:9px 11px;background:#F8FAFC;border:1px solid var(--border)}
+.bmsg-attach-doc-icon{font-size:24px;flex-shrink:0}
+.bmsg-attach-doc-info{flex:1;min-width:0}
+.bmsg-attach-doc-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bmsg-attach-doc-size{font-size:10px;color:var(--muted);margin-top:1px}
+
 /* Special types */
 .msg-vm{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 12px;margin-top:6px}
 .msg-vm-hdr{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--green);margin-bottom:5px}
@@ -267,7 +325,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="brand">RecallText™</div>
         <span class="brand-sub">Your Conversation Records</span>
       </div>
-      <span style="font-size:20px;cursor:pointer;color:rgba(255,255,255,0.65)">⚙️</span>
+      <span onclick="openModal('m-incoming-demo')" style="font-size:20px;cursor:pointer;color:rgba(255,255,255,0.65)" title="Preview: incoming call with RecallText capture">📞</span>
     </div>
     <!-- Home tabs -->
     <div style="background:var(--navy);display:flex;border-bottom:1px solid rgba(255,255,255,0.1)">
@@ -454,6 +512,60 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
+<!-- ===== MODAL: IDENTIFY CALLER (user-applied alias, preserves carrier metadata) ===== -->
+<div class="moverlay" id="m-ident">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✎ Identify This Number</div>
+    <div class="modal-body">
+      <div style="background:#F0F9FF;border:1px solid #BAE6FD;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#075985;line-height:1.5">
+        Adding a display name does <strong>not</strong> change the original carrier-verified metadata. The original number and any name the carrier provided are <strong>preserved in every export</strong> for chain of custody. Your label is shown alongside, clearly marked as user-applied.
+      </div>
+      <div id="ident-original" style="background:var(--bg);border-radius:8px;padding:10px;font-size:12px;color:var(--text-sec);margin-bottom:14px;border:1px solid var(--border);line-height:1.6;font-family:monospace"></div>
+      <div class="fgroup">
+        <label class="flabel">Your Display Name for this Number</label>
+        <input class="finput" id="ident-alias" type="text" placeholder="e.g. Sarah from ABC Realty">
+      </div>
+      <button class="btn-primary" onclick="saveIdentify()">💾 Save Display Name</button>
+      <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:6px">Display name is editable anytime · Carrier metadata is immutable</div>
+      <button class="btn-cancel" onclick="closeModal('m-ident')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: INCOMING CALL DEMO (static mockup of the live-call experience) ===== -->
+<div class="moverlay" id="m-incoming-demo">
+  <div class="modal" style="background:#0F1F3D;color:white;max-width:430px;border-radius:24px;padding-bottom:0;overflow:hidden">
+    <div style="padding:40px 20px 24px;text-align:center;background:linear-gradient(180deg,#1A2F5A 0%,#0F1F3D 100%)">
+      <div style="font-size:12px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px">Incoming Call</div>
+      <div style="width:90px;height:90px;border-radius:50%;background:rgba(249,115,22,0.18);border:3px solid var(--orange);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:36px">📞</div>
+      <div style="font-size:22px;font-weight:700;margin-bottom:4px">Unknown</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.7);font-family:monospace">(714) 555-9988</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px">Mobile · Likely Real Estate</div>
+    </div>
+    <div style="background:rgba(249,115,22,0.12);border-top:1px solid rgba(249,115,22,0.3);border-bottom:1px solid rgba(249,115,22,0.3);padding:14px 18px;margin:0">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">🛡 RecallText · Live Capture</div>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:white;cursor:pointer;margin-bottom:6px">
+        <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--orange)">
+        <span>Record this call with live transcription</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:white;cursor:pointer">
+        <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--orange)">
+        <span>Hash-stamp at first ring &amp; at hang-up</span>
+      </label>
+      <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:8px;line-height:1.5">
+        Recording requires participant notification per CA Penal Code §632. Two-party consent prompt plays at answer.
+      </div>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:10px;background:#0F1F3D">
+      <button style="background:var(--orange);color:white;border:none;border-radius:24px;padding:14px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📞 Answer &amp; Record</button>
+      <button style="background:#22C55E;color:white;border:none;border-radius:24px;padding:14px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer">Answer (no recording)</button>
+      <button style="background:transparent;color:#EF4444;border:1.5px solid #EF4444;border-radius:24px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer">Decline</button>
+      <button onclick="closeModal('m-incoming-demo')" style="background:transparent;color:rgba(255,255,255,0.55);border:none;padding:10px;font-size:12px;font-family:inherit;cursor:pointer;margin-top:6px">✕ Close demo</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== MODAL: TAG MESSAGE TO RECORD ===== -->
 <div class="moverlay" id="m-tag">
   <div class="modal">
@@ -475,14 +587,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="moverlay" id="m-ann">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">📝 Add Agent Note</div>
+    <div class="modal-title">📝 Message Actions</div>
     <div class="modal-body">
       <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#92400E">
         Notes are <strong>clearly marked as agent-added</strong> in all exports. They document context without altering original message content.
       </div>
       <div id="ann-preview" style="background:var(--bg);border-radius:8px;padding:10px;font-size:12px;color:var(--text-sec);margin-bottom:14px;border:1px solid var(--border)"></div>
       <div class="fgroup"><label class="flabel">Your Note</label><textarea class="finput" id="ann-text" rows="3" placeholder='e.g. "Inspector mentioned this verbally at the showing on Feb 28"' style="resize:none"></textarea></div>
-      <button class="btn-primary" onclick="saveAnn()">Save Note</button>
+      <button class="btn-primary" onclick="saveAnn()">💾 Save Note</button>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button onclick="setBoRFromAnn()" style="flex:1;background:white;color:var(--orange);border:1.5px dashed var(--orange);border-radius:24px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📍 Set as Beginning of Record</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="openTagPickerFromAnn()" style="flex:1;background:white;color:var(--navy);border:1.5px solid var(--navy);border-radius:24px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📁 Tag to record(s)</button>
+      </div>
       <button class="btn-cancel" onclick="closeModal('m-ann')">Cancel</button>
     </div>
   </div>
@@ -602,9 +720,11 @@ const ALL_CONVS = [
   ],
   beginMsg:'Mar 3, 2026 · 10:58 AM'},
   {id:'c2',party:'Maria Torres',role:'Inspector',carrier:'(818) 555-0294',avatar:'MT',color:'#DC4B26',msgs:[
-    {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Inspection report attached. Roof needs attention — see page 4 for details.',ts:'Feb 28, 2026 · 2:15 PM',ann:null},
+    {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Inspection report attached. Roof needs attention — see page 4 for details.',ts:'Feb 28, 2026 · 2:15 PM',ann:null,attachments:[{type:'pdf',name:'Inspection_Report_Alvarez.pdf',size:'2.4 MB'}]},
     {sender:'Lauren Cotner',badge:'DRE #01242185 · Épique Realty · (310) 508-5957',text:'Received. Forwarding to buyer\'s agent now.',ts:'Feb 28, 2026 · 2:30 PM',ann:null},
-    {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Make sure they see the drainage issue in the backyard too. It\'s in the photos.',ts:'Feb 28, 2026 · 2:45 PM',ann:'Inspector verbally repeated this at the site walk on March 1'}
+    {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Here are the photos of the roof damage — the worst spot is near the chimney flashing.',ts:'Feb 28, 2026 · 2:40 PM',ann:null,attachments:[{type:'image',caption:'Roof damage near chimney'},{type:'image',caption:'Backyard drainage issue'}]},
+    {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Make sure they see the drainage issue in the backyard too. It\'s in the photos.',ts:'Feb 28, 2026 · 2:45 PM',ann:'Inspector verbally repeated this at the site walk on March 1'},
+    {sender:'Maria Torres',badge:'Carrier #: (818) 555-0294',text:'Quick walkthrough video of the attic — you can see the water staining on the joists.',ts:'Feb 28, 2026 · 3:10 PM',ann:null,attachments:[{type:'video',caption:'Attic walkthrough · 0:47'}]}
   ]},
   {id:'c3',party:'David Kim',role:'Transaction Coordinator',carrier:'(626) 555-0371',avatar:'DK',color:'#2563EB',msgs:[
     {sender:'David Kim',badge:'Carrier #: (626) 555-0371',text:'All docs received. Timeline looks good for March 15 close.',ts:'Mar 5, 2026 · 9:00 AM',ann:null},
@@ -757,10 +877,51 @@ let txs = [
 ];
 
 let curTxId = null;
+let viewMode = 'party'; // 'party' or 'date' — bubble view toggle
 let selCatVal = 'Real Estate';
 let selCatIcon = '🏠';
 let pendingSel = new Set();
 let annTarget = null;
+
+// Ensure every message has a stable id so annotation lookup is reliable
+ALL_CONVS.forEach(c => {
+  if (c.allMsgs) c.allMsgs.forEach((m, i) => { if (!m.id) m.id = 'am_' + c.id + '_' + i; });
+  if (c.msgs) c.msgs.forEach((m, i) => { if (!m.id) m.id = 'sm_' + c.id + '_' + i; });
+});
+
+// Ensure every phone-record extra (call/VM) has a stable id and a tags array.
+// tags = list of tx ids this extra appears in. One extra can live in many matters.
+function initExtras() {
+  txs.forEach(tx => {
+    if (!tx.extra) tx.extra = [];
+    tx.extra.forEach((e, i) => {
+      if (!e.id) e.id = 'ex_' + tx.id + '_' + i;
+      if (!e.tags) e.tags = [tx.id];
+    });
+  });
+}
+initExtras();
+
+// Walk every extra across every tx (used for multi-tag lookup)
+function getAllExtras() {
+  const seen = new Set();
+  const all = [];
+  txs.forEach(tx => {
+    (tx.extra || []).forEach(e => {
+      if (!seen.has(e.id)) { seen.add(e.id); all.push(e); }
+    });
+  });
+  return all;
+}
+function getExtrasForTx(txId) {
+  return getAllExtras().filter(e => (e.tags || []).includes(txId));
+}
+function findExtra(extraId) {
+  return getAllExtras().find(e => e.id === extraId);
+}
+
+let pendingExtraId = null;
+let pendingTextId = null;
 
 // =============================================
 // UTILS
@@ -808,6 +969,25 @@ function switchHomeTab(tab) {
   }
 }
 
+// Tracks which All Texts items are expanded to show full message list
+const expandedTexts = new Set();
+
+function toggleTextExpand(id) {
+  // If the contact has no underlying conversation messages, open the file picker instead
+  const t = ALL_TEXTS.find(x => x.id === id);
+  if (t) {
+    const conv = t.convId ? getConv(t.convId) : null;
+    const fullMsgs = conv ? (conv.allMsgs || conv.msgs || []) : [];
+    if (fullMsgs.length === 0) {
+      openTextFilePicker(id);
+      return;
+    }
+  }
+  if (expandedTexts.has(id)) expandedTexts.delete(id);
+  else expandedTexts.add(id);
+  renderAllTexts();
+}
+
 function renderAllTexts() {
   const list = document.getElementById('all-texts-list');
   if(!list) return;
@@ -835,7 +1015,7 @@ function renderAllTexts() {
         <div class="text-avatar" style="background:#E2E8F0;color:#64748B;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center">?</div>
         <div class="text-info">
           <div class="text-name" style="color:var(--text)">${t.number} <span style="font-size:10px;color:var(--amber);font-weight:600">(not in contacts)</span></div>
-          <div class="text-preview">${t.lastMsg}</div>
+          <div class="text-preview" style="white-space:normal;overflow:visible;text-overflow:clip">${t.lastMsg}</div>
           <div style="font-size:10px;color:var(--muted);margin-top:2px">Tap to file to a transaction</div>
         </div>
         <div class="text-meta">
@@ -845,20 +1025,70 @@ function renderAllTexts() {
       </div>`;
     }
 
-    // NORMAL
-    return `<div class="text-item ${t.inTx ? 'in-tx' : ''}" onclick="viewTextConv('${t.id}')">
-      <div class="text-avatar" style="background:${t.color}">${t.avatar}</div>
-      <div class="text-info">
-        <div class="text-name">${t.name}</div>
-        <div class="text-preview">${t.lastMsg}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.number} · ${t.msgs} message${t.msgs>1?'s':''}</div>
-      </div>
-      <div class="text-meta">
-        <div class="text-ts">${t.ts}</div>
-        ${t.inTx ? `<div class="text-badge assigned">✓ ${t.txName}</div>` : '<div class="text-badge">+ Add to Tx</div>'}
-      </div>
-    </div>`;
+    // NORMAL — with inline expansion
+    const isExpanded = expandedTexts.has(t.id);
+    const conv = t.convId ? getConv(t.convId) : null;
+    const fullMsgs = conv ? (conv.allMsgs || conv.msgs || []) : [];
+
+    // Header row (always visible)
+    let html = `<div class="text-item ${t.inTx ? 'in-tx' : ''}" style="display:block;padding:0">
+      <div onclick="toggleTextExpand('${t.id}')" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer">
+        <div class="text-avatar" style="background:${t.color}">${t.avatar}</div>
+        <div class="text-info">
+          <div class="text-name">${t.name}</div>
+          <div class="text-preview" style="white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4">${t.lastMsg}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">${t.number} · ${fullMsgs.length || t.msgs} message${(fullMsgs.length || t.msgs)>1?'s':''} · <span style="color:var(--orange);font-weight:600">${isExpanded ? '▼ Hide' : '▶ Show all'}</span></div>
+        </div>
+        <div class="text-meta">
+          <div class="text-ts">${t.ts}</div>
+          ${t.inTx
+            ? `<div class="text-badge assigned" onclick="event.stopPropagation();openTextFilePicker('${t.id}')" style="cursor:pointer">✓ ${t.txName}</div>`
+            : `<div class="text-badge" onclick="event.stopPropagation();openTextFilePicker('${t.id}')" style="cursor:pointer">+ Tag</div>`}
+        </div>
+      </div>`;
+
+    // Expanded section — full message list as mini-bubbles
+    if (isExpanded && fullMsgs.length > 0) {
+      html += `<div style="background:#FAFBFD;border-top:1px solid var(--border);padding:10px 14px 14px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:8px">All ${fullMsgs.length} messages — tap 📁 to file any message to a record</div>`;
+      fullMsgs.forEach(m => {
+        const isMe = m.sender === 'Lauren Cotner';
+        const taggedTxs = (m.tags || []).map(tid => getTx(tid)).filter(Boolean);
+        const tagsHtml = taggedTxs.length > 0
+          ? taggedTxs.map(tx => `<span style="background:${catColor(tx.cat)};color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px">${tx.icon} ${tx.name}</span>`).join(' ')
+          : '<span style="font-size:10px;color:var(--muted);font-style:italic">Not filed yet</span>';
+        html += `<div style="display:flex;${isMe ? 'flex-direction:row-reverse' : ''};gap:8px;margin-bottom:8px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:${isMe ? 'var(--orange)' : t.color};color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:2px">${isMe ? 'L' : t.avatar}</div>
+          <div style="max-width:78%">
+            <div style="font-size:10px;font-weight:700;color:${isMe ? 'var(--navy)' : t.color};margin-bottom:1px;${isMe ? 'text-align:right' : ''}">${m.sender}</div>
+            <div style="background:${isMe ? '#FFF4E0' : '#EEF1F7'};border-radius:11px;padding:7px 11px 5px;font-size:13px;line-height:1.4">
+              <div>${m.text}</div>
+              <div style="font-size:9px;color:var(--muted);text-align:right;margin-top:3px">${m.ts}</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:4px;${isMe ? 'justify-content:flex-end' : ''}">
+              <button onclick="event.stopPropagation();openTagPickerForAnyMsg('${t.convId}','${m.id}')" style="background:white;border:1.5px dashed var(--orange);color:var(--orange);font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;cursor:pointer;font-family:inherit">📁 File</button>
+              ${tagsHtml}
+            </div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+    return html;
   }).join('');
+}
+
+// Universal tag picker that works for messages in either allMsgs or msgs
+function openTagPickerForAnyMsg(convId, msgId) {
+  const conv = getConv(convId);
+  if (!conv) return;
+  if (conv.allMsgs && conv.allMsgs.find(m => m.id === msgId)) {
+    openTagPicker(convId, msgId);
+  } else {
+    openSimpleTagPicker(convId, msgId);
+  }
 }
 
 function openSpamText(id) {
@@ -874,17 +1104,15 @@ function openSpamText(id) {
 function openUnknownText(id) {
   const t = ALL_TEXTS.find(x => x.id === id);
   if (!t) return;
-  // Show a modal-style overlay to identify and file
-  // Build a simple inline modal using toast + transaction picker
   pendingTagConvId = null;
   pendingTagMsgId = null;
-  // Show picker to file directly to a transaction
+  pendingTextId = id;
   document.getElementById('tag-preview').textContent = t.number + ': "' + t.lastMsg + '"';
   document.getElementById('tag-picker-list').innerHTML = `
     <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:#92400E;line-height:1.5">
       <strong>${t.number}</strong> is not saved in your contacts.<br>
       Message: "${t.lastMsg}"<br><br>
-      File it to a transaction now — you can add their name later when you find out who it is.
+      File it to an existing matter — or create a brand new one for it.
     </div>
     ${txs.map(tx => {
       const color = catColor(tx.cat);
@@ -896,8 +1124,27 @@ function openUnknownText(id) {
         </div>
         <span style="color:var(--muted-lt);font-size:18px">○</span>
       </div>`;
-    }).join('')}`;
+    }).join('')}
+    <div class="tag-picker-item" onclick="closeModal('m-tag');openAddTxFromUnknown('${id}')" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
+      <div class="tag-picker-icon" style="background:var(--orange-light);font-size:20px">＋</div>
+      <div style="flex:1">
+        <div class="tag-picker-name" style="color:var(--orange)">Create New Matter</div>
+        <div class="tag-picker-cat">File this in a brand new transaction — review later</div>
+      </div>
+    </div>`;
   openModal('m-tag');
+}
+
+function openAddTxFromUnknown(textId) {
+  pendingTextId = textId;
+  pendingExtraId = null;
+  renderCatGrid();
+  document.getElementById('tx-name').value = '';
+  document.getElementById('tx-note').value = '';
+  selCatVal = 'Real Estate'; selCatIcon = '🏠';
+  updateTemplate();
+  openModal('m-add-tx');
+  setTimeout(() => document.getElementById('tx-name').focus(), 300);
 }
 
 function fileUnknownToTx(textId, txId) {
@@ -906,8 +1153,10 @@ function fileUnknownToTx(textId, txId) {
   if (!t || !tx) return;
   t.inTx = true;
   t.txName = tx.name;
-  // Add as a phone record to that transaction
+  const newExtraId = 'ex_' + tx.id + '_' + (tx.extra || []).length;
   tx.extra.push({
+    id: newExtraId,
+    tags: [tx.id],
     type: 'call',
     name: 'Unknown Agent · ' + t.number,
     num: t.number,
@@ -925,27 +1174,51 @@ function fileUnknownToTx(textId, txId) {
 function viewTextConv(id) {
   const t = ALL_TEXTS.find(x => x.id === id);
   if (!t) return;
-  // Check if this person has a conv with allMsgs (multi-property scenario)
+  // If this contact has a stored conversation, show it
   const conv = t.convId ? getConv(t.convId) : null;
   if (conv && conv.allMsgs && conv.allMsgs.length > 0) {
     renderFullConv(t.convId);
     return;
   }
-  if (t.inTx) {
-    toast('✓ Already in transaction: ' + t.txName);
-  } else {
-    pendingTextId = id;
-    document.getElementById('tx-name').value = '';
-    document.getElementById('tx-name').placeholder = 'e.g. ' + t.name + ' matter...';
-    openAddTx();
-    setTimeout(() => {
-      const tip = document.getElementById('pending-text-tip');
-      if(tip) {
-        tip.style.display = 'block';
-        tip.innerHTML = '📱 Adding conversation with <strong>' + t.name + '</strong> (' + t.number + ') to this transaction.';
-      }
-    }, 100);
-  }
+  // Otherwise (Sandra Lee, etc.) open the unified file-to-records picker
+  openTextFilePicker(id);
+}
+
+function openTextFilePicker(id) {
+  const t = ALL_TEXTS.find(x => x.id === id);
+  if (!t) return;
+  pendingTagConvId = null;
+  pendingTagMsgId = null;
+  pendingTextId = id;
+  const isUnknown = !!t.isUnknown;
+  const previewName = isUnknown ? t.number : t.name;
+  document.getElementById('tag-preview').textContent = previewName + ': "' + (t.lastMsg || '') + '"';
+  const explanation = isUnknown
+    ? `<strong>${t.number}</strong> is not saved in your contacts.<br>Message: "${t.lastMsg || ''}"<br><br>File it to an existing matter — or create a brand new one for it.`
+    : `<strong>${t.name}</strong> (${t.number})<br>Last: "${t.lastMsg || ''}"<br><br>File this conversation to one or more matters — or create a new matter for it.`;
+  document.getElementById('tag-picker-list').innerHTML = `
+    <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:#92400E;line-height:1.5">
+      ${explanation}
+    </div>
+    ${txs.map(tx => {
+      const color = catColor(tx.cat);
+      return `<div class="tag-picker-item" onclick="fileUnknownToTx('${id}',${tx.id})">
+        <div class="tag-picker-icon" style="background:${color}22">${tx.icon}</div>
+        <div style="flex:1">
+          <div class="tag-picker-name">${tx.name}</div>
+          <div class="tag-picker-cat">${tx.cat}</div>
+        </div>
+        <span style="color:var(--muted-lt);font-size:18px">○</span>
+      </div>`;
+    }).join('')}
+    <div class="tag-picker-item" onclick="closeModal('m-tag');openAddTxFromUnknown('${id}')" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
+      <div class="tag-picker-icon" style="background:var(--orange-light);font-size:20px">＋</div>
+      <div style="flex:1">
+        <div class="tag-picker-name" style="color:var(--orange)">Create New Matter</div>
+        <div class="tag-picker-cat">File this in a brand new transaction — review later</div>
+      </div>
+    </div>`;
+  openModal('m-tag');
 }
 
 let pendingTagConvId = null;
@@ -1167,75 +1440,35 @@ function renderDetail() {
   const convs = getConvs(tx);
   let html = '';
 
-  convs.forEach(conv => {
-    const col = conv.color;
+  // ===== Sort toggle =====
+  html += `<div class="sort-toggle">
+    <button class="${viewMode==='date'?'active':''}" onclick="setViewMode('date')">📅 By Date</button>
+    <button class="${viewMode==='party'?'active':''}" onclick="setViewMode('party')">👥 By Party</button>
+  </div>`;
 
-    // Filter messages: if conv has allMsgs with tags, only show messages tagged to this tx
-    let msgsToShow;
-    if (conv.allMsgs && conv.allMsgs.some(m => m.tags !== undefined)) {
-      msgsToShow = conv.allMsgs.filter(m => m.tags && m.tags.includes(curTxId));
-      const unfiledCount = conv.allMsgs.filter(m => !m.tags || m.tags.length === 0).length;
-      html += `<div class="conv-sec">
-        <div class="conv-hdr" style="border-left:4px solid ${col}">
-          <input type="checkbox" checked>
-          <div class="conv-hdr-info">
-            <div class="conv-party" style="color:${col}">${conv.party}</div>
-            <div class="conv-role">${conv.role} · ${conv.carrier}</div>
-          </div>
-          <span class="conv-cnt">${msgsToShow.length} msgs</span>
-        </div>
-        ${unfiledCount > 0 ? `<div style="background:#FFFBEB;border-bottom:1px solid #FDE68A;padding:8px 14px;font-size:11px;color:#92400E;display:flex;align-items:center;justify-content:space-between">
-          <span>⚠️ ${unfiledCount} message${unfiledCount>1?'s':''} not yet filed to any record</span>
-          <button onclick="renderFullConv('${conv.id}')" style="background:var(--amber);border:none;border-radius:6px;padding:3px 9px;color:white;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">View All →</button>
-        </div>` : ''}`;
-    } else {
-      msgsToShow = conv.allMsgs || conv.msgs;
-      html += `<div class="conv-sec">
-        <div class="conv-hdr" style="border-left:4px solid ${col}">
-          <input type="checkbox" checked>
-          <div class="conv-hdr-info">
-            <div class="conv-party" style="color:${col}">${conv.party}</div>
-            <div class="conv-role">${conv.role} · ${conv.carrier}</div>
-          </div>
-          <span class="conv-cnt">${msgsToShow.length} msgs</span>
-        </div>`;
-    }
-
-    let beginShown = false;
-    msgsToShow.forEach((m, mi) => {
-      const sc = m.sender === 'Lauren Cotner' ? '#1A2F5A' : col;
-      const isBeginRecord = conv.beginMsg && m.ts === conv.beginMsg;
-      if(isBeginRecord && !beginShown) {
-        beginShown = true;
-        html += `<div class="begin-divider">📍 Beginning of Record — Transaction Record starts here</div>`;
-      }
-      const isPreRecord = conv.beginMsg && !beginShown;
-      // Show other records this message is also tagged to
-      const otherTags = m.tags ? m.tags.filter(t => t !== curTxId).map(t => getTx(t)).filter(Boolean) : [];
-      html += `<div class="msg-item ${isPreRecord ? 'pre-record-msg' : ''}">
-        <button class="ann-btn" onclick="openAnn('${conv.id}',${mi})" title="Add agent note">📝</button>
-        <div class="msg-top">
-          <div class="msg-sender" style="color:${sc}">${m.sender}</div>
-          <div class="msg-time">${m.ts}</div>
-        </div>
-        <div class="msg-badge">${m.badge}</div>
-        <div class="msg-text">${m.text}</div>
-        ${otherTags.length > 0 ? `<div style="margin-top:4px">${otherTags.map(t=>`<span style="background:${catColor(t.cat)}22;border:1px solid ${catColor(t.cat)}44;color:${catColor(t.cat)};font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;margin-right:4px">${t.icon} Also in: ${t.name}</span>`).join('')}</div>` : ''}
-        ${m.ann ? `<div class="msg-ann"><div class="msg-ann-lbl">Agent Note</div>${m.ann}</div>` : ''}
-      </div>`;
+  // ===== Party identifier strip (always visible) =====
+  if (convs.length > 0) {
+    html += `<div class="party-strip">`;
+    convs.forEach(c => {
+      html += `<span class="party-pill">
+        <span class="party-pill-av" style="background:${c.color}">${c.avatar||c.party.charAt(0)}</span>
+        ${c.party}
+      </span>`;
     });
-
-    tx.extra.filter(e => e.cid === conv.id).forEach(item => {
-      html += renderExtraItem(item, col);
-    });
-
     html += `</div>`;
-  });
+  }
 
-  // Standalone phone records section
-  const solo = tx.extra.filter(e => !e.cid);
+  // ===== Bubbles =====
+  if (viewMode === 'date') {
+    html += renderDetailByDate(tx, convs);
+  } else {
+    html += renderDetailByParty(tx, convs);
+  }
+
+  // Standalone phone records section — any extra tagged to this tx with no conv association
+  const solo = getExtrasForTx(curTxId).filter(e => !e.cid);
   if (solo.length) {
-    html += `<div class="conv-sec">
+    html += `<div class="conv-sec" style="margin-top:14px">
       <div class="conv-hdr" style="border-left:4px solid var(--orange)">
         <div class="conv-hdr-info">
           <div class="conv-party" style="color:var(--orange)">📱 Phone Records</div>
@@ -1260,6 +1493,213 @@ function renderDetail() {
   document.getElementById('det-content').innerHTML = html;
 }
 
+function setViewMode(m) {
+  viewMode = m;
+  renderDetail();
+}
+
+// Export just one party's contribution to this matter (selective scope)
+function exportParty(convId) {
+  const tx = getTx(curTxId);
+  if (!tx) return;
+  const conv = getConv(convId);
+  if (!conv) return;
+  const originalCids = [...tx.cids];
+  tx.cids = [convId];
+  try {
+    generatePDF(false);
+    toast('⤓ Exporting ' + conv.party + '\u2019s messages only');
+  } finally {
+    tx.cids = originalCids;
+  }
+}
+
+// Parse "Jan 15, 2026 · 9:00 AM" to a Date
+function parseMsgDate(s) {
+  if (!s) return new Date(0);
+  const cleaned = String(s).replace(' · ', ' ').replace(/·/g, '');
+  const d = new Date(cleaned);
+  return isNaN(d.getTime()) ? new Date(0) : d;
+}
+
+// Get just the time portion "9:00 AM"
+function timeOnly(s) {
+  if (!s) return '';
+  const parts = String(s).split('·');
+  return (parts[1] || parts[0]).trim();
+}
+
+// Render a single message as a bubble. `m` is the msg, `conv` is the parent conversation, `mi` is index
+function renderBubbleMsg(m, conv, mi) {
+  if (!m || !conv) return ''; // defensive: skip if data is missing
+  const isOut = m.sender === 'Lauren Cotner';
+  const color = conv.color || '#6B7280';
+  const initial = isOut ? 'L' : (conv.avatar || conv.party.charAt(0));
+  const avatarBg = isOut ? 'var(--orange)' : color;
+  const nameColor = isOut ? 'var(--navy)' : color;
+
+  const isPreRecord = conv.beginMsg && parseMsgDate(m.ts) < parseMsgDate(conv.beginMsg);
+  const isBeginMarker = conv.beginMsg && m.ts === conv.beginMsg;
+
+  // Other tags (this message also tagged to other transactions)
+  const otherTags = m.tags ? m.tags.filter(t => t !== curTxId).map(t => getTx(t)).filter(Boolean) : [];
+  const tagsHtml = otherTags.length > 0
+    ? `<div class="bmsg-tags">${otherTags.map(t => `<span class="bmsg-tag" style="background:${catColor(t.cat)}">${t.icon} ${t.name.length>14?t.name.substring(0,14)+'…':t.name}</span>`).join('')}</div>`
+    : '';
+
+  // Annotation
+  const annHtml = m.ann ? `<div class="bmsg-ann"><div class="bmsg-ann-lbl">Agent Note</div>${m.ann}</div>` : '';
+
+  // Attachments (photos, videos, PDFs, etc.) — rendered inside the bubble
+  let attachmentsHtml = '';
+  if (m.attachments && m.attachments.length) {
+    attachmentsHtml = '<div class="bmsg-attachments">' + m.attachments.map(a => renderAttachment(a)).join('') + '</div>';
+  }
+
+  // Begin Record marker (rendered as a divider in bubble view)
+  let beginHtml = '';
+  if (isBeginMarker) {
+    beginHtml = `<div class="bmsg-bor">📍 Beginning of Record — starts here</div>`;
+  }
+
+  return `${beginHtml}<div class="bmsg-row ${isOut?'out':''}">
+    <div class="bmsg-avatar" style="background:${avatarBg}">${initial}</div>
+    <div class="bmsg-col">
+      <div class="bmsg-name" style="color:${nameColor}">${m.sender}</div>
+      <div class="bmsg-bubble ${isOut?'out':'in'} ${isPreRecord?'pre-record':''}" onclick="event.stopPropagation()">
+        <button class="bmsg-ann-btn" onclick="openAnn('${conv.id}','${m.id}')" title="Add note">📝</button>
+        ${m.badge ? `<div class="bmsg-badge">${m.badge}</div>` : ''}
+        <div class="bmsg-text">${m.text}</div>
+        ${attachmentsHtml}
+        <div class="bmsg-time">${timeOnly(m.ts)}</div>
+      </div>
+      ${tagsHtml}
+      ${annHtml}
+    </div>
+  </div>`;
+}
+
+function renderAttachment(a) {
+  if (a.type === 'image') {
+    // Stylized SVG placeholder — simulates an inline photo. In production this is the actual image.
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 140'><rect width='200' height='140' fill='%23E5E7EB'/><rect x='0' y='90' width='200' height='50' fill='%23A8B4C2'/><circle cx='160' cy='35' r='14' fill='%23F3D679'/><polygon points='0,90 60,40 100,80 140,55 200,100 200,140 0,140' fill='%2370869C'/><rect x='80' y='65' width='40' height='35' fill='%237A5C44'/><rect x='95' y='80' width='10' height='20' fill='%23B89578'/></svg>`;
+    return `<div class="bmsg-attach bmsg-attach-image">
+      <img src="data:image/svg+xml;utf8,${svg}" alt="${a.caption||'Photo'}" />
+      <div class="bmsg-attach-cap">📷 ${a.caption || 'Photo'}</div>
+    </div>`;
+  }
+  if (a.type === 'video') {
+    return `<div class="bmsg-attach bmsg-attach-video">
+      <div class="bmsg-attach-video-thumb">
+        <span class="bmsg-attach-play">▶</span>
+      </div>
+      <div class="bmsg-attach-cap">🎥 ${a.caption || 'Video'}</div>
+    </div>`;
+  }
+  if (a.type === 'pdf') {
+    return `<div class="bmsg-attach bmsg-attach-doc">
+      <div class="bmsg-attach-doc-icon">📄</div>
+      <div class="bmsg-attach-doc-info">
+        <div class="bmsg-attach-doc-name">${a.name || 'Document.pdf'}</div>
+        ${a.size ? `<div class="bmsg-attach-doc-size">${a.size}</div>` : ''}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+// ===== BY PARTY view =====
+function renderDetailByParty(tx, convs) {
+  let html = '';
+  convs.forEach(conv => {
+    const col = conv.color;
+
+    // Filter messages
+    let msgsToShow;
+    let unfiledCount = 0;
+    if (conv.allMsgs && conv.allMsgs.some(m => m.tags !== undefined)) {
+      msgsToShow = conv.allMsgs.filter(m => m.tags && m.tags.includes(curTxId));
+      unfiledCount = conv.allMsgs.filter(m => !m.tags || m.tags.length === 0).length;
+    } else {
+      msgsToShow = conv.allMsgs || conv.msgs;
+    }
+
+    html += `<div class="conv-sec" style="margin-top:14px;padding:0">
+      <div class="conv-party-bar" style="border-left:4px solid ${col}">
+        <div class="conv-party-bar-av" style="background:${col}">${conv.avatar||conv.party.charAt(0)}</div>
+        <div class="conv-party-bar-info">
+          <div class="conv-party-bar-name" style="color:${col}">${conv.party}</div>
+          <div class="conv-party-bar-role">${conv.role} · ${conv.carrier}</div>
+        </div>
+        <button onclick="exportParty('${conv.id}')" style="background:white;border:1px solid ${col};color:${col};font-size:10px;font-weight:700;padding:4px 10px;border-radius:10px;cursor:pointer;font-family:inherit">⤓ Export</button>
+        <span class="conv-party-bar-cnt">${msgsToShow.length} msgs</span>
+      </div>
+      ${unfiledCount > 0 ? `<div style="background:#FFFBEB;border-bottom:1px solid #FDE68A;padding:8px 14px;font-size:11px;color:#92400E;display:flex;align-items:center;justify-content:space-between">
+        <span>⚠️ ${unfiledCount} message${unfiledCount>1?'s':''} not yet filed to any record</span>
+        <button onclick="renderFullConv('${conv.id}')" style="background:var(--amber);border:none;border-radius:6px;padding:3px 9px;color:white;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">View All →</button>
+      </div>` : ''}
+      <div class="bubble-list">`;
+
+    msgsToShow.forEach((m, mi) => {
+      html += renderBubbleMsg(m, conv, mi);
+    });
+
+    // Extras (calls, voicemails) tagged to this tx AND associated with this conv
+    getExtrasForTx(curTxId).filter(e => e.cid === conv.id).forEach(item => {
+      html += renderExtraItem(item, col);
+    });
+
+    html += `</div></div>`;
+  });
+  return html;
+}
+
+// ===== BY DATE view =====
+function renderDetailByDate(tx, convs) {
+  // Gather all messages from all convs filtered to this tx
+  const all = [];
+  convs.forEach(conv => {
+    if (!conv) return;
+    let msgs;
+    if (conv.allMsgs && conv.allMsgs.some(m => m && m.tags !== undefined)) {
+      msgs = conv.allMsgs.filter(m => m && m.tags && m.tags.includes(curTxId));
+    } else {
+      msgs = conv.allMsgs || conv.msgs || [];
+    }
+    msgs.forEach((m, mi) => {
+      if (!m) return; // skip undefined entries
+      all.push({ m, conv, mi, date: parseMsgDate(m.ts) });
+    });
+  });
+
+  // Sort chronologically
+  all.sort((a, b) => a.date - b.date);
+
+  if (all.length === 0) {
+    return `<div class="bubble-list"><div style="padding:30px;text-align:center;color:var(--muted);font-size:13px">No messages tagged to this record yet.</div></div>`;
+  }
+
+  let html = '<div class="bubble-list">';
+  let lastHeader = '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  all.forEach(item => {
+    const d = item.date;
+    const header = d.getTime() > 0
+      ? `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
+      : 'Unknown date';
+    if (header !== lastHeader) {
+      html += `<div class="bdate-divider"><span>${header}</span></div>`;
+      lastHeader = header;
+    }
+    html += renderBubbleMsg(item.m, item.conv, item.mi);
+  });
+
+  html += '</div>';
+  return html;
+}
+
 function makeHash(text) {
   let h = 0;
   for(let i=0;i<text.length;i++) h=(Math.imul(31,h)+text.charCodeAt(i))|0;
@@ -1277,38 +1717,150 @@ function renderExtraItem(item, col) {
   </div>
   <div style="font-size:8px;font-family:monospace;color:var(--muted-lt);margin-top:2px;word-break:break-all">${hash}</div>`;
 
+  // ===== Multi-tag bar: which matters does this extra appear in =====
+  const taggedTxs = (item.tags || []).map(tid => getTx(tid)).filter(Boolean);
+  const otherTxs = taggedTxs.filter(t => t.id !== curTxId);
+  const tagBar = `<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)">
+    <button onclick="openExtraTagPicker('${item.id}')" style="background:white;border:1.5px dashed var(--orange);color:var(--orange);font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;cursor:pointer;font-family:inherit">📁 Tag to record(s)</button>
+    ${otherTxs.length > 0 ? otherTxs.map(t => `<span style="background:${catColor(t.cat)}22;border:1px solid ${catColor(t.cat)}55;color:${catColor(t.cat)};font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px">${t.icon} Also in: ${t.name}</span>`).join('') : ''}
+  </div>`;
+
   if (item.type === 'vm') {
     const isOutbound = item.caller && item.caller.includes('→');
+    const displayCaller = item.userAlias ? item.userAlias + (item.caller ? ' (was: ' + item.caller + ')' : '') : item.caller;
+    const aliasNote = item.userAlias ? `<div style="font-size:9px;color:var(--orange);margin-top:2px;font-style:italic">⚙ Name updated by you — carrier metadata preserved</div>` : '';
     return `<div class="msg-item" style="border-left:3px solid #16A34A">
       <div class="msg-top">
         <div class="msg-sender" style="color:#16A34A;font-weight:700">🎙️ ${isOutbound ? 'Voicemail Left' : 'Voicemail Received'}</div>
         <div class="msg-time">${now}</div>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">${item.caller}${item.dur ? ' · ' + item.dur : ''}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px">
+        <span style="flex:1">${displayCaller}${item.dur ? ' · ' + item.dur : ''}</span>
+        <button onclick="openIdentifyExtra('${item.id}')" style="background:white;border:1px solid var(--border);color:var(--muted);font-size:10px;padding:2px 8px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap">✎ ${item.userAlias ? 'Edit name' : 'Identify'}</button>
+      </div>
+      ${aliasNote}
       <div class="msg-vm">
         <div class="msg-vm-text" style="font-size:12px;line-height:1.6">"${item.tx}"</div>
         ${item.note ? `<div style="margin-top:6px;padding:6px 8px;background:#FFF7ED;border-left:3px solid #F97316;border-radius:4px;font-size:11px;color:#92400E"><strong>Agent Note:</strong> ${item.note}</div>` : ''}
       </div>
       ${hashBadge}
+      ${tagBar}
     </div>`;
   } else {
     const noAnswer = item.dur === '0:00' || item.dur === '0' || (item.notes && item.notes.includes('NO ANSWER'));
     const di = item.dir === 'Inbound' ? '📲' : noAnswer ? '📵' : item.dir === 'Outbound' ? '📤' : '❌';
     const callColor = noAnswer ? '#DC4B26' : item.dir === 'Inbound' ? '#2563EB' : '#0F766E';
     const callLabel = noAnswer ? 'No Answer — ' + item.dir : item.dir + ' Call';
+    const displayName = item.userAlias || item.name;
+    const aliasNote = item.userAlias ? `<div style="font-size:9px;color:var(--orange);margin-top:2px;font-style:italic">⚙ Name updated by you — original carrier number preserved below</div>` : '';
     return `<div class="msg-item" style="border-left:3px solid ${callColor}">
       <div class="msg-call">
         <div class="msg-call-icon" style="font-size:22px">${di}</div>
         <div class="msg-call-info">
           <div style="font-size:13px;font-weight:700;color:${callColor}">${callLabel}${item.dur && item.dur !== '0:00' && item.dur !== '0' ? ' · ' + item.dur : ''}</div>
-          <div style="font-size:11px;color:var(--text-sec);margin-top:2px">${item.name}</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+            <div style="font-size:11px;color:var(--text-sec);flex:1">${displayName}</div>
+            <button onclick="openIdentifyExtra('${item.id}')" style="background:white;border:1px solid var(--border);color:var(--muted);font-size:10px;padding:2px 8px;border-radius:8px;cursor:pointer;font-family:inherit">✎ ${item.userAlias ? 'Edit' : 'Identify'}</button>
+          </div>
+          ${aliasNote}
           <div style="font-size:10px;color:var(--muted)">${item.num} · ${now}</div>
           ${item.notes ? `<div style="font-size:11px;color:var(--text);margin-top:6px;padding:6px 8px;background:${noAnswer?'#FEF2F2':'#F8FAFF'};border-left:2px solid ${callColor};border-radius:0 4px 4px 0;line-height:1.5">${item.notes}</div>` : ''}
         </div>
       </div>
       ${hashBadge}
+      ${tagBar}
     </div>`;
   }
+}
+
+// ===== User-applied alias for calls/VMs (preserves carrier metadata, adds friendly name) =====
+function openIdentifyExtra(extraId) {
+  const extra = findExtra(extraId);
+  if (!extra) return;
+  pendingExtraId = extraId;
+  const originalNum = extra.num || (extra.caller || '');
+  const originalName = extra.caller || extra.name || '';
+  document.getElementById('ident-original').innerHTML = `
+    <strong>Carrier-verified number:</strong> ${originalNum}<br>
+    <strong>Original metadata:</strong> ${originalName}
+  `;
+  document.getElementById('ident-alias').value = extra.userAlias || '';
+  openModal('m-ident');
+  setTimeout(() => document.getElementById('ident-alias').focus(), 200);
+}
+
+function saveIdentify() {
+  const extra = findExtra(pendingExtraId);
+  if (!extra) return;
+  const alias = document.getElementById('ident-alias').value.trim();
+  if (alias) extra.userAlias = alias;
+  else delete extra.userAlias;
+  closeModal('m-ident');
+  renderDetail();
+  toast(alias ? '✓ Display name updated · carrier metadata preserved' : '✓ Display name cleared');
+}
+
+// ===== Multi-tag picker for phone records (calls/VMs) =====
+function openExtraTagPicker(extraId) {
+  const extra = findExtra(extraId);
+  if (!extra) { toast('Could not find that record'); return; }
+  pendingExtraId = extraId;
+  const preview = extra.type === 'vm'
+    ? `🎙️ Voicemail: "${(extra.tx || '').slice(0, 80)}${(extra.tx || '').length > 80 ? '...' : ''}"`
+    : `📞 ${extra.dir || ''} Call: ${extra.name || extra.num || 'Unknown'}`;
+  document.getElementById('tag-preview').textContent = preview;
+  document.getElementById('tag-picker-list').innerHTML = `
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Tap to file · Tap again to remove · One call/VM can belong to multiple matters — a single conversation may cover many things</p>
+    ${txs.map(tx => {
+      const color = catColor(tx.cat);
+      const alreadyTagged = (extra.tags || []).includes(tx.id);
+      return `<div class="tag-picker-item" onclick="applyExtraTag(${tx.id})" style="${alreadyTagged ? 'background:#F0FDF4;' : ''}">
+        <div class="tag-picker-icon" style="background:${color}22">${tx.icon}</div>
+        <div style="flex:1">
+          <div class="tag-picker-name">${tx.name}</div>
+          <div class="tag-picker-cat">${tx.cat}</div>
+        </div>
+        ${alreadyTagged
+          ? '<span style="color:#16A34A;font-size:20px;font-weight:700">✓</span>'
+          : '<span style="color:var(--border);font-size:20px">○</span>'}
+      </div>`;
+    }).join('')}
+    <div class="tag-picker-item" onclick="closeModal('m-tag');openAddTxFromExtra('${extraId}')" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
+      <div class="tag-picker-icon" style="background:var(--orange-light);font-size:20px">＋</div>
+      <div style="flex:1">
+        <div class="tag-picker-name" style="color:var(--orange)">Create New Matter</div>
+        <div class="tag-picker-cat">File this call/VM in a brand new transaction</div>
+      </div>
+    </div>`;
+  openModal('m-tag');
+}
+
+function applyExtraTag(txId) {
+  const extra = findExtra(pendingExtraId);
+  if (!extra) return;
+  if (!extra.tags) extra.tags = [];
+  const tx = getTx(txId);
+  if (!tx) return;
+  if (extra.tags.includes(txId)) {
+    extra.tags = extra.tags.filter(t => t !== txId);
+    toast('Removed from: ' + tx.name);
+  } else {
+    extra.tags.push(txId);
+    toast('✅ Filed to: ' + tx.name);
+  }
+  openExtraTagPicker(pendingExtraId);
+  renderDetail();
+}
+
+function openAddTxFromExtra(extraId) {
+  pendingExtraId = extraId;
+  renderCatGrid();
+  document.getElementById('tx-name').value = '';
+  document.getElementById('tx-note').value = '';
+  selCatVal = 'Real Estate'; selCatIcon = '🏠';
+  updateTemplate();
+  openModal('m-add-tx');
+  setTimeout(() => document.getElementById('tx-name').focus(), 300);
 }
 
 // =============================================
@@ -1344,19 +1896,67 @@ function createTx() {
   const note = document.getElementById('tx-note').value.trim();
   const newId = Math.max(...txs.map(t => t.id), 0) + 1;
   txs.push({ id:newId, name, cat:selCatVal, icon:selCatIcon, note, cids:[], extra:[] });
+  const newTx = txs[txs.length - 1];
   closeModal('m-add-tx');
-  // If created from All Texts tab, add conversation to transaction
+
+  // Case 1: created while tagging an existing extra (call/VM) — add this new tx to its tags
+  if (pendingExtraId) {
+    const extra = findExtra(pendingExtraId);
+    if (extra) {
+      if (!extra.tags) extra.tags = [];
+      if (!extra.tags.includes(newId)) extra.tags.push(newId);
+    }
+    pendingExtraId = null;
+    renderHome();
+    toast(`✅ "${name}" created — call/VM filed`);
+    setTimeout(() => openTx(newId), 380);
+    return;
+  }
+
+  // Case 1b: created while filing a simple-conv message (Tom Nguyen flow)
+  if (pendingTagConvId && pendingTagMsgId) {
+    const conv = getConv(pendingTagConvId);
+    if (conv) {
+      const msg = (conv.msgs || []).find(m => m.id === pendingTagMsgId) || (conv.allMsgs || []).find(m => m.id === pendingTagMsgId);
+      if (msg) {
+        if (!msg.tags) msg.tags = [];
+        if (!msg.tags.includes(newId)) msg.tags.push(newId);
+      }
+      // Also add the conv to the new tx's cids so it appears
+      if (!newTx.cids.includes(pendingTagConvId)) newTx.cids.push(pendingTagConvId);
+    }
+    pendingTagConvId = null;
+    pendingTagMsgId = null;
+    renderHome();
+    toast(`✅ "${name}" created — message filed`);
+    setTimeout(() => openTx(newId), 380);
+    return;
+  }
+
+  // Case 2: created from All Texts tab
   if(pendingTextId) {
     const pt = ALL_TEXTS.find(x => x.id === pendingTextId);
     if(pt) {
       pt.inTx = true;
       pt.txName = name;
-      // Add the conversation to the new transaction if it has a convId
       if(pt.convId) {
-        const newTx = txs[txs.length - 1];
-        if(newTx && !newTx.cids.includes(pt.convId)) {
-          newTx.cids.push(pt.convId);
-        }
+        // Real conversation — add it
+        if(!newTx.cids.includes(pt.convId)) newTx.cids.push(pt.convId);
+      } else {
+        // Unknown/spam/random number — create a phone-record placeholder
+        const newExtraId = 'ex_' + newId + '_0';
+        newTx.extra.push({
+          id: newExtraId,
+          tags: [newId],
+          type: 'call',
+          name: pt.name && !pt.name.match(/^\(\d/) ? pt.name : 'Unknown · ' + pt.number,
+          num: pt.number,
+          dt: pt.ts,
+          dur: '',
+          dir: 'Inbound',
+          notes: pt.lastMsg || '',
+          cid: null
+        });
       }
     }
     pendingTextId = null;
@@ -1367,7 +1967,7 @@ function createTx() {
   } else {
     renderHome();
   }
-  toast(`✅ "${name}" created — conversation added!`);
+  toast(`✅ "${name}" created`);
   setTimeout(() => openTx(newId), 380);
 }
 
@@ -1524,7 +2124,11 @@ function addVM() {
   const dtStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
   const dt = document.getElementById('vm-dt').value.trim() || dtStr;
   const dur = document.getElementById('vm-dur').value.trim() || '';
-  getTx(curTxId).extra.push({ type:'vm', caller, dt, dur, tx:tx2, note:vmNote, cid:null });
+  getTx(curTxId).extra.push({
+    id: 'ex_' + curTxId + '_' + Date.now().toString(36),
+    tags: [curTxId],
+    type:'vm', caller, dt, dur, tx:tx2, note:vmNote, cid:null
+  });
   closeModal('m-vm');
   ['vm-caller','vm-dt','vm-dur','vm-tx','vm-note'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
   renderDetail();
@@ -1544,7 +2148,11 @@ function addCall() {
   const now = new Date();
   const dtStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
   const dt = document.getElementById('cl-dt').value.trim() || dtStr;
-  getTx(curTxId).extra.push({ type:'call', name, num, dt, dur, dir, notes, cid:null });
+  getTx(curTxId).extra.push({
+    id: 'ex_' + curTxId + '_' + Date.now().toString(36),
+    tags: [curTxId],
+    type:'call', name, num, dt, dur, dir, notes, cid:null
+  });
   closeModal('m-call');
   ['cl-name','cl-num','cl-dt','cl-dur','cl-notes'].forEach(id => document.getElementById(id).value='');
   document.getElementById('cl-dir').selectedIndex = 0;
@@ -1555,34 +2163,138 @@ function addCall() {
 // =============================================
 // ANNOTATIONS
 // =============================================
-function setBeginRecord(cid, mi, ts) {
+function setBeginRecord(cid, ts) {
   const conv = getConv(cid);
   if(!conv) return;
-  // Update beginMsg timestamp
   conv.beginMsg = ts;
-  // Update msgs array to only include from this point forward
-  const allMsgs = conv.allMsgs || conv.msgs;
-  const startIdx = allMsgs.findIndex(m => m.ts === ts);
-  if(startIdx > -1) {
-    conv.msgs = allMsgs.slice(startIdx);
-  }
   renderDetail();
   toast('📍 Beginning of Record set to ' + ts);
 }
 
-function openAnn(cid, mi) {
-  annTarget = { cid, mi };
+// Called from the message actions modal — uses the message currently in annTarget
+function setBoRFromAnn() {
+  if (!annTarget || !annTarget.msg || !annTarget.conv) { toast('No message selected'); return; }
+  annTarget.conv.beginMsg = annTarget.msg.ts;
+  closeModal('m-ann');
+  renderDetail();
+  toast('📍 Beginning of Record set');
+}
+
+// Called from the message actions modal — opens the tag picker for the current message
+function openTagPickerFromAnn() {
+  if (!annTarget || !annTarget.msg || !annTarget.conv) { toast('No message selected'); return; }
+  const conv = annTarget.conv;
+  const msg = annTarget.msg;
+  closeModal('m-ann');
+  // If this message lives in conv.allMsgs (has tags array), use openTagPicker
+  if (conv.allMsgs && conv.allMsgs.find(m => m.id === msg.id)) {
+    openTagPicker(conv.id, msg.id);
+  } else {
+    // Simple msgs array — ensure tags array exists, then open a simplified picker
+    if (!msg.tags) msg.tags = [];
+    openSimpleTagPicker(conv.id, msg.id);
+  }
+}
+
+// Tag picker for messages in conv.msgs (no allMsgs) — operates on the msg object directly
+function openSimpleTagPicker(convId, msgId) {
+  const conv = getConv(convId);
+  if (!conv) return;
+  const msg = (conv.msgs || []).find(m => m.id === msgId);
+  if (!msg) { toast('Could not find that message'); return; }
+  pendingTagConvId = convId;
+  pendingTagMsgId = msgId;
+  document.getElementById('tag-preview').textContent = '"' + msg.text.slice(0,80) + (msg.text.length > 80 ? '...' : '') + '"';
+  document.getElementById('tag-picker-list').innerHTML = `
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Tap to file · Tap again to remove · One message can belong to multiple matters</p>
+    ${txs.map(tx => {
+      const color = catColor(tx.cat);
+      const alreadyTagged = (msg.tags || []).includes(tx.id);
+      return `<div class="tag-picker-item" onclick="applySimpleTag(${tx.id})" style="${alreadyTagged ? 'background:#F0FDF4;' : ''}">
+        <div class="tag-picker-icon" style="background:${color}22">${tx.icon}</div>
+        <div style="flex:1">
+          <div class="tag-picker-name">${tx.name}</div>
+          <div class="tag-picker-cat">${tx.cat}</div>
+        </div>
+        ${alreadyTagged ? '<span style="color:#16A34A;font-size:20px;font-weight:700">✓</span>' : '<span style="color:var(--border);font-size:20px">○</span>'}
+      </div>`;
+    }).join('')}
+    <div class="tag-picker-item" onclick="closeModal('m-tag');openAddTxFromSimpleMsg('${convId}','${msgId}')" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
+      <div class="tag-picker-icon" style="background:var(--orange-light);font-size:20px">＋</div>
+      <div style="flex:1">
+        <div class="tag-picker-name" style="color:var(--orange)">Create New Matter</div>
+        <div class="tag-picker-cat">Start fresh — category, name, then file this message in it</div>
+      </div>
+    </div>`;
+  openModal('m-tag');
+}
+
+function openAddTxFromSimpleMsg(convId, msgId) {
+  pendingTagConvId = convId;
+  pendingTagMsgId = msgId;
+  pendingExtraId = null;
+  pendingTextId = null;
+  renderCatGrid();
+  document.getElementById('tx-name').value = '';
+  document.getElementById('tx-note').value = '';
+  selCatVal = 'Real Estate'; selCatIcon = '🏠';
+  updateTemplate();
+  openModal('m-add-tx');
+  setTimeout(() => document.getElementById('tx-name').focus(), 300);
+}
+
+function applySimpleTag(txId) {
+  const conv = getConv(pendingTagConvId);
+  if (!conv) return;
+  const msg = (conv.msgs || []).find(m => m.id === pendingTagMsgId);
+  if (!msg) return;
+  if (!msg.tags) msg.tags = [];
+  if (msg.tags.includes(txId)) {
+    msg.tags = msg.tags.filter(t => t !== txId);
+    toast('Removed from: ' + getTx(txId).name);
+  } else {
+    msg.tags.push(txId);
+    toast('✅ Filed to: ' + getTx(txId).name);
+  }
+  openSimpleTagPicker(pendingTagConvId, pendingTagMsgId);
+  renderDetail();
+}
+
+function openAnn(cid, msgId) {
+  // Always clear any stale content from a previous opening
+  const preview = document.getElementById('ann-preview');
+  const annText = document.getElementById('ann-text');
+  preview.innerHTML = '';
+  annText.value = '';
+  annTarget = null;
+
   const conv = getConv(cid);
-  const m = conv.msgs[mi];
-  document.getElementById('ann-preview').innerHTML = `<strong style="color:${conv.color}">${m.sender}</strong><br><span style="color:var(--text-sec)">${m.text}</span>`;
-  document.getElementById('ann-text').value = m.ann || '';
+  if (!conv) {
+    preview.innerHTML = '<span style="color:#DC4B26">Could not find that conversation.</span>';
+    openModal('m-ann');
+    return;
+  }
+
+  let m = null;
+  if (conv.allMsgs) m = conv.allMsgs.find(x => x && x.id === msgId);
+  if (!m && conv.msgs) m = conv.msgs.find(x => x && x.id === msgId);
+
+  if (!m) {
+    preview.innerHTML = `<span style="color:#DC4B26">Could not find that message.<br><small>Looking for id: ${msgId} in ${conv.party}</small></span>`;
+    openModal('m-ann');
+    return;
+  }
+
+  annTarget = { msg: m, conv: conv };
+  preview.innerHTML = `<strong style="color:${conv.color}">${m.sender}</strong><br><span style="color:var(--text-sec)">${m.text}</span>`;
+  annText.value = m.ann || '';
   openModal('m-ann');
 }
 
 function saveAnn() {
-  if (!annTarget) return;
+  if (!annTarget || !annTarget.msg) return;
   const txt = document.getElementById('ann-text').value.trim();
-  getConv(annTarget.cid).msgs[annTarget.mi].ann = txt || null;
+  annTarget.msg.ann = txt || null;
   closeModal('m-ann');
   renderDetail();
   toast(txt ? '📝 Agent note saved' : 'Note removed');
@@ -1701,24 +2413,46 @@ function generatePDF(fullArchive=false) {
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
   doc.text('PARTIES: '+partyList,M,y,{maxWidth:CW});y+=11;
   const totalMsgs = convs.reduce((a,c)=>a+(archiveMode&&c.allMsgs?c.allMsgs.length:c.msgs.length),0);
-  doc.text('TOTAL MESSAGES: '+totalMsgs+' | Personal messages excluded',M,y);y+=16;
+  doc.text('TOTAL MESSAGES: '+totalMsgs,M,y);y+=16;
 
   // ── CONVERSATIONS — CHRONOLOGICAL, EMOJIS STRIPPED ──
   function clean(s){
     if(!s)return'';
-    return s.replace(/[\u{1F000}-\u{1FFFF}]/gu,'').replace(/[\u{2600}-\u{27BF}]/gu,'').replace(/[\u{1F300}-\u{1F9FF}]/gu,'').replace(/\u{1F1E0}-\u{1F1FF}/gu,'').replace(/→/g,'->').replace(/[^\x00-\x7E]/g,'').replace(/\s+/g,' ').trim();
+    return s
+      // Map accented letters to ASCII so É → E etc. (keeps "Épique" readable)
+      .replace(/[\u00C0-\u00C5]/g,'A').replace(/[\u00E0-\u00E5]/g,'a').replace(/\u00C6/g,'AE').replace(/\u00E6/g,'ae')
+      .replace(/[\u00C8-\u00CB]/g,'E').replace(/[\u00E8-\u00EB]/g,'e')
+      .replace(/[\u00CC-\u00CF]/g,'I').replace(/[\u00EC-\u00EF]/g,'i')
+      .replace(/[\u00D2-\u00D6]/g,'O').replace(/[\u00F2-\u00F6]/g,'o').replace(/\u00D8/g,'O').replace(/\u00F8/g,'o')
+      .replace(/[\u00D9-\u00DC]/g,'U').replace(/[\u00F9-\u00FC]/g,'u')
+      .replace(/\u00D1/g,'N').replace(/\u00F1/g,'n').replace(/\u00C7/g,'C').replace(/\u00E7/g,'c')
+      // Punctuation
+      .replace(/[\u2013\u2014]/g,'-').replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"')
+      .replace(/\u00B7/g,'|')
+      .replace(/\u00A9/g,'(c)').replace(/\u00AE/g,'(R)').replace(/\u2122/g,'(TM)')
+      .replace(/\u2026/g,'...').replace(/\u2192/g,'->')
+      // Strip emojis and any remaining non-ASCII
+      .replace(/[\u{1F000}-\u{1FFFF}]/gu,'')
+      .replace(/[\u{2600}-\u{27BF}]/gu,'')
+      .replace(/[\u{1F300}-\u{1F9FF}]/gu,'')
+      .replace(/[^\x00-\x7E]/g,'')
+      .replace(/\s+/g,' ').trim();
   }
 
   // Build flat chronological list
   const allItems=[];
   convs.forEach(conv=>{
+    if (!conv) return;
     const msgs=(archiveMode&&conv.allMsgs)?conv.allMsgs:conv.msgs;
+    if (!msgs) return;
     msgs.forEach(m=>{
-      allItems.push({kind:'msg',ts:m.ts,sender:clean(m.sender),badge:clean(m.badge),text:clean(m.text),ann:m.ann?clean(m.ann):null,color:conv.color,party:conv.party});
+      if (!m) return;
+      allItems.push({kind:'msg',ts:m.ts,sender:clean(m.sender),badge:clean(m.badge),text:clean(m.text),ann:m.ann?clean(m.ann):null,color:conv.color,party:conv.party,tags:m.tags||[],attachments:m.attachments||[]});
     });
   });
-  tx.extra.forEach(item=>{
-    allItems.push({kind:item.type,ts:item.dt,caller:clean(item.caller||''),name:clean(item.name||''),num:item.num||'',dir:item.dir||'',dur:item.dur||'',tx:clean(item.tx||''),notes:clean(item.notes||''),note:clean(item.note||'')});
+  getExtrasForTx(curTxId).forEach(item=>{
+    if (!item) return;
+    allItems.push({kind:item.type,ts:item.dt,caller:clean(item.caller||''),name:clean(item.name||''),num:item.num||'',dir:item.dir||'',dur:item.dur||'',tx:clean(item.tx||''),notes:clean(item.notes||''),note:clean(item.note||''),tags:item.tags||[]});
   });
 
   function parseTs(ts){
@@ -1743,20 +2477,44 @@ function generatePDF(fullArchive=false) {
         doc.text(dayStr,W/2,y,{align:'center'});y+=9;
       }
       doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...sc);
-      doc.text(item.sender,M,y);
+      doc.text('[TEXT] '+item.sender,M,y);
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
       doc.text(item.ts,W-M,y,{align:'right'});y+=11;
       if(item.badge){doc.setFontSize(7.5);doc.text(item.badge,M,y);y+=9;}
       doc.setFontSize(9);doc.setTextColor(...black);
       doc.splitTextToSize(item.text,CW).forEach(ln=>{chk(12);doc.text(ln,M,y);y+=12;});
+      // Attachments
+      if (item.attachments && item.attachments.length) {
+        item.attachments.forEach(a => {
+          chk(11);
+          doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(80,80,140);
+          let label = '';
+          if (a.type === 'image') label = '[ATTACHMENT - PHOTO] ' + (clean(a.caption) || 'Image');
+          else if (a.type === 'video') label = '[ATTACHMENT - VIDEO] ' + (clean(a.caption) || 'Video clip');
+          else if (a.type === 'pdf') label = '[ATTACHMENT - PDF] ' + (clean(a.name) || 'Document') + (a.size ? ' (' + a.size + ')' : '');
+          else label = '[ATTACHMENT] ' + (clean(a.caption || a.name) || a.type);
+          doc.text(label, M, y);
+          y += 10;
+        });
+        doc.setFont('helvetica','normal');doc.setTextColor(...black);
+      }
       if(item.ann){chk(12);doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(180,100,0);doc.splitTextToSize('[Agent Note] '+item.ann,CW).forEach(ln=>{doc.text(ln,M,y);y+=11;});doc.setFont('helvetica','normal');doc.setTextColor(...black);}
+      // Show "Also filed in" for messages tagged to multiple matters
+      const otherMatters = (item.tags||[]).filter(t => t !== curTxId).map(t => getTx(t)).filter(Boolean);
+      if (otherMatters.length > 0) {
+        chk(11);
+        doc.setFont('helvetica','italic');doc.setFontSize(7);doc.setTextColor(...orange);
+        doc.text('[Also filed in: ' + otherMatters.map(t => t.name).join(', ') + ']', M, y);
+        y += 9;
+      }
+      doc.setFont('helvetica','normal');
       doc.setFontSize(7);doc.setTextColor(...gray);
       doc.text('SHA-256 hashed at ingestion.',M,y);y+=9;
 
     }else if(item.kind==='vm'){
       chk(60);
       doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(22,163,74);
-      doc.text('[Voicemail] '+(item.caller||''),M,y);
+      doc.text('[VOICEMAIL] '+(item.caller||''),M,y);
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
       doc.text(item.ts+(item.dur?' | '+item.dur:''),W-M,y,{align:'right'});y+=12;
       doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(...black);
@@ -1770,7 +2528,7 @@ function generatePDF(fullArchive=false) {
       const noAns=item.dur==='0:00'||item.dur==='0';
       const cc=noAns?[220,75,38]:item.dir==='Inbound'?[37,99,235]:[15,118,110];
       doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...cc);
-      doc.text('['+(noAns?'No Answer':item.dir+' Call')+'] '+item.name,M,y);
+      doc.text('[CALL - '+(noAns?'No Answer':item.dir.toUpperCase())+'] '+item.name,M,y);
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...gray);
       doc.text(item.ts+(item.dur&&!noAns?' | '+item.dur:''),W-M,y,{align:'right'});y+=11;
       if(item.num){doc.text(item.num,M,y);y+=9;}
@@ -1784,7 +2542,7 @@ function generatePDF(fullArchive=false) {
   chk(30);
   doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...gray);
   doc.text(ed,M,y);y+=10;
-  doc.text('Sent via RecallText | Only selected conversations included | Personal messages excluded',M,y);y+=16;
+  doc.text('Sent via RecallText | Selected conversations included',M,y);y+=16;
 
   // ── CHAIN OF CUSTODY ──
   doc.setDrawColor(...orange);doc.setLineWidth(1);doc.line(M,y,W-M,y);y+=12;
@@ -1802,7 +2560,7 @@ function generatePDF(fullArchive=false) {
   doc.setFont('helvetica','bold');
   doc.text('VERIFICATION HASH: SHA256:'+hash,M,y);y+=10;
   doc.setFont('helvetica','normal');doc.setTextColor(...gray);
-  doc.text('Export ID: '+eid+' | 2026 RecallText LLC | recalltext.io',M,y);
+  doc.text('Export ID: '+eid+' | (c) 2026 RecallText LLC | recalltext.io',M,y);
 
   // Page footers — Export ID on every page
   const pageCount = doc.getNumberOfPages();
