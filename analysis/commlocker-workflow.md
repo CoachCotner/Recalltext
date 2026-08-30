@@ -41,7 +41,7 @@ Home (empty state: "No active Files")
             └─ success modal "File created"
                  ├─ [Open File]  → File detail
                  └─ [Not now]    → Home
-            + system notification: "✅ '<name>' created"
+            + in-app toast: "✅ '<name>' created"
 ```
 
 **Type-aware copy** — selecting a type changes the icon, the sheet subtitle, and
@@ -375,6 +375,67 @@ gets visually cut off. Fixing the truncation is therefore not cosmetic.
 
 ---
 
+## 4d. Settings
+
+### In-app Settings
+
+| Item | Observed value |
+|---|---|
+| Exporter Identity | Lauren Cotner |
+| Appearance | System |
+| Permissions | All granted |
+| Contact Aliases | 2 aliases |
+| Storage | 2 records |
+| Backup & Restore | **1 backup** |
+| Subscription | **Active** |
+| Diagnostics | restricted |
+| About | 0.1.29 (33) |
+
+Plus a `Search settings` field.
+
+### Android App info (OS-level)
+
+| Field | Value |
+|---|---|
+| Package | `com.commlocker` |
+| Version | **0.1.29 (33)** — pre-1.0 |
+| Installed from | **App Tester** (sideloaded, not Play Store) |
+| Permissions | Call logs, Contacts and accounts, … |
+| Notifications | **Off** |
+| Storage & cache | **292 MB internal** |
+| Mobile data used | 0.98 MB since Aug 15 |
+
+### Three questions this raises
+
+1. **292 MB on disk vs "2 records" in Settings.**
+   The app's own storage view counts only filed records, but the OS reports
+   292 MB used. Something large is on disk — most likely a local cache of the
+   1,797 ingested conversations and their attachments. If so, the app holds a
+   full copy of the device's message history, which is a materially different
+   privacy posture from "we store what you file." Needs source confirmation.
+
+2. **"1 backup" — to where?**
+   The export's chain-of-custody page asserts records are "processed locally."
+   If Backup & Restore writes off-device, that claim needs qualifying language
+   on the exhibit. If it writes a local file, the claim stands. This is the
+   single most important thing to reconcile, because it appears as an assertion
+   inside a legal document.
+
+3. **"Subscription: Active" implies a server.**
+   Billing means an account and network contact of some kind. Only 0.98 MB of
+   mobile data since Aug 15 suggests it is light — licensing rather than content
+   sync — but "processed locally" and "has a subscription backend" need to be
+   stated together and precisely.
+
+### Distribution note
+
+Version 0.1.29, sideloaded via App Tester. Pre-release, no Play Store review
+performed, and Play Store data-safety disclosures have not yet been written —
+those will need to match whatever the answers to the three questions above are.
+
+
+---
+
 ## 5. Observations
 
 1. **Device SMS ingestion.** The app reads the device message store wholesale —
@@ -411,8 +472,9 @@ gets visually cut off. Fixing the truncation is therefore not cosmetic.
 
 ## 6. Open questions (need source code or further clips)
 
-- Where do Files and filed messages live — device-only, or a server?
-  (The export asserts local-only processing; unverified without source.)
+- What accounts for 292 MB of local storage when Settings reports 2 records?
+- Where does Backup & Restore write, and does it leave the device?
+- What does the Subscription check contact, and what does it transmit?
 - What exactly is fed into the SHA-256 — body only, or body + metadata + timestamps?
   Is the ingestion hash stored anywhere tamper-resistant, or in the same local
   database as the record it protects?
@@ -425,8 +487,9 @@ gets visually cut off. Fixing the truncation is therefore not cosmetic.
 
 ## 7. Not yet mapped
 
-- Settings · Search · the Exports tab in the bottom nav (the per-File export
-  flow and the PDF output are both mapped)
+- Search · the Exports tab in the bottom nav
+- Settings sub-screens: Exporter Identity, Permissions, Contact Aliases,
+  Storage, Backup & Restore, Subscription, Diagnostics
 - Voicemail / Email record paths
 - Manage parties · Select messages · Rename · Close file · Edit details
 - The `By Party` / `By Role` / `Archive` packaging modes (only `Whole` observed)
