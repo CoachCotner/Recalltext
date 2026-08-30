@@ -104,6 +104,62 @@ File detail (empty: "No records yet")
 
 ---
 
+## 3b. All Texts tab  (the device message pool)
+
+Header banner: **"All Device Conversations — Pulled on Launch"** — the app
+re-reads the device message store on every launch.
+
+Search bar: "Search conversations, contacts, keywords…"
+
+**Each conversation row:** avatar, contact name or bare number, last-message
+preview, number, total message count, `Show all` expander, last-activity
+timestamp, and a status control on the right:
+
+| State | Control shown |
+|---|---|
+| Not yet filed | orange **`File`** button (files it directly) |
+| Already filed | green **`Filed <File name>`** badge |
+
+Filed conversations also carry a colored left edge-bar in the list.
+
+**`Show all` expands inline**, showing a loading state and a summary row:
+"All N messages · File to add one to a File, Options for everything else"
+with a **`View Full`** button.
+
+### Conversation detail view
+
+- Header: contact name, number, live message count, `⋮`
+- Persistent instruction banner:
+  > "Tap any record for its options, use File to add it straight to a File, or tap
+  > the three-dot menu above to select additional records for filing.
+  > **One record can go to multiple Files.**"
+- `Message order` · `Sort: Oldest first / Newest first`
+- Loads progressively: "Loading messages… CommLocker is loading this conversation
+  from the device." (count climbs 0 → 400 while loading)
+- **Per-message row:** direction label (`Me — This device` / party), body,
+  metadata (`Owner +…5957 · To +…8840 · Line +…`), timestamp, and controls:
+  **`Hashed`** · **`File`** · **`⋮ Options`**
+- **Per-message `Options` menu:** Add to File · Add note · Copy text ·
+  **Set display name**
+
+### Key architectural finding
+
+Messages show **`Hashed`** in this view — *before* they have been filed into any
+File. Hashing therefore happens on ingestion from the device, not at filing time.
+In the File view messages show `Hashed` **+ `Filed``; here they show `Hashed` +
+an actionable `File` button. The two badges are independent states:
+
+```
+device message ──pulled on launch──> Hashed ──filed into a File──> Hashed + Filed
+```
+
+This matters for the evidentiary claim: the hash is taken at first sight of the
+message, which is the stronger design — but it also means the app is hashing all
+1,797 conversations, not only the ones the user chooses to file.
+
+
+---
+
 ## 4. File detail view (populated)
 
 - Header: back · type icon · File name · export icon · overflow `⋮`
@@ -133,14 +189,25 @@ Select messages · Export File
 2. **Snapshot semantics, disclosed.** Filing captures messages as they exist at
    that moment; it does not subscribe to the conversation. The app states this
    plainly at the confirm step — good practice, and a deliberate product decision.
-3. **`Hashed` is the integrity claim.** Every filed message carries a hash badge.
-   *What* is hashed, with what algorithm, and where the hash is anchored is not
+3. **`Hashed` is the integrity claim, and it is applied at ingestion.** Every
+   message shows a hash badge even before filing (see 3b). *What* is hashed, with
+   what algorithm, and whether it is chained or anchored anywhere is not
    observable from the UI. This is the central question for any evidentiary claim.
 4. **Progressive loading at scale.** A 1,124-message conversation loads
    incrementally ("Loading readable messages…"). "Readable" implies some messages
    are not — unclear which, or whether the user is told.
 5. **Parties are first-class**, with roles and per-type record counters — the data
    model is party-centric, not just chronological.
+6. **Records are many-to-many with Files.** Stated explicitly in the UI: "One
+   record can go to multiple Files." A message is referenced by Files, not owned
+   by one.
+7. **Two routes to filing.** The 3-step wizard (bulk, from inside a File) and the
+   direct `File` button (single record or whole conversation, from All Texts).
+   Both reach the same end state.
+8. **Count discrepancy to check.** A conversation listed as "574 messages" in All
+   Texts opened showing "400 messages" after loading settled. Possibly still
+   loading, possibly the "readable" filter from observation 4. Needs confirming —
+   on an evidentiary record, a silent shortfall matters.
 
 ## 6. Open questions (need source code or further clips)
 
@@ -154,7 +221,7 @@ Select messages · Export File
 
 ## 7. Not yet mapped
 
-- All Texts tab · Search · Exports · Settings
+- Search · Exports · Settings
 - Voicemail / Email / Call record paths
 - Manage parties · Select messages · Rename · Export File
 - Onboarding, permission prompts, first-run
