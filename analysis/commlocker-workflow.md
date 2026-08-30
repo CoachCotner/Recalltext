@@ -181,6 +181,98 @@ Select messages · Export File
 
 ---
 
+## 4b. Export output  (analyzed from a real exported PDF)
+
+A 6-page US-Letter PDF, ~840 KB, PDF 1.7, DejaVuSans embedded, unencrypted,
+no embedded file attachments in this sample (scope had none).
+Filename: `CommLocker_<File>_Transaction_Record_<date>_<ExportID>.pdf`
+
+**Page structure**
+
+| Page | Section | Contents |
+|---|---|---|
+| 1 | Export Summary | Logo, File name, category, Export ID, generated timestamp, exporter name, counts (messages/calls/voicemails/attachments), record scope, date range, packet section list, participant legend |
+| 2 | Conversation Timeline | Date separators; per-message card: type, party, numbers, body, timestamp, and the hash block |
+| 3 | Attachment Index | "No attachments were available in this export scope." |
+| 4 | About This Device | Hardware attestation block (see below) |
+| 5 | How To Read The Hashes | Plain-English explainer of every hash and verification state |
+| 6 | Chain Of Custody | Verification summary, 6 numbered custody statements, Export Hash |
+
+Every page carries a running header (record type + Export ID), a page title,
+`Page N of 6`, the File name and category, and a footer repeating
+`Export ID … | Page N of 6`.
+
+### The per-record hash block
+
+Each message in the timeline carries three lines:
+
+```
+Ingestion record hash (SHA-256):  <64 hex>   ← taken when first read from device
+Current record hash   (SHA-256):  <64 hex>   ← taken when this document was produced
+Verification: MATCH
+```
+
+Four documented verification states:
+- **MATCH** — unchanged since first read
+- **MISMATCH** — changed after first read; the record is still shown, and the label is how you know
+- **SOURCE MISMATCH** — the copy still on the device no longer matches what was first read
+- **ingestion unpinned** — no first-read fingerprint stored, so no comparison is possible
+
+### Hardware attestation (page 4)
+
+The export includes an Android Key Attestation block describing the producing device:
+
+| Field | Example value |
+|---|---|
+| Signing hardware | Isolated secure processor |
+| Bootloader | Locked |
+| Device software | Manufacturer-signed, unmodified |
+| Device reported by hardware | Google Pixel 10 |
+| Android version | 17.0.0 |
+| Security patch | 2026-08 |
+| Bound to record hash | `<64 hex>` |
+| Attestation certificate | `<64 hex>` |
+
+**"Bound to record hash" equals the Export Hash on page 6.** The hardware
+attestation is cryptographically tied to this specific document, not merely
+attached to it.
+
+Accompanied by an accurate scope statement: the attestation describes the phone
+and its software state, and says nothing about whether the communications
+themselves are accurate or complete.
+
+### Honesty of the claims
+
+The document repeatedly and correctly limits itself:
+- "Whether a record changed after this app first read it. It does not establish
+  that the original was accurate, who wrote it, or that nothing is missing."
+- "this record makes no claim of completeness"
+- Notes are labeled separately and do not alter original communication content
+
+This candor is a strength, not a weakness — an exhibit that overclaims gets
+attacked; one that states its own limits survives cross-examination.
+
+### Defects found in the sample export
+
+1. **Header collision, page 1** — "Page 1 of 6" overlaps the orange
+   "TAMPER-EVIDENT COMMUNICATION RECORD" label. Visible layout bug on the cover.
+2. **Fields truncated with an ellipsis** rather than wrapped:
+   - cover date range → "Aug 27, 2026 - Aug 29,…"
+   - participant legend → "Lauren Cotner | Device owne…"
+   - every message metadata line → "Device line: un…"
+   On an exhibit, a visibly cut-off sentence invites a challenge.
+3. **PDF document metadata is empty** — Title, Author, Producer, CreationDate
+   all blank. Should carry the File name, exporter, product, and timestamp;
+   e-discovery tooling reads these.
+4. **No Bates numbering.** `Page N of 6` plus Export ID is good practice but is
+   not Bates. The named competitor ships it.
+5. **Packet section list is incomplete** — the cover lists 4 sections
+   (Cover, Timeline, Attachment Index, Chain of Custody) but the document has 6;
+   "About This Device" and "How To Read The Hashes" are missing from the list.
+
+
+---
+
 ## 5. Observations
 
 1. **Device SMS ingestion.** The app reads the device message store wholesale —
@@ -212,8 +304,12 @@ Select messages · Export File
 ## 6. Open questions (need source code or further clips)
 
 - Where do Files and filed messages live — device-only, or a server?
-- What exactly does `Hashed` cover, and is the hash chained/anchored anywhere?
-- What does Export produce, and does it carry the integrity proof?
+  (The export asserts local-only processing; unverified without source.)
+- What exactly is fed into the SHA-256 — body only, or body + metadata + timestamps?
+  Is the ingestion hash stored anywhere tamper-resistant, or in the same local
+  database as the record it protects?
+- Are ingestion hashes chained or externally timestamped? Without that, a
+  device-local hash pair proves internal consistency, not third-party custody.
 - Which permissions are requested, and when?
 - What are "unreadable" messages, and are they silently dropped?
 - Is there an account/auth layer at all?
@@ -221,7 +317,7 @@ Select messages · Export File
 
 ## 7. Not yet mapped
 
-- Search · Exports · Settings
+- Search · Settings · the in-app Exports tab (the PDF output itself is now mapped)
 - Voicemail / Email / Call record paths
 - Manage parties · Select messages · Rename · Export File
 - Onboarding, permission prompts, first-run
