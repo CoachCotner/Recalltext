@@ -313,6 +313,68 @@ attacked; one that states its own limits survives cross-examination.
 
 ---
 
+## 4a. Home dashboard and File lifecycle
+
+Stat chips across the top are a **status pipeline**, not just counters:
+
+| Active | Review | Ready | Archive |
+|---|---|---|---|
+
+File cards show the type icon, name, category, last-activity date, a content
+summary ("1 conv · 2 msg · 0 phone…"), and a status word (`Needs records`,
+`Ready`). Each card has a document button and a `…` overflow:
+
+**File card overflow:** Edit details · Manage parties · Export · Close file · **Delete**
+
+## 4c. Review & Export screen  (the in-app export flow)
+
+Reached from the File card `…` → Export, or the File detail export icon.
+
+### 1. Readiness checklist
+A gated pre-flight with a progress bar:
+
+> **Ready to export** — All readiness checks are complete.
+> ✅ Records filed  ✅ Parties labeled  ✅ Exporter identity set
+
+### 2. Export scope
+> "Beginning and End define which filed records are included.
+> **Your selections are saved for future exports** and can be changed or reset at any time."
+
+`BEGINNING: First record (start of the File)` → `END: Present (through today)`
+
+Tapping either opens **Set Beginning / End of Record**:
+- `Oldest` / `Newest` toggle · `Jump to` dropdown
+- Records grouped by month heading, each typed (`TEXT`, call, voicemail, email),
+  showing party, preview, and timestamp, with a radio selector
+- "Choose the first record to include — a text, call, voicemail, or email."
+
+Then: **"N records in scope"** with a per-type breakdown (messages · calls ·
+voicemails · attachments).
+
+### 3. Include — packaging mode
+`Whole` · `By Party` · `By Role` · `Archive`
+("Everything in the range above, in one record.")
+
+### 4. Live preview
+The actual rendered cover page is shown inline, so the user sees the real
+document before generating it.
+
+### 5. Format and generate
+`PDF record` | `+ attachments (ZIP)` → **Export**, captioned with the effective
+scope ("All filed records → Present").
+
+### Risk worth flagging
+
+Export scope **persists between exports**. A user who once narrowed a range and
+later exports again gets the old narrowing silently applied. The mitigation is
+the cover page, which prints the date range and scope label — but **that is
+exactly the field that truncates** ("Aug 27, 2026 - Aug 29,…", defect 2 in 4b).
+The one disclosure that would reveal an under-inclusive export is the one that
+gets visually cut off. Fixing the truncation is therefore not cosmetic.
+
+
+---
+
 ## 5. Observations
 
 1. **Device SMS ingestion.** The app reads the device message store wholesale —
@@ -363,8 +425,9 @@ attacked; one that states its own limits survives cross-examination.
 
 ## 7. Not yet mapped
 
-- Search · Settings · the in-app Exports tab (the PDF output itself is now mapped)
+- Settings · Search · the Exports tab in the bottom nav (the per-File export
+  flow and the PDF output are both mapped)
 - Voicemail / Email record paths
-- Manage parties · Select messages · Rename · the in-app export options screen
-  (the resulting PDF is mapped in 4b)
+- Manage parties · Select messages · Rename · Close file · Edit details
+- The `By Party` / `By Role` / `Archive` packaging modes (only `Whole` observed)
 - Onboarding, permission prompts, first-run
