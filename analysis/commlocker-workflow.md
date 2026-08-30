@@ -160,6 +160,46 @@ message, which is the stronger design — but it also means the app is hashing a
 
 ---
 
+## 3c. Flow: Add a Call to a File
+
+`Add to File` → **Call** → "Add Call to File"
+
+- Instruction: "Tap File Here to add an imported call to this file."
+- `Search calls by name or number` · `Filter`
+- Calls are grouped by party — e.g. "CALLS WITH <NAME>"
+- **Per-call row:** direction · party name, date and time, number, and a green
+  source label **`Device call log`**, with a **`File Here`** button on the right
+  (one tap files it — no wizard for calls)
+- Directions observed: `inbound` · `missed` · `no-answer` · `rejected`
+- Footer controls: **`Show N more`** (paged list) · **`↻ Refresh from device`** ·
+  **`Log a call by hand`** (collapsed disclosure) · `Cancel`
+
+Note the contrast with texts: messages are "Pulled on Launch", calls have an
+explicit manual **Refresh from device**.
+
+**Filed calls appear in the File** alongside messages, carrying the same
+`Hashed` + `Filed` badges, the source label `Device call log`, and duration
+(shown in raw seconds, e.g. "Inbound · 347s").
+
+## 3d. Flow: Add a Note to a record
+
+Record `⋮ Options` → **Add note**
+
+- The sheet shows the record being annotated (number, timestamp, source label)
+- `YOUR NOTE` free-text field
+- Standing disclosure, with a shield icon:
+  > "Notes are your own added context. They are labelled as user-added in every
+  > export, and the original record is never changed."
+- `Save Note` → toast "Note saved"
+
+**This matches the export.** The PDF's chain-of-custody page states "Notes are
+labeled separately and do not alter original communication content." The in-app
+promise and the exported document say the same thing — the separation between
+evidence and commentary is enforced end to end, not just claimed on one screen.
+
+
+---
+
 ## 4. File detail view (populated)
 
 - Header: back · type icon · File name · export icon · overflow `⋮`
@@ -296,7 +336,13 @@ attacked; one that states its own limits survives cross-examination.
 7. **Two routes to filing.** The 3-step wizard (bulk, from inside a File) and the
    direct `File` button (single record or whole conversation, from All Texts).
    Both reach the same end state.
-8. **Count discrepancy to check.** A conversation listed as "574 messages" in All
+8. **Notes are structurally separated from evidence** — user commentary never
+   mutates a record, and is labeled as user-added wherever it appears. The UI
+   and the export agree on this.
+9. **Call durations are shown in raw seconds** ("347s") in the File view. Human
+   readers, including attorneys, read "5m 47s" faster. Cosmetic, but it appears
+   on an evidentiary record.
+10. **Count discrepancy to check.** A conversation listed as "574 messages" in All
    Texts opened showing "400 messages" after loading settled. Possibly still
    loading, possibly the "readable" filter from observation 4. Needs confirming —
    on an evidentiary record, a silent shortfall matters.
@@ -318,6 +364,7 @@ attacked; one that states its own limits survives cross-examination.
 ## 7. Not yet mapped
 
 - Search · Settings · the in-app Exports tab (the PDF output itself is now mapped)
-- Voicemail / Email / Call record paths
-- Manage parties · Select messages · Rename · Export File
+- Voicemail / Email record paths
+- Manage parties · Select messages · Rename · the in-app export options screen
+  (the resulting PDF is mapped in 4b)
 - Onboarding, permission prompts, first-run
