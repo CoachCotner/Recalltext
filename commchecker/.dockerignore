@@ -1,0 +1,14 @@
+.git
+.gitignore
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.p12
+*.pfx
+*.pem
+.env
+sample.pdf
+sealed.pdf
+tampered.pdf

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CommChecker — verify a sealed record</title>
+<link rel="icon" href="cc_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="top">
+  <img src="cc_logo.png" alt="CommChecker">
+</header>
+
+<main class="wrap">
+  <h1>Verify a record</h1>
+  <p class="sub">
+    Drop an exported CommLocker PDF below. CommChecker re-checks the seal and
+    tells you whether anything changed since it was sealed — and if something
+    did, exactly which record it was.
+  </p>
+
+  <div class="drop" id="drop" tabindex="0" role="button"
+       aria-label="Choose a PDF to verify">
+    <div class="drop-main"><b>Drop a PDF here</b> or click to choose</div>
+    <small>Nothing is stored. The check runs in memory and the file is discarded.</small>
+    <input type="file" id="file" accept="application/pdf" hidden>
+  </div>
+
+  <div id="res" aria-live="polite"></div>
+</main>
+
+<footer class="foot">
+  <span id="modeline"></span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

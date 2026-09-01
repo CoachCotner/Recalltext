@@ -1,0 +1,19 @@
+# Never commit key material. A .p12 holds a private key.
+*.p12
+*.pfx
+*.pem
+*.key
+.env
+
+# Demo and test output
+sample.pdf
+sealed.pdf
+tampered.pdf
+ui_*.png
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/

@@ -1,0 +1,14 @@
+# CommChecker runtime dependencies.
+# Install with:  pip install -r requirements.txt
+
+pyhanko>=0.25          # PAdES signing, RFC-3161 timestamps, signature validation
+pyhanko-certvalidator>=0.26   # certificate chain and trust validation
+pypdf>=4.0             # reading text and attachments back out of a PDF
+pikepdf>=8.0           # low-level PDF surgery (used by the test suite)
+reportlab>=4.0         # rendering sample/demo exports
+cryptography>=42.0     # key and certificate handling
+
+fastapi>=0.110         # the web service
+uvicorn[standard]>=0.27  # the web server
+python-multipart>=0.0.9  # file upload parsing
+certifi>=2024.2.2      # fallback CA bundle when the OS has none
