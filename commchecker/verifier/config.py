@@ -130,6 +130,9 @@ class Settings:
             "revocation_checking": self.allow_fetching,
             "manifest_previews": self.manifest_previews,
             "max_upload_mb": self.max_upload_mb,
+            "signing_key_present": bool(
+                self.p12_path or self.p12_base64 or not self.is_production
+            ),
             "problems": self.problems,
         }
 
@@ -146,11 +149,17 @@ class Settings:
 
     # -- validation --------------------------------------------------------
 
-    def validate(self) -> List[str]:
+    def validate(self, for_signing: bool = False) -> List[str]:
         """
         Return a list of configuration problems in plain English.
 
         An empty list means the configuration is usable.
+
+        ``for_signing`` adds the checks that only matter when this machine is
+        going to APPLY a seal. Verifying needs no private key - it needs to
+        know which authorities to trust - so a verifier is not asked for one.
+        That separation is deliberate: the signing key should never have to sit
+        on an internet-facing box just to satisfy a config check.
         """
         problems = list(self.problems)
 
@@ -162,27 +171,30 @@ class Settings:
             return problems
 
         if self.is_production:
-            if not self.p12_path and not self.p12_base64:
-                problems.append(
-                    "Production mode needs a real signing certificate. Set "
-                    "COMMCHECKER_P12_PATH to your .p12 file (or "
-                    "COMMCHECKER_P12_BASE64 if your host has no file storage)."
-                )
-            if self.p12_path and self.p12_base64:
-                problems.append(
-                    "Set either COMMCHECKER_P12_PATH or COMMCHECKER_P12_BASE64, "
-                    "not both."
-                )
-            if self.p12_path and not os.path.exists(self.p12_path):
-                problems.append(
-                    f"The signing certificate file was not found at "
-                    f"{self.p12_path!r}."
-                )
-            if self.p12_password is None:
-                problems.append(
-                    "Production mode needs the certificate password. Set "
-                    "COMMCHECKER_P12_PASSWORD or COMMCHECKER_P12_PASSWORD_FILE."
-                )
+            if for_signing:
+                if not self.p12_path and not self.p12_base64:
+                    problems.append(
+                        "Sealing in production needs a real signing "
+                        "certificate. Set COMMCHECKER_P12_PATH to your .p12 "
+                        "file (or COMMCHECKER_P12_BASE64 if your host has no "
+                        "file storage)."
+                    )
+                if self.p12_path and self.p12_base64:
+                    problems.append(
+                        "Set either COMMCHECKER_P12_PATH or "
+                        "COMMCHECKER_P12_BASE64, not both."
+                    )
+                if self.p12_path and not os.path.exists(self.p12_path):
+                    problems.append(
+                        f"The signing certificate file was not found at "
+                        f"{self.p12_path!r}."
+                    )
+                if self.p12_password is None:
+                    problems.append(
+                        "Sealing in production needs the certificate password. "
+                        "Set COMMCHECKER_P12_PASSWORD or "
+                        "COMMCHECKER_P12_PASSWORD_FILE."
+                    )
             if not self.trust_roots_path and not self.trust_system_roots:
                 problems.append(
                     "Production mode has no trust roots, so CommChecker could "
@@ -209,9 +221,9 @@ class Settings:
 
         return problems
 
-    def require_valid(self) -> None:
+    def require_valid(self, for_signing: bool = False) -> None:
         """Raise ConfigError listing every problem at once."""
-        problems = self.validate()
+        problems = self.validate(for_signing=for_signing)
         if problems:
             bullets = "\n".join(f"  - {p}" for p in problems)
             raise ConfigError(

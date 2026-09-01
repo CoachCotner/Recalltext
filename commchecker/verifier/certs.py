@@ -108,7 +108,7 @@ def load_signer(settings: Settings) -> signers.SimpleSigner:
     Raises ConfigError with an explanation a human can act on, rather than
     returning None and failing mysteriously three steps later.
     """
-    settings.require_valid()
+    settings.require_valid(for_signing=True)
     p12_bytes = settings.signing_p12_bytes()
     password = settings.signing_password()
 

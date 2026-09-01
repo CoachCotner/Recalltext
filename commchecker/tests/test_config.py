@@ -45,14 +45,17 @@ class TestProductionCertificate:
         monkeypatch.setenv("COMMCHECKER_P12_PATH", real_cert)
         monkeypatch.setenv("COMMCHECKER_P12_PASSWORD", "s3cret-passphrase")
         monkeypatch.setenv("COMMCHECKER_TSA_REQUIRED", "0")
+        monkeypatch.setenv("COMMCHECKER_TRUST_SYSTEM_ROOTS", "1")
 
         settings = load_settings()
-        assert settings.validate() == []
+        assert settings.validate(for_signing=True) == []
         assert load_signer(settings) is not None
 
-    def test_production_without_a_certificate_is_refused(self, clean_env, monkeypatch):
+    def test_production_without_a_certificate_is_refused_for_signing(
+        self, clean_env, monkeypatch
+    ):
         monkeypatch.setenv("COMMCHECKER_MODE", "production")
-        problems = load_settings().validate()
+        problems = load_settings().validate(for_signing=True)
         assert any("signing certificate" in p for p in problems)
 
     def test_production_never_falls_back_to_the_demo_certificate(
@@ -71,7 +74,10 @@ class TestProductionCertificate:
         monkeypatch.setenv("COMMCHECKER_MODE", "production")
         monkeypatch.setenv("COMMCHECKER_P12_PATH", "/no/such/cert.p12")
         monkeypatch.setenv("COMMCHECKER_P12_PASSWORD", "x")
-        assert any("was not found" in p for p in load_settings().validate())
+        assert any(
+            "was not found" in p
+            for p in load_settings().validate(for_signing=True)
+        )
 
     def test_a_wrong_password_is_reported_clearly(
         self, clean_env, monkeypatch, real_cert
@@ -94,9 +100,10 @@ class TestProductionCertificate:
         monkeypatch.setenv("COMMCHECKER_P12_PATH", real_cert)
         monkeypatch.setenv("COMMCHECKER_P12_PASSWORD_FILE", str(secret))
         monkeypatch.setenv("COMMCHECKER_TSA_REQUIRED", "0")
+        monkeypatch.setenv("COMMCHECKER_TRUST_SYSTEM_ROOTS", "1")
 
         settings = load_settings()
-        assert settings.validate() == []
+        assert settings.validate(for_signing=True) == []
         assert load_signer(settings) is not None
 
     def test_the_certificate_can_come_from_base64(
@@ -110,9 +117,10 @@ class TestProductionCertificate:
         monkeypatch.setenv("COMMCHECKER_P12_BASE64", encoded)
         monkeypatch.setenv("COMMCHECKER_P12_PASSWORD", "s3cret-passphrase")
         monkeypatch.setenv("COMMCHECKER_TSA_REQUIRED", "0")
+        monkeypatch.setenv("COMMCHECKER_TRUST_SYSTEM_ROOTS", "1")
 
         settings = load_settings()
-        assert settings.validate() == []
+        assert settings.validate(for_signing=True) == []
         assert load_signer(settings) is not None
 
     def test_bad_base64_is_reported_clearly(self, clean_env, monkeypatch):
@@ -130,7 +138,9 @@ class TestProductionCertificate:
         monkeypatch.setenv("COMMCHECKER_P12_PATH", real_cert)
         monkeypatch.setenv("COMMCHECKER_P12_BASE64", "abcd")
         monkeypatch.setenv("COMMCHECKER_P12_PASSWORD", "x")
-        assert any("not both" in p for p in load_settings().validate())
+        assert any(
+            "not both" in p for p in load_settings().validate(for_signing=True)
+        )
 
 
 class TestSealingWithAProductionCertificate:

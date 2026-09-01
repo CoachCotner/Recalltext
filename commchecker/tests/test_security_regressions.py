@@ -329,3 +329,67 @@ class TestModeTypo:
         assert settings.validate() != []
         with pytest.raises(ConfigError):
             settings.require_valid()
+
+
+# ---------------------------------------------------------------------------
+# 8. The verifier must never need the signing key
+# ---------------------------------------------------------------------------
+class TestVerifierNeedsNoPrivateKey:
+    """
+    Sealing and verifying are different jobs on different machines.
+
+    Verifying needs to know which authorities to trust - public certificates.
+    It never needs the private key. Requiring one would push the most sensitive
+    file in the system onto the internet-facing box for no reason, so the
+    configuration check must not ask for it.
+    """
+
+    @pytest.fixture
+    def signed_elsewhere(self, sample_pdf, clean_env, tmp_path, monkeypatch):
+        """Seal on a 'signing machine', then publish only the public cert."""
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.serialization import pkcs12
+
+        key_file = tmp_path / "company-signing.p12"
+        make_demo_cert(str(key_file), "pw")
+
+        signer = load_settings()
+        signer.mode = "production"
+        signer.p12_path = str(key_file)
+        signer.p12_password = "pw"
+        signer.trust_system_roots = True
+        sealed, _ = seal_bytes(sample_pdf, signer)
+
+        with open(key_file, "rb") as f:
+            _, cert, _ = pkcs12.load_key_and_certificates(f.read(), b"pw")
+        public_pem = tmp_path / "company-public.pem"
+        public_pem.write_bytes(cert.public_bytes(serialization.Encoding.PEM))
+        key_file.unlink()  # the verifier never sees the private key
+
+        monkeypatch.setenv("COMMCHECKER_MODE", "production")
+        monkeypatch.setenv("COMMCHECKER_TRUST_ROOTS", str(public_pem))
+        monkeypatch.setenv("COMMCHECKER_TSA_REQUIRED", "0")
+        return sealed
+
+    def test_a_verifier_with_no_signing_key_configures_cleanly(
+        self, signed_elsewhere
+    ):
+        settings = load_settings()
+        assert settings.validate() == []
+        assert not settings.p12_path and not settings.p12_base64
+
+    def test_it_verifies_a_genuine_document(self, signed_elsewhere):
+        assert verify_bytes(signed_elsewhere, load_settings())["verdict"] == "PASS"
+
+    def test_it_still_catches_a_tampered_document(self, signed_elsewhere):
+        tampered = signed_elsewhere.replace(b"tomorrow at 2.", b"tomorrow at 5.")
+        report = verify_bytes(tampered, load_settings())
+        assert report["verdict"] == "FAIL"
+        assert [c["id"] for c in report["records"]["changed"]] == ["0003"]
+
+    def test_sealing_without_a_key_is_still_refused(self, signed_elsewhere):
+        """Verify-only leniency must not leak into the signing path."""
+        from verifier.certs import load_signer
+
+        with pytest.raises(ConfigError, match="signing certificate"):
+            load_signer(load_settings())

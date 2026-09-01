@@ -20,6 +20,30 @@ something is not behaving the way you expect.
 
 ---
 
+## 0. Two machines, two different jobs
+
+Before any setting makes sense, the most important distinction in the system:
+
+| Job | What it needs | Where it runs |
+|---|---|---|
+| **Sealing** — applying the seal to an export | Your **private key** (the `.p12`) | Wherever exports are made. Never public. |
+| **Verifying** — checking a sealed document | The **public certificate** of whoever sealed it | The CommChecker website. Internet-facing. |
+
+**Your private key never goes on the web server.** The verifier does not need
+it and cannot use it. It only needs to know which authorities to trust, which
+is public information.
+
+This is why `python cli.py config` asks for a signing certificate only when you
+are actually going to seal something. A verify-only deployment configures
+cleanly with no private key at all.
+
+So when your certificate arrives and you ask "where do I put it?" — the answer
+is: on the machine that seals, and nowhere else. If someone gets your `.p12`
+and its password, they can produce seals indistinguishable from yours, which is
+exactly why it does not belong on a public server.
+
+---
+
 ## 1. The signing certificate
 
 > This is requirement #1: keep the demo certificate for local testing, and drop
