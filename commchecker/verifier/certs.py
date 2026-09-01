@@ -170,6 +170,7 @@ def load_trust_roots(settings: Settings) -> Tuple[List[asn1_x509.Certificate], L
     """
     roots: List[asn1_x509.Certificate] = []
     notes: List[str] = []
+    failures: List[str] = []
 
     path = settings.trust_roots_path
     if path:
@@ -187,11 +188,19 @@ def load_trust_roots(settings: Settings) -> Tuple[List[asn1_x509.Certificate], L
                 notes.append(f"{len(loaded)} certificate(s) from {os.path.basename(f)}")
             except Exception as e:
                 notes.append(f"could not read {os.path.basename(f)}: {e}")
+                failures.append(f"{os.path.basename(f)}: {e}")
 
     if settings.trust_system_roots:
         system_roots, note = _load_system_roots()
         roots.extend(system_roots)
         notes.append(note)
+
+    if failures and not roots:
+        # A mangled CA bundle must not degrade quietly into "trust nothing",
+        # which downstream would read as "could not evaluate".
+        notes.append(
+            "WARNING: no trust roots could be loaded - " + "; ".join(failures)
+        )
 
     return roots, notes
 

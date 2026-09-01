@@ -23,8 +23,8 @@ COPY verifier/ ./verifier/
 COPY web/ ./web/
 COPY cli.py demo.py ./
 
-# Run as an unprivileged user. The service writes nothing, so it needs no
-# writable directories of its own.
+# Run as an unprivileged user. The service keeps uploads in memory and writes
+# no documents of its own.
 RUN useradd --create-home --uid 10001 commchecker \
     && chown -R commchecker:commchecker /app
 USER commchecker

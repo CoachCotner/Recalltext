@@ -155,9 +155,14 @@ logging of document contents. This is enforced by tests
 pytest
 ```
 
-117 tests covering the manifest, sealing and verification, the timestamp path
+157 tests covering the manifest, sealing and verification, the timestamp path
 (offline, using a local timestamp authority), certificate configuration, and
 the web service.
+
+`tests/test_security_regressions.py` pins the cases found in security review -
+forged signing certificates, broken timestamps, hostile manifest attachments,
+duplicate record numbering and unbounded uploads. Each one used to return a
+green PASS or crash the server.
 
 ---
 
@@ -165,16 +170,19 @@ the web service.
 
 Read these before you stake a pitch on the tool.
 
-- **Demo mode proves integrity, not identity.** A self-signed certificate shows
-  the file is unchanged; it says nothing about who sealed it. The report labels
-  this rather than showing a misleading green tick.
+- **Demo mode proves integrity, not real-world identity.** The demo certificate
+  is self-signed, so it shows a file is unchanged and that it was sealed by
+  *this* installation - but nothing in the outside world vouches for that key.
+  A document sealed with anyone else's key is correctly rejected; a document
+  sealed with a genuine CA certificate needs production mode to be judged
+  properly.
 - **The record format is a contract.** Record-level detail works on exports that
   carry `RECORD nnnn | ...` headers. A sealed PDF without them still verifies —
   the report just says record-level detail is unavailable instead of implying
   more than it knows.
-- **Trust roots must be configured to mean anything.** With no roots configured,
-  CommChecker reports the signer's identity as *unevaluated* rather than
-  guessing.
+- **Trust roots must be configured.** With no roots, CommChecker cannot confirm
+  who sealed a document, and returns FAIL rather than a PASS it has not earned.
+  Production mode refuses to start without them.
 - **Not yet built:** Android hardware key-attestation validation (the export's
   page-17 device proof), and PAdES-LTA long-term archival.
 - **Get a security engineer to review the validation logic** before it carries

@@ -24,6 +24,7 @@ from pyhanko.sign.validation import validate_pdf_signature
 from .certs import build_validation_context, describe_certificate, load_signer
 from .config import ConfigError, Settings, load_settings
 from .manifest import (
+    ManifestError,
     compare_records,
     extract_records,
     read_manifest,
@@ -151,11 +152,17 @@ def verify_bytes(
             else "the signer's certificate does not chain to any trusted root",
         )
     elif anchor_kind == "demo-self-trust":
+        # The demo certificate is the only anchor here, so this check still
+        # means something: it catches a document sealed by somebody else's key.
+        # What it cannot do is prove real-world trust, which the wording says.
         add(
             "Sealed by a trusted certificate",
-            None,
-            "DEMO MODE - the seal was checked against the demo certificate "
-            "itself, which proves nothing about real-world trust",
+            status.trusted,
+            "sealed by this installation's own demo certificate - DEMO ONLY, "
+            "this proves nothing about real-world trust"
+            if status.trusted
+            else "NOT sealed by this installation's demo certificate - the "
+            "signer is unknown, so this file did not come from here",
         )
         report["warnings"].append(
             "Running in demo mode with a self-signed certificate. This proves "
@@ -163,16 +170,18 @@ def verify_bytes(
             "CA certificate before relying on identity."
         )
     else:
+        # Nothing to judge against. We cannot certify the signer, and saying
+        # PASS here would claim more than was actually checked.
         add(
             "Sealed by a trusted certificate",
-            None,
-            "no trust roots configured, so the signer's identity could not be "
-            "evaluated (set COMMCHECKER_TRUST_ROOTS or "
-            "COMMCHECKER_TRUST_SYSTEM_ROOTS=1)",
+            False,
+            "no trust roots are configured, so the signer could not be "
+            "verified at all (set COMMCHECKER_TRUST_SYSTEM_ROOTS=1, or "
+            "COMMCHECKER_TRUST_ROOTS)",
         )
         report["warnings"].append(
-            "No trust roots are configured, so this check could not judge who "
-            "sealed the file - only that it is unchanged."
+            "No trust roots are configured, so this file's origin cannot be "
+            "checked. Integrity was still verified."
         )
 
     signer_cert = getattr(status, "signing_cert", None)
@@ -258,7 +267,18 @@ def _attach_record_findings(report: dict, pdf_bytes: bytes, add, sealed: bool) -
     Runs even on a document whose seal has already failed - a broken seal is
     exactly when you most want to know which record was touched.
     """
-    manifest = read_manifest(pdf_bytes)
+    try:
+        manifest = read_manifest(pdf_bytes)
+    except ManifestError as e:
+        # The document carries something claiming to be a manifest but it is
+        # not usable. That is a finding, not a crash.
+        report["records"] = {
+            "manifest_present": False,
+            "manifest_error": str(e),
+            "summary": f"This document's per-record manifest is unusable: {e}",
+        }
+        add("Per-record manifest is readable", False, str(e))
+        return
 
     if manifest is None:
         report["records"] = {
@@ -312,21 +332,35 @@ def _attach_record_findings(report: dict, pdf_bytes: bytes, add, sealed: bool) -
 
 
 def _decide_verdict(report: dict, status, anchor_kind: str) -> None:
-    """Turn the checks into one word, and one sentence explaining it."""
+    """
+    Turn the checks into one word, and one sentence explaining it.
+
+    PASS means every question this tool asked came back clean. A question it
+    could not answer is not a pass - "we could not check who sealed this" must
+    never be reported as "this is fine", because the person reading the banner
+    takes a green PASS as the whole answer.
+    """
     records = report["records"]
     integrity_ok = bool(status.intact) and bool(status.valid)
     coverage_ok = report["seal"].get("coverage") == "ENTIRE_FILE"
 
-    # Trust only counts against the verdict when it was genuinely evaluated.
-    trust_ok = True
-    if anchor_kind == "configured":
-        trust_ok = bool(status.trusted)
+    # Trust always counts. With no anchors configured, status.trusted is False
+    # and the verdict says so rather than quietly waving the document through.
+    trust_ok = bool(status.trusted)
+
+    # A timestamp that is present but broken is evidence of tampering. It lives
+    # in the part of the signature the seal does not cover, so nothing else
+    # here would catch it.
+    timestamp = report.get("timestamp") or {}
+    timestamp_ok = not (timestamp.get("present") and not timestamp.get("intact"))
 
     records_ok = True
     if records.get("manifest_present"):
         records_ok = bool(records.get("all_records_match"))
+    elif records.get("manifest_error"):
+        records_ok = False
 
-    if integrity_ok and coverage_ok and trust_ok and records_ok:
+    if integrity_ok and coverage_ok and trust_ok and timestamp_ok and records_ok:
         report["verdict"] = "PASS"
         count = records.get("record_count_found")
         if records.get("manifest_present") and count:
@@ -351,10 +385,26 @@ def _decide_verdict(report: dict, status, anchor_kind: str) -> None:
         report["message"] = (
             "Content was ADDED to this file after it was sealed - flag for review."
         )
-    elif not trust_ok:
+    elif not timestamp_ok:
         report["message"] = (
-            "The file is unchanged, but it was not sealed by a trusted "
-            "certificate - treat its origin as unproven."
+            "The trusted timestamp on this seal is BROKEN - the sealing time "
+            "cannot be relied on. Flag for review."
+        )
+    elif not trust_ok:
+        if anchor_kind == "none":
+            report["message"] = (
+                "The file is unchanged, but no trust roots are configured, so "
+                "CommChecker cannot confirm who sealed it."
+            )
+        else:
+            report["message"] = (
+                "This file was NOT sealed by a trusted certificate - it did "
+                "not come from where it claims to. Flag for review."
+            )
+    elif records.get("manifest_error"):
+        report["message"] = (
+            "This document's per-record manifest is unusable, so its records "
+            "could not be checked."
         )
     else:
         report["message"] = "This record did not pass verification."

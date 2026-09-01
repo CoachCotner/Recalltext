@@ -10,9 +10,17 @@ Run in production:
 Privacy design
 --------------
 Uploaded documents are held in memory for the length of one request and then
-dropped. Nothing is written to disk, nothing is logged beyond the fact that a
-request happened, and there is no database. The service cannot leak documents
-it never kept.
+dropped. Nothing is logged beyond the fact that a request happened, and there
+is no database. The service cannot leak documents it never kept.
+
+Keeping that true takes two deliberate steps, both below:
+
+  * Oversized requests are rejected from their Content-Length BEFORE the body
+    is read, so the server never ingests a file it intends to refuse.
+  * Starlette buffers uploads to a SpooledTemporaryFile that rolls over to
+    real disk past 1 MB by default - which would put every genuine export on
+    disk. The spool is raised to the upload limit so accepted files stay in
+    memory.
 """
 import os
 import sys
@@ -21,6 +29,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, Response
+from starlette.formparsers import MultiPartParser
 
 from verifier import ConfigError, load_settings, quiet_library_logs, verify_bytes
 from verifier.certs import ensure_demo_cert
@@ -80,6 +89,49 @@ CSP = (
     "form-action 'none'; "
     "frame-ancestors 'none'"
 )
+
+
+# Starlette spools each uploaded part to a temporary file once it passes
+# spool_max_size (1 MB by default), which would write real sealed exports to
+# disk. Raising it to the upload cap keeps accepted uploads in memory, and the
+# Content-Length guard below stops anything bigger from being read at all.
+MultiPartParser.spool_max_size = max(
+    SETTINGS.max_upload_bytes, MultiPartParser.spool_max_size
+)
+
+
+def _too_large_response(limit_mb: int) -> JSONResponse:
+    return JSONResponse(
+        {
+            "verdict": "FAIL",
+            "message": f"That file is larger than the {limit_mb} MB limit.",
+            "checks": [],
+            "warnings": [],
+            "records": {"manifest_present": False},
+            "timestamp": {"present": False},
+        },
+        status_code=413,
+    )
+
+
+@app.middleware("http")
+async def limit_request_size(request: Request, call_next):
+    """
+    Reject an oversized upload before its body is read.
+
+    Without this the whole request is parsed and buffered before the endpoint
+    is entered, so a size check inside the endpoint arrives far too late to
+    prevent the resource use it is meant to prevent.
+    """
+    if request.method == "POST":
+        declared = request.headers.get("content-length")
+        if declared is not None:
+            try:
+                if int(declared) > SETTINGS.max_upload_bytes:
+                    return _too_large_response(SETTINGS.max_upload_mb)
+            except ValueError:
+                pass
+    return await call_next(request)
 
 
 @app.middleware("http")
@@ -157,19 +209,10 @@ def verify_endpoint(file: UploadFile = File(...)):
             break
         buffer.extend(chunk)
         if len(buffer) > limit:
-            # Stop reading immediately - do not buffer a file we will reject.
-            return JSONResponse(
-                {
-                    "verdict": "FAIL",
-                    "message": f"That file is larger than the "
-                    f"{SETTINGS.max_upload_mb} MB limit.",
-                    "checks": [],
-                    "warnings": [],
-                    "records": {"manifest_present": False},
-                    "timestamp": {"present": False},
-                },
-                status_code=413,
-            )
+            # Backstop for a request that arrived without a Content-Length
+            # (chunked transfer), which the middleware above cannot measure.
+            buffer.clear()
+            return _too_large_response(SETTINGS.max_upload_mb)
 
     data = bytes(buffer)
     if not data:
@@ -198,6 +241,22 @@ def verify_endpoint(file: UploadFile = File(...)):
                 "timestamp": {"present": False},
             },
             status_code=503,
+        )
+    except Exception:
+        # verify_bytes is built to report rather than raise, but this endpoint
+        # takes hostile input by design: an unforeseen parser failure must read
+        # as a refused document, never as a server error the caller mistakes
+        # for a network problem.
+        return JSONResponse(
+            {
+                "verdict": "FAIL",
+                "message": "This file could not be processed as a PDF.",
+                "checks": [],
+                "warnings": [],
+                "records": {"manifest_present": False},
+                "timestamp": {"present": False},
+            },
+            status_code=200,
         )
     finally:
         # Drop the bytes as soon as we are done with them.

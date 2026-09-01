@@ -152,6 +152,10 @@ def main() -> int:
             if len(argv) < 2:
                 print("Usage: python cli.py verify file.pdf")
                 return 2
+            # A misconfigured verifier gives misleading answers, so refuse
+            # rather than quietly checking against the wrong trust settings.
+            # (A COMMCHECKER_MODE typo used to land here as silent demo mode.)
+            settings.require_valid()
             ensure_demo_cert(settings)
             report = verify(argv[1], settings)
             if as_json:

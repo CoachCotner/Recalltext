@@ -36,6 +36,10 @@ from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
+class ManifestError(Exception):
+    """The document carries a manifest, but it is not a usable one."""
+
+
 MANIFEST_FILENAME = "commlocker-manifest.json"
 MANIFEST_SCHEMA = "commlocker.manifest/1"
 CANONICALIZATION = "commlocker-text/1"
@@ -156,6 +160,18 @@ def build_manifest(
     source: Optional[dict] = None,
 ) -> dict:
     """Turn a list of records into the manifest that gets sealed into the PDF."""
+    # Records are matched by number at verification time, so a repeated number
+    # would leave one record permanently unchecked while the report claimed
+    # full coverage. Refuse to seal an export that cannot be verified.
+    seen = set()
+    duplicates = sorted({r.id for r in records if r.id in seen or seen.add(r.id)})
+    if duplicates:
+        raise ManifestError(
+            "cannot seal this export: record number(s) "
+            + ", ".join(duplicates)
+            + " appear more than once. Record numbering must be unique."
+        )
+
     entries = []
     for record in records:
         entry = {
@@ -191,7 +207,9 @@ def manifest_digest(manifest: dict) -> str:
     changes this value even when every surviving record is untouched.
     """
     joined = "\n".join(
-        f"{e['id']}:{e[HASH_ALGORITHM]}" for e in manifest.get("records", [])
+        f"{e.get('id')}:{e.get(HASH_ALGORITHM)}"
+        for e in manifest.get("records", [])
+        if isinstance(e, dict)
     )
     return hashlib.sha256(joined.encode("utf-8")).hexdigest()
 
@@ -224,9 +242,59 @@ def read_manifest(pdf_bytes: bytes) -> Optional[dict]:
 
     raw = payloads[0] if isinstance(payloads, list) else payloads
     try:
-        return json.loads(raw.decode("utf-8"))
-    except Exception:
-        return None
+        manifest = json.loads(raw.decode("utf-8"))
+    except Exception as e:
+        raise ManifestError(f"the attached manifest is not readable JSON: {e}")
+
+    validate_manifest(manifest)
+    return manifest
+
+
+def validate_manifest(manifest) -> None:
+    """
+    Check the manifest's shape before anything trusts it.
+
+    The manifest arrives inside an uploaded file, so it is attacker-controlled
+    until proven otherwise. Everything downstream indexes into it; without this
+    a hand-crafted attachment turns a verification into a server crash.
+    """
+    if not isinstance(manifest, dict):
+        raise ManifestError(
+            f"the manifest should be a JSON object, found "
+            f"{type(manifest).__name__}"
+        )
+
+    records = manifest.get("records")
+    if records is None:
+        raise ManifestError("the manifest lists no records")
+    if not isinstance(records, list):
+        raise ManifestError(
+            f"the manifest's record list should be a list, found "
+            f"{type(records).__name__}"
+        )
+
+    seen = set()
+    for index, entry in enumerate(records):
+        if not isinstance(entry, dict):
+            raise ManifestError(
+                f"manifest entry {index} should be an object, found "
+                f"{type(entry).__name__}"
+            )
+        record_id = entry.get("id")
+        if record_id is None:
+            raise ManifestError(f"manifest entry {index} has no record id")
+        if not isinstance(entry.get(HASH_ALGORITHM), str):
+            raise ManifestError(
+                f"manifest entry {record_id} has no {HASH_ALGORITHM} fingerprint"
+            )
+        # Records are matched by id, so a repeated id would silently hide one
+        # record behind another.
+        if str(record_id) in seen:
+            raise ManifestError(
+                f"record id {record_id} appears more than once - record "
+                f"numbering must be unique"
+            )
+        seen.add(str(record_id))
 
 
 # ---------------------------------------------------------------------------
@@ -240,9 +308,18 @@ def compare_records(manifest: dict, records: List[Record]) -> dict:
     were removed, and which were inserted.
     """
     expected: Dict[str, dict] = {
-        str(e["id"]): e for e in manifest.get("records", [])
+        str(e["id"]): e for e in manifest.get("records", []) if isinstance(e, dict)
     }
-    found: Dict[str, Record] = {r.id: r for r in records}
+
+    # A repeated id in the document would let one record hide behind another,
+    # so it is a finding in its own right rather than something to paper over.
+    found: Dict[str, Record] = {}
+    duplicate_ids: List[str] = []
+    for record in records:
+        if record.id in found:
+            duplicate_ids.append(record.id)
+        else:
+            found[record.id] = record
 
     matched: List[str] = []
     changed: List[dict] = []
@@ -301,6 +378,7 @@ def compare_records(manifest: dict, records: List[Record]) -> dict:
     manifest_intact = manifest.get("manifest_sha256") == manifest_digest(manifest)
 
     return {
+        "duplicate_ids": sorted(set(duplicate_ids)),
         "record_count_sealed": len(expected),
         "record_count_found": len(found),
         "matched_count": len(matched),
@@ -310,7 +388,11 @@ def compare_records(manifest: dict, records: List[Record]) -> dict:
         "added": sorted(added, key=lambda c: c["id"]),
         "manifest_self_consistent": manifest_intact,
         "all_records_match": (
-            not changed and not missing and not added and manifest_intact
+            not changed
+            and not missing
+            and not added
+            and not duplicate_ids
+            and manifest_intact
         ),
     }
 
@@ -372,6 +454,9 @@ def summarise(comparison: dict) -> str:
     if added:
         ids = ", ".join(a["id"] for a in added[:5])
         bits.append(f"{len(added)} added: {ids}")
+    if comparison.get("duplicate_ids"):
+        ids = ", ".join(comparison["duplicate_ids"][:5])
+        bits.append(f"duplicate record numbers: {ids}")
     if not comparison["manifest_self_consistent"]:
         bits.append("the manifest itself was altered")
 

@@ -178,6 +178,14 @@ class Settings:
                     "Production mode needs the certificate password. Set "
                     "COMMCHECKER_P12_PASSWORD or COMMCHECKER_P12_PASSWORD_FILE."
                 )
+            if not self.trust_roots_path and not self.trust_system_roots:
+                problems.append(
+                    "Production mode has no trust roots, so CommChecker could "
+                    "not confirm who sealed any document and would fail every "
+                    "check. Set COMMCHECKER_TRUST_SYSTEM_ROOTS=1 (usual "
+                    "choice), or point COMMCHECKER_TRUST_ROOTS at your CA "
+                    "certificate."
+                )
             if self.tsa_required and not self.tsa_url:
                 problems.append(
                     "COMMCHECKER_TSA_REQUIRED is on but COMMCHECKER_TSA_URL is "

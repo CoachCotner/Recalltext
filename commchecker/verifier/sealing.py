@@ -30,6 +30,7 @@ from .config import ConfigError, Settings, load_settings
 from .certs import load_signer
 from .manifest import (
     MANIFEST_FILENAME,
+    ManifestError,
     Record,
     build_manifest,
     extract_records,
@@ -85,11 +86,14 @@ def seal_bytes(
     if records is None:
         records = extract_records(pdf_bytes)
 
-    manifest = build_manifest(
-        records,
-        include_previews=settings.manifest_previews,
-        source=source,
-    )
+    try:
+        manifest = build_manifest(
+            records,
+            include_previews=settings.manifest_previews,
+            source=source,
+        )
+    except ManifestError as e:
+        raise SealError(str(e)) from e
 
     # 2. Attach the manifest, then sign. Both happen in one incremental update,
     #    so the signature covers the manifest: altering the manifest to match a
