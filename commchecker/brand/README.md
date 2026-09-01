@@ -46,12 +46,29 @@ Put these in `commchecker/web/`:
 
 ---
 
-## Status of the files currently in this repository
+## Status
 
-| File | Status |
-|---|---|
-| `web/CommChecker_logo_transparent.png` | **OUTDATED** — carries the old tagline *"CHECKED. VERIFIED. UNCHANGED."* The current mark reads *"CHECKED. CONFIRMED. FLAGGED."* Replace this file. |
-| `web/CommChecker_icon.png` | From the original prototype; replace with the current icon. |
-| `brand/CommLocker_logo_*` | **NOT PRESENT.** Until one is added, the sealed-record cover page sets its header in type instead of artwork. |
+All five files are present and in use.
 
-Replacing them is a straight file overwrite — same filenames, no code change.
+| File | Location | Notes |
+|---|---|---|
+| `CommLocker_logo_transparent.png` | `brand/` | **In use** on the sealed-record cover header |
+| `CommLocker_logo_2000.png` | `brand/` | Higher-resolution fallback |
+| `CommLocker_logo_POP.svg` | `brand/` | Last fallback — see the note below |
+| `CommChecker_logo_transparent.png` | `web/` | **In use** on the verify page header |
+| `CommChecker_icon.png` | `web/` | **In use** as the browser tab icon |
+
+### A note on `CommLocker_logo_POP.svg`
+
+That file is **not vector artwork**. It contains no `<path>` elements — it is a
+base64-encoded PNG wrapped in an `<svg>` element, at the same 2000x965 as
+`CommLocker_logo_2000.png`. So it offers no crispness advantage on a PDF while
+adding a rendering dependency, and it is tried last rather than first.
+
+This does not affect quality. `CommLocker_logo_transparent.png` is 1330px wide
+and is placed about 250pt across, which needs roughly 1040px at 300dpi — so
+there is resolution to spare in print.
+
+If true vector artwork is produced later (an SVG built from paths, or a PDF/EPS
+export), drop it in and point `COMMCHECKER_COVER_LOGO` at it; the SVG path in
+the code already handles real vector.

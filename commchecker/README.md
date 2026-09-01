@@ -166,7 +166,7 @@ logging of document contents. This is enforced by tests
 pytest
 ```
 
-210 tests covering the manifest, sealing and verification, the timestamp path
+216 tests covering the manifest, sealing and verification, the timestamp path
 (offline, using a local timestamp authority), certificate configuration, and
 the web service.
 
@@ -177,6 +177,21 @@ green PASS or crash the server.
 
 `tests/test_failure_reporting.py` pins the wording of each failure, including
 that an alteration hidden inside a re-save still escalates.
+
+---
+
+## Branding
+
+Two products, two logos, and keeping them straight matters:
+
+> **CommLocker seals it** — its logo is on the sealed record (the cover page a
+> broker opens).
+> **CommChecker checks it** — its logo is on the verify tool (the PASS/FAIL
+> page).
+
+Logo files are placed exactly as supplied — never recoloured, flattened, traced
+or regenerated. Navy `#071B42`, burnt orange `#C56230`, soft white `#EDEDED`.
+See [brand/README.md](brand/README.md) for which file goes where.
 
 ---
 

@@ -48,14 +48,21 @@ TIMESTAMP_FILENAME = "commlocker-timestamp.tsr"
 # The cover page is the CommLocker product's page - CommLocker seals the
 # record, CommChecker checks it - so it carries the CommLocker mark.
 #
-# Tried in order. The transparent PNG comes first because it is the one made
-# to sit on a dark background, which is what the navy header band is. Logos are
-# placed exactly as supplied: never recoloured, traced or regenerated.
+# Tried in order. The transparent PNG comes first: it is the one made to sit on
+# a dark background, which is what the navy header band is, and at 1330px wide
+# it has resolution to spare for a 250pt placement (~1040px at 300dpi).
+#
+# The 2000px PNG outranks the .svg deliberately. That SVG contains no vector
+# paths - it is a base64 PNG wrapped in an <svg> element - so it offers no
+# crispness advantage over a plain PNG while adding a rendering dependency. If
+# a true vector file is supplied later, point COMMCHECKER_COVER_LOGO at it.
+#
+# Logos are placed exactly as supplied: never recoloured, traced or regenerated.
 BRAND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "brand")
 COVER_LOGO_CANDIDATES = (
     "CommLocker_logo_transparent.png",
-    "CommLocker_logo_POP.svg",
     "CommLocker_logo_2000.png",
+    "CommLocker_logo_POP.svg",
 )
 
 
@@ -303,14 +310,23 @@ def _header(c, demo_mode: bool, logo_path: Optional[str] = None) -> None:
         )
 
     if drew_logo:
+        # The logo holds the left of the band; the right carries the title,
+        # stacked so the demo badge cannot collide with it.
         c.setFillColorRGB(1, 1, 1)
         c.setFont("Helvetica-Bold", 19)
-        c.drawRightString(PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 62, "SEALED RECORD")
+        c.drawRightString(PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 56, "SEALED RECORD")
         c.setFillColorRGB(0.78, 0.82, 0.89)
         c.setFont("Helvetica", 10.5)
         c.drawRightString(
-            PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 80, "verify at CommChecker"
+            PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 74, "verify at CommChecker"
         )
+        if demo_mode:
+            c.setFillColorRGB(*BURNT)
+            c.setFont("Helvetica-Bold", 9.5)
+            c.drawRightString(
+                PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 96, "DEMO - NOT A LIVE SEAL"
+            )
+        return
     else:
         # No brand file present - set it in type rather than inventing artwork.
         c.setFillColorRGB(1, 1, 1)
@@ -328,7 +344,7 @@ def _header(c, demo_mode: bool, logo_path: Optional[str] = None) -> None:
         c.setFillColorRGB(*BURNT)
         c.setFont("Helvetica-Bold", 10)
         c.drawRightString(
-            PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 68, "DEMO - NOT A LIVE SEAL"
+            PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 110, "DEMO - NOT A LIVE SEAL"
         )
 
 
