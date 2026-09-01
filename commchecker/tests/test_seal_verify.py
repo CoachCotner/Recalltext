@@ -217,3 +217,110 @@ class TestReportShape:
 
     def test_the_file_hash_is_reported(self, sealed, settings):
         assert len(verify_bytes(sealed, settings)["file_sha256"]) == 64
+
+
+class TestReSigningAttacks:
+    """
+    An attacker who cannot forge the seal may try to work around it: append
+    their own signature to make the document look freshly signed, or doctor a
+    record and re-sign to cover their tracks.
+    """
+
+    @pytest.fixture
+    def attacker(self, tmp_path):
+        from pyhanko.sign import signers as pyhanko_signers
+
+        from verifier.certs import make_demo_cert
+
+        path = tmp_path / "attacker.p12"
+        make_demo_cert(str(path), "x")
+        return pyhanko_signers.SimpleSigner.load_pkcs12(str(path), passphrase=b"x")
+
+    @staticmethod
+    def _append_signature(pdf_bytes, signer):
+        import io
+
+        from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
+        from pyhanko.sign import signers as pyhanko_signers
+        from pyhanko.sign.signers import PdfSignatureMetadata
+
+        writer = IncrementalPdfFileWriter(io.BytesIO(pdf_bytes))
+        out = pyhanko_signers.sign_pdf(
+            writer, PdfSignatureMetadata(field_name="AttackerSig"), signer=signer
+        )
+        return out.getvalue()
+
+    def test_appending_another_signature_does_not_pass(
+        self, sealed, settings, attacker
+    ):
+        """
+        The appended signature is valid and the original seal is untouched, so
+        only the coverage check stands between this and a false green light.
+        """
+        doubled = self._append_signature(sealed, attacker)
+        report = verify_bytes(doubled, settings)
+
+        assert report["verdict"] == "FAIL"
+        checks = {c["check"]: c["ok"] for c in report["checks"]}
+        assert checks["Seal covers the whole document"] is False
+
+    def test_doctoring_then_re_signing_still_names_the_record(
+        self, sealed, settings, attacker
+    ):
+        tampered = sealed.replace(b"tomorrow at 2.", b"tomorrow at 5.")
+        re_signed = self._append_signature(tampered, attacker)
+
+        report = verify_bytes(re_signed, settings)
+        assert report["verdict"] == "FAIL"
+        assert [c["id"] for c in report["records"]["changed"]] == ["0003"]
+
+
+class TestMultiPageExports:
+    """A real transaction thread runs to many pages, not one."""
+
+    @pytest.fixture
+    def long_thread(self):
+        from verifier.manifest import Record
+        from verifier.sample import render_records_pdf
+
+        records = [
+            Record(
+                id=f"{i:04d}",
+                sent_utc=f"2025-08-{(i % 28) + 1:02d}T09:{i % 60:02d}:00Z",
+                direction="INBOUND" if i % 2 else "OUTBOUND",
+                party="+15550142",
+                body=f"Message number {i} about the closing schedule and the "
+                f"appraisal contingency.",
+            )
+            for i in range(1, 61)
+        ]
+        return render_records_pdf(records, title="Long thread")
+
+    def test_records_are_sealed_across_every_page(self, long_thread, settings):
+        from verifier import read_manifest
+
+        sealed, info = seal_bytes(long_thread, settings)
+        assert info["records_sealed"] == 60
+
+        pages = {e["page"] for e in read_manifest(sealed)["records"]}
+        assert len(pages) > 1, "this fixture should span several pages"
+
+    def test_a_clean_multi_page_export_passes(self, long_thread, settings):
+        sealed, _ = seal_bytes(long_thread, settings)
+        report = verify_bytes(sealed, settings)
+        assert report["verdict"] == "PASS"
+        assert report["records"]["record_count_found"] == 60
+
+    def test_a_change_on_a_later_page_is_pinned_to_that_page(
+        self, long_thread, settings
+    ):
+        sealed, _ = seal_bytes(long_thread, settings)
+        tampered = sealed.replace(
+            b"Message number 47 about", b"Message number 00 about"
+        )
+        assert tampered != sealed
+
+        changed = verify_bytes(tampered, settings)["records"]["changed"]
+        assert len(changed) == 1
+        assert changed[0]["id"] == "0047"
+        assert changed[0]["page"] > 1

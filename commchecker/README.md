@@ -155,7 +155,7 @@ logging of document contents. This is enforced by tests
 pytest
 ```
 
-112 tests covering the manifest, sealing and verification, the timestamp path
+117 tests covering the manifest, sealing and verification, the timestamp path
 (offline, using a local timestamp authority), certificate configuration, and
 the web service.
 
