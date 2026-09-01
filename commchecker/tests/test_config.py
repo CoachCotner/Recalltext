@@ -239,3 +239,58 @@ class TestOtherSettings:
         monkeypatch.setenv("COMMCHECKER_P12_BASE64", "SECRETKEYMATERIAL")
         monkeypatch.setenv("COMMCHECKER_P12_PASSWORD", "x")
         assert "SECRETKEYMATERIAL" not in str(load_settings().describe())
+
+
+class TestSharedDemoCertificate:
+    """
+    A hosted demo has to verify documents sealed somewhere else.
+
+    A deployed server generates its own demo certificate on a filesystem that
+    is wiped on every deploy, so a PDF sealed on a laptop is signed by a key
+    the server has never seen and is correctly rejected. Supplying the same
+    demo certificate to both makes the demo work without weakening the check.
+    """
+
+    def test_the_demo_certificate_can_be_supplied_as_base64(
+        self, clean_env, monkeypatch, sample_pdf, tmp_path
+    ):
+        import base64
+
+        from verifier.certs import ensure_demo_cert
+
+        laptop = load_settings()
+        ensure_demo_cert(laptop)
+        sealed, _ = seal_bytes(sample_pdf, laptop)
+
+        with open(laptop.demo_p12_path, "rb") as f:
+            blob = base64.b64encode(f.read()).decode()
+        import os
+
+        os.remove(laptop.demo_p12_path)  # the server has no file at all
+
+        monkeypatch.setenv("COMMCHECKER_DEMO_P12_BASE64", blob)
+        server = load_settings()
+        ensure_demo_cert(server)
+
+        assert verify_bytes(sealed, server)["verdict"] == "PASS"
+
+    def test_a_different_demo_certificate_still_rejects(
+        self, clean_env, sample_pdf, tmp_path
+    ):
+        """Sharing the certificate must not turn the signer check off."""
+        from verifier.certs import ensure_demo_cert
+
+        laptop = load_settings()
+        ensure_demo_cert(laptop)
+        sealed, _ = seal_bytes(sample_pdf, laptop)
+
+        other = load_settings()
+        other.demo_p12_path = str(tmp_path / "other.p12")
+        make_demo_cert(other.demo_p12_path, other.demo_p12_password)
+
+        assert verify_bytes(sealed, other)["verdict"] == "FAIL"
+
+    def test_bad_demo_base64_is_reported_clearly(self, clean_env, monkeypatch):
+        monkeypatch.setenv("COMMCHECKER_DEMO_P12_BASE64", "!!! not base64 !!!")
+        with pytest.raises(ConfigError, match="base64"):
+            load_signer(load_settings())

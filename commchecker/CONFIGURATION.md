@@ -104,9 +104,24 @@ Only used when `COMMCHECKER_MODE=demo`.
 |---|---|
 | `COMMCHECKER_DEMO_P12_PATH` | `demo.p12` |
 | `COMMCHECKER_DEMO_P12_PASSWORD` | `demo` |
+| `COMMCHECKER_DEMO_P12_BASE64` | *(unset)* - the demo certificate as text |
 
 Create it with `python cli.py init`. The demo and the web service create it
 automatically if it is missing.
+
+**If you are hosting a demo, you need `COMMCHECKER_DEMO_P12_BASE64`.** A
+deployed server creates its own demo certificate and loses it on every deploy,
+so a PDF you sealed on your laptop is signed by a key the server has never
+seen - and gets correctly rejected as coming from an unknown signer. Give both
+machines the same certificate:
+
+```bash
+python cli.py init      # creates demo.p12 on your laptop
+base64 -w0 demo.p12     # copy this into COMMCHECKER_DEMO_P12_BASE64 on the host
+```
+
+This does not weaken anything: a document sealed with any *other* key is still
+rejected.
 
 ---
 

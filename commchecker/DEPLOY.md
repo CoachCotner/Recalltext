@@ -10,6 +10,69 @@ document covers where to put it.
 
 ---
 
+## Hosting a demo (no certificate yet)
+
+This is the quickest path to a real URL you can show people, using the demo
+certificate. About ten minutes, and nothing to pay on a free tier.
+
+**The one thing that trips people up:** a deployed server creates its own demo
+certificate, and its filesystem is wiped on every deploy. A PDF you sealed on
+your laptop is signed by a key that server has never seen, so it gets rejected
+as coming from an unknown signer — correct, but unhelpful. The fix is to give
+both machines the same demo certificate.
+
+**On your laptop**, create the certificate and your two demo files:
+
+```bash
+cd commchecker
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+
+python demo.py
+```
+
+That writes three files: `sealed.pdf` (the good copy), `tampered.pdf` (the
+doctored one), and `demo.p12` (the signing certificate).
+
+Now turn the certificate into text you can paste into a hosting dashboard:
+
+```bash
+base64 -w0 demo.p12
+```
+
+On a Mac, use `base64 -i demo.p12`. Copy the whole line — it is long.
+
+**On Render:**
+
+1. Sign in at [render.com](https://render.com) and choose **New → Web Service**.
+2. Connect the `CoachCotner/Recalltext` repository and pick the branch
+   `claude/commlocker-new-step-vxm0pg`.
+3. Set **Root Directory** to `commchecker`.
+4. Set **Build Command** to `pip install -r requirements.txt`.
+5. Set **Start Command** to `uvicorn web.app:app --host 0.0.0.0 --port $PORT`.
+6. Under **Environment**, add one variable:
+   `COMMCHECKER_DEMO_P12_BASE64` = the long line you copied.
+7. Set **Health Check Path** to `/healthz`.
+8. Create the service and wait for the first deploy to finish.
+
+Railway is the same idea: New Project → Deploy from GitHub, pick the branch,
+set the root directory to `commchecker`, add the same environment variable.
+Railway reads the `Procfile`, so it needs no start command.
+
+**Check it worked.** Visit `/healthz` — it should say
+`{"status": "ok", "mode": "demo"}`. Then open the main page and drop in
+`sealed.pdf` (expect **PASS**) and `tampered.pdf` (expect **FAIL**, naming
+record 0003).
+
+Demo mode is honest about itself: every result carries a note that the
+certificate is self-signed and proves nothing about real-world identity, and
+the footer reads *"Demo mode · self-signed certificate, for testing only."*
+That is the right thing to have on screen in front of investors — it shows you
+know the difference. When your CA certificate arrives, follow the checklist
+below and those notes go away.
+
+---
+
 ## Before you go live — the checklist
 
 1. `COMMCHECKER_MODE=production`

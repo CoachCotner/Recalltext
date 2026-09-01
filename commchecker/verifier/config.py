@@ -74,6 +74,7 @@ class Settings:
     # Demo signing certificate (self-signed, local testing only).
     demo_p12_path: str = DEFAULT_DEMO_P12
     demo_p12_password: str = DEFAULT_DEMO_PASSWORD
+    demo_p12_base64: Optional[str] = None
 
     # RFC-3161 trusted timestamp.
     tsa_url: Optional[str] = DEFAULT_TSA_URL
@@ -117,6 +118,8 @@ class Settings:
             "signing_certificate": (
                 "production (.p12 supplied)"
                 if self.is_production
+                else "demo self-signed (supplied)"
+                if self.demo_p12_base64
                 else f"demo self-signed ({self.demo_p12_path})"
             ),
             "certificate_source": self._cert_source_label(),
@@ -132,7 +135,9 @@ class Settings:
 
     def _cert_source_label(self) -> str:
         if not self.is_production:
-            return "demo file"
+            if self.demo_p12_base64:
+                return "COMMCHECKER_DEMO_P12_BASE64 (in memory)"
+            return f"demo file: {self.demo_p12_path}"
         if self.p12_base64:
             return "COMMCHECKER_P12_BASE64 (in memory)"
         if self.p12_path:
@@ -248,6 +253,16 @@ class Settings:
                 )
 
         # Demo mode.
+        if self.demo_p12_base64:
+            # A hosted demo needs the SAME demo certificate as the machine that
+            # sealed the documents, otherwise every upload is correctly - and
+            # unhelpfully - rejected as coming from an unknown signer.
+            try:
+                return base64.b64decode(self.demo_p12_base64, validate=True)
+            except (binascii.Error, ValueError) as e:
+                raise ConfigError(
+                    f"COMMCHECKER_DEMO_P12_BASE64 is not valid base64 text: {e}"
+                )
         if not os.path.exists(self.demo_p12_path):
             raise ConfigError(
                 f"The demo certificate {self.demo_p12_path!r} does not exist "
@@ -319,6 +334,7 @@ def load_settings(env_prefix_check: bool = True) -> Settings:
         extra_chain_path=_env("P12_CHAIN_PATH"),
         demo_p12_path=_env("DEMO_P12_PATH", DEFAULT_DEMO_P12),
         demo_p12_password=_env("DEMO_P12_PASSWORD", DEFAULT_DEMO_PASSWORD),
+        demo_p12_base64=_env("DEMO_P12_BASE64"),
         tsa_url=tsa_url,
         tsa_username=_env("TSA_USERNAME"),
         tsa_password=_env("TSA_PASSWORD"),

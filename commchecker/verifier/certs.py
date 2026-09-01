@@ -90,6 +90,9 @@ def ensure_demo_cert(settings: Settings) -> str:
     """Create the demo certificate if it is missing. No-op in production."""
     if settings.is_production:
         return ""
+    if settings.demo_p12_base64:
+        # Supplied from the environment; there is nothing to create.
+        return ""
     if not os.path.exists(settings.demo_p12_path):
         make_demo_cert(settings.demo_p12_path, settings.demo_p12_password)
     return settings.demo_p12_path
