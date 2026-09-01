@@ -73,8 +73,8 @@ def _read(name: str, binary: bool = False):
 ASSETS = {
     "/app.css": ("text/css; charset=utf-8", _read("app.css").encode("utf-8")),
     "/app.js": ("application/javascript; charset=utf-8", _read("app.js").encode("utf-8")),
-    "/cc_logo.png": ("image/png", _read("cc_logo.png", binary=True)),
-    "/cc_icon.png": ("image/png", _read("cc_icon.png", binary=True)),
+    "/CommChecker_logo_transparent.png": ("image/png", _read("CommChecker_logo_transparent.png", binary=True)),
+    "/CommChecker_icon.png": ("image/png", _read("CommChecker_icon.png", binary=True)),
 }
 INDEX_HTML = _read("index.html")
 

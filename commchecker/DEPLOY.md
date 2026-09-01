@@ -59,6 +59,11 @@ Railway is the same idea: New Project → Deploy from GitHub, pick the branch,
 set the root directory to `commchecker`, add the same environment variable.
 Railway reads the `Procfile`, so it needs no start command.
 
+**Then set the verify URL.** Once Render gives you a URL, add one more
+environment variable — `COMMCHECKER_VERIFY_URL` — set to that URL, on whatever
+machine does the sealing. It is what the QR code on every sealed document
+points at, so set it before you seal anything you plan to send out.
+
 **Check it worked.** Visit `/healthz` — it should say
 `{"status": "ok", "mode": "demo"}`. Then open the main page and drop in
 `sealed.pdf` (expect **PASS**) and `tampered.pdf` (expect **FAIL**, naming

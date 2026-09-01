@@ -28,6 +28,13 @@ from pyhanko.sign.timestamps import HTTPTimeStamper
 
 from .config import ConfigError, Settings, load_settings
 from .certs import load_signer
+from .coverpage import (
+    TIMESTAMP_FILENAME,
+    content_timestamp,
+    find_cover_logo,
+    prepend_cover,
+    render_cover_page,
+)
 from .manifest import (
     MANIFEST_FILENAME,
     ManifestError,
@@ -86,6 +93,35 @@ def seal_bytes(
     if records is None:
         records = extract_records(pdf_bytes)
 
+    if timestamper is None:
+        timestamper = build_timestamper(settings)
+
+    # 2. Put the self-verifying cover page on the front, BEFORE sealing, so the
+    #    seal covers it: the QR code and the record count cannot be swapped out
+    #    without breaking the seal.
+    cover_info = {"cover_page": False, "content_timestamp": None}
+    timestamp_token = None
+    if settings.cover_page and records:
+        sealed_at, timestamp_token = content_timestamp(pdf_bytes, timestamper)
+        cover = render_cover_page(
+            verify_url=settings.verify_url,
+            record_count=len(records),
+            sealed_time=sealed_at,
+            signer=_friendly_signer(signer),
+            reference=(source or {}).get("case_ref", ""),
+            demo_mode=not settings.is_production,
+            timestamp_authority=_tsa_label(settings),
+            logo_path=find_cover_logo(settings.cover_logo),
+        )
+        pdf_bytes = prepend_cover(cover, pdf_bytes)
+        # Page numbers shifted, so re-read the records to keep the manifest
+        # pointing at the pages a reader will actually turn to.
+        records = extract_records(pdf_bytes)
+        cover_info = {
+            "cover_page": True,
+            "content_timestamp": sealed_at.isoformat() if sealed_at else None,
+        }
+
     try:
         manifest = build_manifest(
             records,
@@ -95,17 +131,16 @@ def seal_bytes(
     except ManifestError as e:
         raise SealError(str(e)) from e
 
-    # 2. Attach the manifest, then sign. Both happen in one incremental update,
+    # 3. Attach the manifest, then sign. Both happen in one incremental update,
     #    so the signature covers the manifest: altering the manifest to match a
     #    doctored record breaks the seal.
-    if timestamper is None:
-        timestamper = build_timestamper(settings)
-
     timestamp_note = "disabled - no timestamp authority configured"
     timestamped = False
 
     try:
-        sealed = _write_sealed(pdf_bytes, manifest, signer, timestamper)
+        sealed = _write_sealed(
+            pdf_bytes, manifest, signer, timestamper, timestamp_token
+        )
         if timestamper is not None:
             timestamped = True
             timestamp_note = f"timestamped by {getattr(timestamper, 'url', 'the configured authority')}"
@@ -121,7 +156,7 @@ def seal_bytes(
             ) from e
         # Timestamping is optional here (the local demo may be offline), so
         # fall back to an untimestamped seal and say so plainly.
-        sealed = _write_sealed(pdf_bytes, manifest, signer, None)
+        sealed = _write_sealed(pdf_bytes, manifest, signer, None, timestamp_token)
         timestamp_note = (
             f"NOT timestamped - {settings.tsa_url} could not be reached ({e})"
         )
@@ -133,8 +168,26 @@ def seal_bytes(
         "timestamp_note": timestamp_note,
         "signing_mode": settings.mode,
         "signer_subject": signer.signing_cert.subject.human_friendly,
+        **cover_info,
     }
     return sealed, info
+
+
+def _friendly_signer(signer) -> str:
+    """The signer's common name, for a human to read on the cover page."""
+    try:
+        subject = signer.signing_cert.subject
+        return subject.native.get("common_name") or subject.human_friendly
+    except Exception:
+        return ""
+
+
+def _tsa_label(settings: Settings) -> str:
+    """A readable name for the timestamp authority, from its URL."""
+    if not settings.tsa_url:
+        return ""
+    label = settings.tsa_url.split("//")[-1].split("/")[0]
+    return label
 
 
 def _write_sealed(
@@ -142,6 +195,7 @@ def _write_sealed(
     manifest: dict,
     signer: signers.SimpleSigner,
     timestamper,
+    timestamp_token: Optional[bytes] = None,
 ) -> bytes:
     """Embed the manifest and apply the signature in a single pass."""
     writer = IncrementalPdfFileWriter(io.BytesIO(pdf_bytes))
@@ -161,6 +215,25 @@ def _write_sealed(
             ),
         ),
     )
+
+    if timestamp_token:
+        # Attach the content timestamp so the time printed on the cover page
+        # can be checked independently, without trusting the cover page.
+        embed.embed_file(
+            writer,
+            embed.FileSpec(
+                file_spec_string=TIMESTAMP_FILENAME,
+                file_name=TIMESTAMP_FILENAME,
+                embedded_data=embed.EmbeddedFileObject.from_file_data(
+                    writer, data=timestamp_token,
+                    mime_type="application/timestamp-reply",
+                ),
+                description=(
+                    "RFC-3161 timestamp token over the records, as printed on "
+                    "the cover page."
+                ),
+            ),
+        )
 
     output = signers.sign_pdf(
         writer,

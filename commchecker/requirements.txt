@@ -12,3 +12,4 @@ fastapi>=0.110         # the web service
 uvicorn[standard]>=0.27  # the web server
 python-multipart>=0.0.9  # file upload parsing
 certifi>=2024.2.2      # fallback CA bundle when the OS has none
+svglib>=1.5           # places an SVG logo on the cover page as vector

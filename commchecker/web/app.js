@@ -56,13 +56,28 @@
 
   /* ---- rendering ---- */
   function render(d) {
-    var pass = d.verdict === "PASS";
+    /* Three presentations, not two. A re-saved file has to look different
+       from an altered one, or people stop reading the difference. */
+    var severity = d.severity || (d.verdict === "PASS" ? "none" : "alert");
+    var tone = severity === "none" ? "pass"
+             : severity === "notice" ? "notice"
+             : "fail";
+    var headline = d.headline || (d.verdict === "PASS" ? "PASS" : "FAIL");
+
     var html = '<div class="card">';
 
     html +=
-      '<div class="banner ' + (pass ? "pass" : "fail") + '">' +
-      '<div class="v">' + (pass ? "PASS" : "FAIL") + "</div>" +
+      '<div class="banner ' + tone + '">' +
+      '<div class="v">' + esc(headline) + "</div>" +
       '<div class="m">' + esc(d.message) + "</div></div>";
+
+    if (severity === "notice") {
+      html +=
+        '<div class="nextstep">What to do: ask for the original sealed ' +
+        "export and file that instead. This is routine — a PDF that gets " +
+        "opened and saved again is rewritten, which breaks the seal without " +
+        "changing a word.</div>";
+    }
 
     html += renderFindings(d.records);
     html += renderChecks(d.checks);

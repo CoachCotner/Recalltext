@@ -217,7 +217,40 @@ been revoked since it was issued.
 
 ---
 
-## 4. Behaviour and limits
+## 4. The self-verifying cover page
+
+Every sealed export gets a front page a broker can act on without knowing
+anything about cryptography: what the document is, how many records it holds,
+when it was sealed, and a QR code plus printed link to check it.
+
+| Setting | What it does | Default |
+|---|---|---|
+| `COMMCHECKER_VERIFY_URL` | Where the QR code and link point | a placeholder |
+| `COMMCHECKER_COVER_PAGE` | Set to `0` to seal without a cover page | `1` (on) |
+| `COMMCHECKER_COVER_LOGO` | The CommLocker logo for the cover header | whatever is in `brand/` |
+
+**`COMMCHECKER_VERIFY_URL` is the one value to change when you deploy.** It is
+printed and encoded into every document you seal, so set it *before* sealing
+anything you intend to send out. Until then it reads
+`https://verify.commchecker.example`, which is deliberately a placeholder and
+goes nowhere.
+
+The cover page is added **before** the seal is applied, so the seal covers it.
+Nobody can redirect the QR code at their own site without breaking the seal.
+
+The cover page also explains the three possible answers in plain language, so
+the first person to see a **RE-FILE** already knows it is routine.
+
+**Branding.** The cover page is the CommLocker product's page - CommLocker
+seals the record, CommChecker checks it - so it carries the CommLocker mark,
+while the verify website carries the CommChecker mark. Drop the files into
+`commchecker/brand/` and `commchecker/web/`; see `brand/README.md` for the
+exact filenames. Logos are placed exactly as supplied, never recoloured or
+regenerated, and a missing brand file never stops a document being sealed.
+
+---
+
+## 5. Behaviour and limits
 
 | Setting | What it does | Default |
 |---|---|---|

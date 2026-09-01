@@ -51,6 +51,9 @@ def verify_bytes(
         "file_size_bytes": len(pdf_bytes),
         "mode": settings.mode,
         "verdict": "FAIL",
+        "severity": SEVERITY_ALERT,
+        "headline": "FAIL",
+        "failure_kind": None,
         "message": "",
         "checks": [],
         "warnings": [],
@@ -71,11 +74,13 @@ def verify_bytes(
         signatures = reader.embedded_signatures
     except Exception as e:
         add("Readable PDF", False, f"the file could not be opened as a PDF: {e}")
+        report["failure_kind"] = "unreadable"
         report["message"] = "This is not a readable PDF."
         return report
 
     if not signatures:
         add("Carries a CommLocker seal", False, "no digital signature found")
+        report["failure_kind"] = "no_seal"
         report["message"] = (
             "NOT a verifiable CommLocker record - there is no seal on this file."
         )
@@ -110,6 +115,7 @@ def verify_bytes(
         )
     except Exception as e:
         add("Seal could be checked", False, f"the seal could not be evaluated: {e}")
+        report["failure_kind"] = "malformed_seal"
         report["message"] = "The seal on this file is malformed and cannot be checked."
         _attach_record_findings(report, pdf_bytes, add, sealed=True)
         return report
@@ -119,7 +125,12 @@ def verify_bytes(
         status.intact,
         "every sealed byte is exactly as it was"
         if status.intact
-        else "the file was altered after it was sealed",
+        # Careful here: a broken seal does NOT mean the words changed. Saving a
+        # PDF rewrites the whole file. Saying "altered" would contradict the
+        # re-save verdict and send a broker escalating a routine problem.
+        else "the file's bytes are not the bytes that were sealed - this "
+        "happens when a PDF is re-saved, and also when content is changed. "
+        "The record check below is what tells the two apart",
     )
     add(
         "Seal is cryptographically well-formed",
@@ -129,20 +140,41 @@ def verify_bytes(
         else "the signature itself is malformed or forged",
     )
 
-    # Coverage: content appended after the seal is not covered by it.
+    # Coverage: content appended after the seal is not covered by it. This is
+    # only measurable while the sealed bytes still hold - a rewritten file
+    # reports odd coverage as a side effect of the rewrite, not an append, and
+    # reporting that as "content was added" would be plainly wrong.
     coverage_name = getattr(status.coverage, "name", str(status.coverage))
     covers_whole_file = coverage_name == "ENTIRE_FILE"
-    add(
-        "Seal covers the whole document",
-        covers_whole_file,
-        "nothing was appended after sealing"
-        if covers_whole_file
-        else f"content was added after the seal was applied ({coverage_name})",
-    )
+    if not status.intact:
+        add(
+            "Seal covers the whole document",
+            None,
+            "could not be evaluated - the file was rewritten, so how much of "
+            "it the seal covered can no longer be measured",
+        )
+    else:
+        add(
+            "Seal covers the whole document",
+            covers_whole_file,
+            "nothing was appended after sealing"
+            if covers_whole_file
+            else "content was added to this file after the seal was applied",
+        )
 
     # Trust: only judge it when we actually have anchors to judge against.
     anchor_kind = trust_description["anchor_kind"]
-    if anchor_kind == "configured":
+    if not status.intact:
+        # The sealed bytes changed, so nothing can be concluded about the
+        # signer. Reporting a red cross here would read as "forged" on what is
+        # usually just a re-saved copy.
+        add(
+            "Sealed by a trusted certificate",
+            None,
+            "could not be evaluated - the file no longer matches its seal, so "
+            "the signer cannot be confirmed either way",
+        )
+    elif anchor_kind == "configured":
         add(
             "Sealed by a trusted certificate",
             status.trusted,
@@ -331,6 +363,15 @@ def _attach_record_findings(report: dict, pdf_bytes: bytes, add, sealed: bool) -
     )
 
 
+# How a failure should be presented. A broker's first FAIL is almost always the
+# innocent one - somebody opened the PDF and re-saved it - and a tool that
+# shouts "TAMPERED" at that will be ignored by the third time it happens. So we
+# separate what we actually observed from how alarmed to be about it.
+SEVERITY_NONE = "none"      # PASS
+SEVERITY_NOTICE = "notice"  # something to fix, nobody did anything wrong
+SEVERITY_ALERT = "alert"    # escalate
+
+
 def _decide_verdict(report: dict, status, anchor_kind: str) -> None:
     """
     Turn the checks into one word, and one sentence explaining it.
@@ -362,6 +403,9 @@ def _decide_verdict(report: dict, status, anchor_kind: str) -> None:
 
     if integrity_ok and coverage_ok and trust_ok and timestamp_ok and records_ok:
         report["verdict"] = "PASS"
+        report["severity"] = SEVERITY_NONE
+        report["headline"] = "PASS"
+        report["failure_kind"] = None
         count = records.get("record_count_found")
         if records.get("manifest_present") and count:
             report["message"] = (
@@ -373,41 +417,139 @@ def _decide_verdict(report: dict, status, anchor_kind: str) -> None:
         return
 
     report["verdict"] = "FAIL"
+    kind, severity, headline, message = _classify_failure(
+        report, status, anchor_kind, integrity_ok, coverage_ok, trust_ok,
+        timestamp_ok, records_ok,
+    )
+    report["failure_kind"] = kind
+    report["severity"] = severity
+    report["headline"] = headline
+    report["message"] = message
 
-    # Lead with the most specific thing we know.
+
+def _classify_failure(
+    report, status, anchor_kind, integrity_ok, coverage_ok, trust_ok,
+    timestamp_ok, records_ok,
+):
+    """
+    Work out WHICH kind of failure this is, most serious first.
+
+    The distinction that matters operationally is between a document whose
+    content was changed and one whose content is intact but whose container was
+    rewritten - a re-save. The per-record manifest is what separates them: if
+    every record still matches its sealed fingerprint, the words on the page
+    are the words that were sealed.
+
+    Reading the underlying signals:
+
+      intact=False                 the sealed bytes are not what they were.
+                                   Re-saving a PDF does this without touching
+                                   a single word, so on its own it proves
+                                   nothing about the content.
+      intact=True, coverage!=whole something was appended after the seal while
+                                   leaving the sealed bytes alone. That is a
+                                   deliberate act, not a side effect of saving.
+    """
+    records = report["records"]
+
+    # 1. Content actually changed. The escalate case.
     if records.get("manifest_present") and not records_ok:
-        report["message"] = "Record was CHANGED after sealing - " + records["summary"]
-    elif not integrity_ok:
-        report["message"] = (
-            "This file was CHANGED after it was sealed - flag for review."
+        return (
+            "altered",
+            SEVERITY_ALERT,
+            "FAIL",
+            "This record was changed after it was sealed - flag for review. "
+            + records["summary"],
         )
-    elif not coverage_ok:
-        report["message"] = (
-            "Content was ADDED to this file after it was sealed - flag for review."
-        )
-    elif not timestamp_ok:
-        report["message"] = (
-            "The trusted timestamp on this seal is BROKEN - the sealing time "
-            "cannot be relied on. Flag for review."
-        )
-    elif not trust_ok:
-        if anchor_kind == "none":
-            report["message"] = (
-                "The file is unchanged, but no trust roots are configured, so "
-                "CommChecker cannot confirm who sealed it."
-            )
-        else:
-            report["message"] = (
-                "This file was NOT sealed by a trusted certificate - it did "
-                "not come from where it claims to. Flag for review."
-            )
-    elif records.get("manifest_error"):
-        report["message"] = (
+
+    # 2. A manifest that is present but unusable. Saving a PDF does not produce
+    #    malformed JSON, so this is not the innocent case.
+    if records.get("manifest_error"):
+        return (
+            "manifest_unusable",
+            SEVERITY_ALERT,
+            "FAIL",
             "This document's per-record manifest is unusable, so its records "
-            "could not be checked."
+            "could not be checked. Flag for review.",
         )
-    else:
-        report["message"] = "This record did not pass verification."
+
+    # 3. Content appended after the seal, with the sealed bytes left intact.
+    #    Only meaningful while the seal itself still holds - a rewritten file
+    #    reports odd coverage as a side effect of the rewrite, not an append.
+    if integrity_ok and not coverage_ok:
+        return (
+            "appended",
+            SEVERITY_ALERT,
+            "FAIL",
+            "Content was ADDED to this file after it was sealed - flag for "
+            "review.",
+        )
+
+    # 4. A broken timestamp means the seal itself was interfered with. Only
+    #    readable while the sealed bytes still hold.
+    if integrity_ok and not timestamp_ok:
+        return (
+            "broken_timestamp",
+            SEVERITY_ALERT,
+            "FAIL",
+            "The trusted timestamp on this seal is BROKEN - the sealing time "
+            "cannot be relied on. Flag for review.",
+        )
+
+    # 5. Sealed by someone we do not trust. Again only meaningful on an
+    #    otherwise-intact seal: a rewritten file cannot vouch for its signer
+    #    either, and that is a symptom of the rewrite, not a forged identity.
+    if integrity_ok and not trust_ok:
+        if anchor_kind == "none":
+            return (
+                "signer_unverifiable",
+                SEVERITY_NOTICE,
+                "CANNOT VERIFY",
+                "The file is unchanged, but no trust roots are configured, so "
+                "CommChecker cannot confirm who sealed it. This is a setup "
+                "problem on this server, not a problem with the document.",
+            )
+        return (
+            "untrusted_signer",
+            SEVERITY_ALERT,
+            "FAIL",
+            "This file was NOT sealed by a trusted certificate - it did not "
+            "come from where it claims to. Flag for review.",
+        )
+
+    # 6. The seal is broken, but every record still matches its fingerprint.
+    #    Almost always somebody opened the PDF and saved it again, which
+    #    rewrites the file and breaks the seal without touching the words.
+    if not integrity_ok and records.get("manifest_present"):
+        return (
+            "resaved",
+            SEVERITY_NOTICE,
+            "RE-FILE",
+            "This appears to be a re-saved copy. Re-file the original sealed "
+            "export.",
+        )
+
+    # 7. The seal is broken and the fingerprints went with it, so the content
+    #    could not be checked either way. Many PDF tools drop attachments on
+    #    save, so this is usually the same innocent re-save - but we did not
+    #    verify that, and the wording must not pretend we did.
+    if not integrity_ok:
+        return (
+            "unverifiable",
+            SEVERITY_NOTICE,
+            "RE-FILE",
+            "The seal is broken and this copy no longer carries its record "
+            "fingerprints, so the content could not be checked. Re-file the "
+            "original sealed export. If the original cannot be produced, flag "
+            "for review.",
+        )
+
+    return (
+        "unknown",
+        SEVERITY_ALERT,
+        "FAIL",
+        "This record did not pass verification.",
+    )
 
 
 def _iso(value) -> Optional[str]:

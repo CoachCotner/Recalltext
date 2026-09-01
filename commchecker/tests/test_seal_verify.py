@@ -84,7 +84,22 @@ class TestTamperedDocument:
         assert changed["sealed_text"] == "Confirmed for tomorrow at 2."
         assert changed["current_text"] == "Confirmed for tomorrow at 5."
 
-    def test_it_reports_the_page(self, tampered, settings):
+    def test_it_reports_the_page_the_reader_will_turn_to(self, tampered, settings):
+        """
+        Page numbers are counted in the sealed document as delivered, so with
+        the cover page on the front the first records sit on page 2. That is
+        the page a broker turns to, which is the whole point of reporting one.
+        """
+        page = verify_bytes(tampered, settings)["records"]["changed"][0]["page"]
+        assert page == 2
+
+    def test_without_a_cover_page_records_start_on_page_one(
+        self, sample_pdf, settings
+    ):
+        settings.cover_page = False
+        sealed, _ = seal_bytes(sample_pdf, settings)
+        tampered = sealed.replace(b"tomorrow at 2.", b"tomorrow at 5.")
+        assert tampered != sealed
         assert verify_bytes(tampered, settings)["records"]["changed"][0]["page"] == 1
 
     def test_the_other_records_are_not_flagged(self, tampered, settings):

@@ -21,6 +21,10 @@ DEFAULT_DEMO_PASSWORD = "demo"
 DEFAULT_TSA_URL = "http://timestamp.digicert.com"
 DEFAULT_TSA_TIMEOUT = 10
 DEFAULT_MAX_UPLOAD_MB = 25
+# Placeholder until the verifier is deployed. This is the ONE value to change
+# once CommChecker has a real URL - it is what the cover page's QR code and
+# printed link point at.
+DEFAULT_VERIFY_URL = "https://verify.commchecker.example"
 
 MODE_DEMO = "demo"
 MODE_PRODUCTION = "production"
@@ -91,6 +95,11 @@ class Settings:
     # Manifest behaviour.
     manifest_previews: bool = True
 
+    # The self-verifying cover page.
+    cover_page: bool = True
+    verify_url: str = DEFAULT_VERIFY_URL
+    cover_logo: Optional[str] = None
+
     # Web service.
     max_upload_mb: int = DEFAULT_MAX_UPLOAD_MB
 
@@ -129,6 +138,9 @@ class Settings:
             "trust_system_roots": self.trust_system_roots,
             "revocation_checking": self.allow_fetching,
             "manifest_previews": self.manifest_previews,
+            "cover_page": self.cover_page,
+            "verify_url": self.verify_url,
+            "cover_logo": self.cover_logo or "(brand folder default)",
             "max_upload_mb": self.max_upload_mb,
             "signing_key_present": bool(
                 self.p12_path or self.p12_base64 or not self.is_production
@@ -358,6 +370,9 @@ def load_settings(env_prefix_check: bool = True) -> Settings:
         trust_system_roots=_env_bool("TRUST_SYSTEM_ROOTS", is_production),
         allow_fetching=_env_bool("ALLOW_FETCHING", False),
         manifest_previews=_env_bool("MANIFEST_PREVIEWS", True),
+        cover_page=_env_bool("COVER_PAGE", True),
+        verify_url=_env("VERIFY_URL", DEFAULT_VERIFY_URL),
+        cover_logo=_env("COVER_LOGO"),
         max_upload_mb=max_upload_mb,
         problems=problems,
     )

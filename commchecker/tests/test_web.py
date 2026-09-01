@@ -48,7 +48,7 @@ class TestPages:
         assert "Verify a record" in response.text
 
     def test_the_brand_assets_are_served(self, client):
-        for asset in ("/app.css", "/app.js", "/cc_logo.png", "/cc_icon.png"):
+        for asset in ("/app.css", "/app.js", "/CommChecker_logo_transparent.png", "/CommChecker_icon.png"):
             assert client.get(asset).status_code == 200, asset
 
     def test_the_brand_colours_are_in_the_stylesheet(self, client):

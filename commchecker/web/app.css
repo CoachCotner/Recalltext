@@ -8,6 +8,7 @@
   --white:     #EDEDED;
   --pass:      #12794A;
   --fail:      #B3261E;
+  --notice:    #B0670E;
   --warn:      #8A6100;
   --ink:       #101828;
   --muted:     #5A6478;
@@ -79,8 +80,21 @@ h1 { font-size: 27px; font-weight: 800; letter-spacing: -0.5px; color: var(--nav
 }
 .banner.pass { background: var(--pass); }
 .banner.fail { background: var(--fail); }
+/* A re-saved file is not an accusation - amber, not red. */
+.banner.notice { background: var(--notice); }
 .banner .v { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
 .banner .m { font-weight: 600; opacity: .96; flex: 1; min-width: 220px; line-height: 1.45; }
+
+/* ---- next step, shown for the innocent case ---- */
+.nextstep {
+  padding: 16px 26px;
+  background: #FFF6EA;
+  border-bottom: 1px solid #F0DFC4;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #7A4A08;
+  line-height: 1.5;
+}
 
 /* ---- the headline finding: which record changed ---- */
 .findings { padding: 20px 26px 6px; background: #FFF4F3; border-bottom: 1px solid #F3D6D3; }

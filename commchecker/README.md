@@ -20,6 +20,8 @@ say *Confirmed for tomorrow at 2* and now says *at 5*."**
 | 2 | **RFC-3161 trusted timestamp** | An independent authority certifies *when* the document was sealed. The seal keeps proving itself after your certificate expires. |
 | 3 | **Per-record hash manifest** | Every record gets its own fingerprint, sealed into the document. On a FAIL, CommChecker names the exact record that changed and shows before/after. |
 | 4 | **Deployable web service** | Processes uploads entirely in memory, stores nothing, ships as a container. Branded navy / burnt orange / soft white. |
+| 5 | **Self-verifying cover page** | Every sealed export carries a front page with the record count, the timestamp, and a QR code + link to verify. The document proves itself in any system — no integration required. |
+| 6 | **A FAIL that distinguishes sloppiness from tampering** | A re-saved file says *"re-file the original"* in amber. A changed record says *"flag for review"* in red, and names the record. |
 
 ---
 
@@ -55,6 +57,15 @@ uvicorn web.app:app --reload
 record, the page, the time it was sent, and shows the wording before and after:
 
 ![FAIL](docs/screenshot-fail.png)
+
+**A re-saved copy** — content intact, container rewritten. Amber, not red,
+because this is routine and an alarm here teaches people to ignore alarms:
+
+![RE-FILE](docs/screenshot-refile.png)
+
+**The cover page** that travels with every sealed export:
+
+![Cover page](docs/cover-page.png)
 
 **With a trusted timestamp** — an independent authority certifies the document
 existed in this exact form at a specific moment:
@@ -155,7 +166,7 @@ logging of document contents. This is enforced by tests
 pytest
 ```
 
-157 tests covering the manifest, sealing and verification, the timestamp path
+210 tests covering the manifest, sealing and verification, the timestamp path
 (offline, using a local timestamp authority), certificate configuration, and
 the web service.
 
@@ -163,6 +174,9 @@ the web service.
 forged signing certificates, broken timestamps, hostile manifest attachments,
 duplicate record numbering and unbounded uploads. Each one used to return a
 green PASS or crash the server.
+
+`tests/test_failure_reporting.py` pins the wording of each failure, including
+that an alteration hidden inside a re-save still escalates.
 
 ---
 
