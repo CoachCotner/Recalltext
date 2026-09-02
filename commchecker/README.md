@@ -20,7 +20,7 @@ say *Confirmed for tomorrow at 2* and now says *at 5*."**
 | 2 | **RFC-3161 trusted timestamp** | An independent authority certifies *when* the document was sealed. The seal keeps proving itself after your certificate expires. |
 | 3 | **Per-record hash manifest** | Every record gets its own fingerprint, sealed into the document. On a FAIL, CommChecker names the exact record that changed and shows before/after. |
 | 4 | **Deployable web service** | Processes uploads entirely in memory, stores nothing, ships as a container. Branded navy / burnt orange / soft white. |
-| 5 | **Self-verifying cover page** | Every sealed export carries a front page with the record count, the timestamp, and a QR code + link to verify. The document proves itself in any system — no integration required. |
+| 5 | **Self-verifying cover page** | Every sealed export carries a front page with the record count, the timestamp, and a QR code + `commchecker.com` link to verify. Built to the approved design. The document proves itself in any system — no integration required. |
 | 6 | **A FAIL that distinguishes sloppiness from tampering** | A re-saved file says *"re-file the original"* in amber. A changed record says *"flag for review"* in red, and names the record. |
 
 ---

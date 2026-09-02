@@ -21,10 +21,9 @@ DEFAULT_DEMO_PASSWORD = "demo"
 DEFAULT_TSA_URL = "http://timestamp.digicert.com"
 DEFAULT_TSA_TIMEOUT = 10
 DEFAULT_MAX_UPLOAD_MB = 25
-# Placeholder until the verifier is deployed. This is the ONE value to change
-# once CommChecker has a real URL - it is what the cover page's QR code and
-# printed link point at.
-DEFAULT_VERIFY_URL = "https://verify.commchecker.example"
+# The address printed and encoded on every sealed cover page. This is the ONE
+# value to change if the verifier is ever hosted somewhere else.
+DEFAULT_VERIFY_URL = "https://commchecker.com"
 
 MODE_DEMO = "demo"
 MODE_PRODUCTION = "production"

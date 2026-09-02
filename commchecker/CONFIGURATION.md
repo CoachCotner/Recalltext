@@ -225,15 +225,15 @@ when it was sealed, and a QR code plus printed link to check it.
 
 | Setting | What it does | Default |
 |---|---|---|
-| `COMMCHECKER_VERIFY_URL` | Where the QR code and link point | a placeholder |
+| `COMMCHECKER_VERIFY_URL` | Where the QR code and printed address point | `https://commchecker.com` |
 | `COMMCHECKER_COVER_PAGE` | Set to `0` to seal without a cover page | `1` (on) |
 | `COMMCHECKER_COVER_LOGO` | The CommLocker logo for the cover header | whatever is in `brand/` |
 
-**`COMMCHECKER_VERIFY_URL` is the one value to change when you deploy.** It is
-printed and encoded into every document you seal, so set it *before* sealing
-anything you intend to send out. Until then it reads
-`https://verify.commchecker.example`, which is deliberately a placeholder and
-goes nowhere.
+**`COMMCHECKER_VERIFY_URL` is printed and encoded into every document you
+seal**, so it has to be right *before* you seal anything you intend to send
+out. It defaults to `https://commchecker.com`; change it only if the verifier
+is ever hosted somewhere else. The QR code carries the full URL, while the
+cover page prints the bare host - the part a person reads off a page and types.
 
 The cover page is added **before** the seal is applied, so the seal covers it.
 Nobody can redirect the QR code at their own site without breaking the seal.

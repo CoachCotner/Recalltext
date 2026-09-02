@@ -33,7 +33,7 @@ class TestTheCoverPageIsAdded:
 
     def test_the_cover_page_comes_first(self, sample_pdf, settings):
         sealed, _ = seal_bytes(sample_pdf, settings)
-        assert "SEALED RECORD" in page_text(sealed, 0)
+        assert "Sealed Record" in page_text(sealed, 0)
 
     def test_it_can_be_switched_off(self, sample_pdf, settings):
         settings.cover_page = False
@@ -55,8 +55,11 @@ class TestWhatTheCoverPageSays:
         assert "6" in page_text(sealed, 0)
 
     def test_it_shows_the_verify_link_as_readable_text(self, sealed):
-        """Not everyone scans a QR code; the link has to be printed too."""
-        assert "https://verify.example.test" in page_text(sealed, 0)
+        """
+        Not everyone scans a QR code, so the address is printed too - as the
+        bare host, which is what a person reads off a page and types.
+        """
+        assert "verify.example.test" in page_text(sealed, 0)
 
     def test_it_shows_the_reference(self, sealed):
         assert "412 Maple Street" in page_text(sealed, 0)
@@ -82,7 +85,7 @@ class TestTheVerifyUrlIsOneConfigValue:
         ensure_demo_cert(settings)
 
         sealed, _ = seal_bytes(sample_pdf, settings)
-        assert "https://check.mybrand.com" in page_text(sealed, 0)
+        assert "check.mybrand.com" in page_text(sealed, 0)
 
     def test_there_is_a_placeholder_until_it_is_deployed(self, clean_env):
         assert load_settings().verify_url.startswith("https://")
@@ -96,14 +99,29 @@ class TestTheCoverPageIsSealedToo:
     """
 
     def test_editing_the_cover_page_breaks_the_seal(self, sample_pdf, settings):
+        """
+        Edit the cover page's own drawing instructions - the marks that make up
+        the QR code and the printed address - and the seal must break.
+        """
+        import pikepdf
+
         settings.verify_url = "https://verify.example.test"
         sealed, _ = seal_bytes(sample_pdf, settings)
 
-        redirected = sealed.replace(
-            b"https://verify.example.test", b"https://evil.example.test"
-        )
-        assert redirected != sealed, "the fixture did not change anything"
-        assert verify_bytes(redirected, settings)["verdict"] == "FAIL"
+        with pikepdf.open(io.BytesIO(sealed)) as pdf:
+            cover_stream = bytes(pdf.pages[0].Contents.read_raw_bytes())
+
+        # Take a slice of the cover's content stream and change a digit in it,
+        # which moves marks on the page. Anchoring on the real stream keeps
+        # this from silently becoming a no-op edit.
+        snippet = cover_stream[200:260]
+        assert snippet in sealed, "could not locate the cover page's content"
+        altered = snippet.replace(b"1", b"7", 1)
+        assert altered != snippet, "the chosen slice had nothing to change"
+
+        edited = sealed.replace(snippet, altered, 1)
+        assert edited != sealed
+        assert verify_bytes(edited, settings)["verdict"] == "FAIL"
 
 
 class TestRecordPagesAccountForTheCover:
