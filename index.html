@@ -1302,7 +1302,7 @@ function renderFullConv(convId) {
       </div>
     </div>
     <div style="background:#EFF6FF;border-bottom:1px solid #BFDBFE;padding:8px 16px;font-size:11px;color:#1E40AF;line-height:1.5">
-      📁 <strong>Tap "File"</strong> on any message to add to a record. One message can go to multiple records. Tap ✕ to remove.
+      📁 <strong>Tap "File"</strong> on any message to add to a record. One message can go to multiple records. To remove it, reopen the picker and tap the record again.
     </div>`;
 
   let html = '<div style="padding:8px 0 12px">';
@@ -1345,7 +1345,7 @@ function renderFullConv(convId) {
           const tx = getTx(txId);
           if (!tx) return '';
           const col = catColor(tx.cat);
-          return `<span style="display:inline-flex;align-items:center;gap:3px;background:${col};color:white;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px">${tx.icon} ${tx.name} <span onclick="removeTag('${conv.id}','${msg.id}',${txId})" style="cursor:pointer;margin-left:2px;opacity:0.75;font-size:11px">✕</span></span>`;
+          return `<span style="display:inline-flex;align-items:center;gap:3px;background:${col};color:white;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px">${tx.icon} ${tx.name}</span>`;
         }).join('') : ''}
         <button onclick="openTagPicker('${conv.id}','${msg.id}')" style="display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;border:1.5px dashed var(--border);background:white;color:var(--muted);cursor:pointer;font-family:inherit">📁 ${tagged ? '+ More' : 'File'}</button>
       </div>`}
@@ -1359,16 +1359,6 @@ function renderFullConv(convId) {
   </div>`;
   det.innerHTML = html;
   showScreen('detail');
-}
-
-function removeTag(convId, msgId, txId) {
-  const conv = getConv(convId);
-  if (!conv || !conv.allMsgs) return;
-  const msg = conv.allMsgs.find(m => m.id === msgId);
-  if (!msg) return;
-  msg.tags = (msg.tags || []).filter(t => t !== txId);
-  renderFullConv(convId);
-  toast('Removed from record');
 }
 
 function openAddTxFromConv(convId) {
