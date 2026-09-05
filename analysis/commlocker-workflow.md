@@ -494,3 +494,87 @@ those will need to match whatever the answers to the three questions above are.
 - Manage parties · Select messages · Rename · Close file · Edit details
 - The `By Party` / `By Role` / `Archive` packaging modes (only `Whole` observed)
 - Onboarding, permission prompts, first-run
+
+---
+
+## 8. Update — 5 September 2026 (one week on)
+
+Re-reviewed from three screen recordings of the same build line. The app has moved
+on considerably; this section records only what changed.
+
+### Scale
+
+| | 30 Aug | 5 Sep |
+|---|---|---|
+| Files | 2 | 4 |
+| Device conversations ingested | 1,797 | 1,824 |
+| Real exports produced | 1 (6 pages) | 4+ across 3 Files |
+
+Largest export observed: **SHS 1976 Reunion — 133 pages, 49.0 MB.**
+Also: garnet apts — 28 pages, 11.4 MB (twice, on 1 Sep and 3 Sep).
+
+### The Exports tab is built
+
+Titled **"Generated Communication Records"**, with the line
+*"Open, save, or send a tamper-evident record only when you choose."*
+
+Exports are grouped by File ("garnet apts · 2 exports", with `Open record ›`).
+Each export card carries: File name, "Communication Record", date · file size ·
+page count, the Export ID, a **share** button and a `⋮` menu. Keeping every
+generated record listed with its ID is exactly right for an evidentiary tool —
+the producer can say which document they handed over, and when.
+
+### Roles are live
+
+The File detail now groups parties under role headings — a `BUYER 1` section
+band with its own `⋮` — and party cards carry role tags (a custom
+"money bags" tag was visible). Party chips are colour-coded per party across
+the filter row and the message rail.
+
+Per-party counters are more granular than before: messages · **media** ·
+calls · voicemails · emails, as separate icon counts (e.g. `1` message,
+`68` media, `1` call).
+
+### A second filing path: select messages in place
+
+`⋮` → **Select messages** turns the conversation into a selection surface:
+- header becomes `Cancel · N Selected · Clear`
+- circular checkmarks on each record
+- a green **`Add N to File`** action bar pinned to the bottom
+
+This is faster than the three-step wizard for picking a handful of messages
+out of a live conversation, and it reaches the same place.
+
+### The Add to File sheet has much better copy
+
+> "Select Files, then save. **This only adds: nothing already filed is removed.**
+> One record can go to multiple Files."
+
+Plus a **Create New File** row that starts a new File and files the selection
+into it in one step. The added sentence removes a real ambiguity — a user
+choosing Files could previously have believed the selection replaced what was
+already filed.
+
+### The file-size problem is now the biggest practical one
+
+At 133 pages / 49.0 MB, an export runs about **377 KB per page** — because every
+page is a full-page raster (section 4b, and the raster finding below). The same
+document emitted as vector text would be on the order of 1–3 MB.
+
+Consequences that are no longer theoretical:
+- **49 MB will not go through most email.** The common attachment ceiling is
+  25 MB; this is double it.
+- Many court e-filing portals impose per-document size caps in the same range.
+- The user hit this directly: a 75 MB file could not be uploaded and had to be
+  split into three parts.
+
+A record that cannot be sent is not a deliverable. This moves "stop rendering
+pages to images" from a correctness issue to a shipping blocker.
+
+### Unchanged
+
+The `Hashed` / `Filed` two-state model, the party-centric data model, the
+snapshot semantics and the many-to-many record-to-File relationship all behave
+as documented above. Unfiled records show `Hashed` plus an actionable `File`
+button; filed records show `Hashed` + `Filed`.
+
