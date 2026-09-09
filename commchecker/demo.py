@@ -24,8 +24,8 @@ GLYPH = {True: "[ok]", False: "[X ]", None: "[? ]"}
 
 
 def show(report: dict) -> None:
-    icon = "PASS" if report["verdict"] == "PASS" else "FAIL"
-    print(f"\n  VERDICT: {icon}  -  {report['message']}")
+    print(f"\n  VERDICT: {report.get('headline', report['verdict'])}  -  "
+          f"{report['message']}")
     for check in report["checks"]:
         print(f"    {GLYPH[check['ok']]} {check['check']}: {check['detail']}")
 
@@ -85,15 +85,54 @@ def run() -> None:
             print(f"      when sealed : {item['sealed_text']}")
             print(f"      in this file: {item['current_text']}")
 
+    # ---------------------------------------------------------------
+    print("\nStep 5 - Someone opens the sealed PDF and saves it again.")
+    print("         Nothing is edited - the file is just rewritten.")
+    resaved = _resave(sealed)
+    with open("resaved.pdf", "wb") as f:
+        f.write(resaved)
+    print("  -> resaved.pdf written")
+
+    print("\nStep 6 - CommChecker verifies the re-saved copy.")
+    resaved_report = verify_bytes(resaved, settings, "resaved.pdf")
+    show(resaved_report)
+    print(
+        "\n  Note the difference: this one is not an accusation. The content "
+        "still\n  matches every sealed fingerprint, so it asks for the "
+        "original file\n  rather than raising an alarm."
+    )
+
     print("\n" + BAR)
     print("  The seal proves something changed.")
-    print("  The manifest proves exactly what.")
+    print("  The manifest proves exactly what - and what did NOT.")
     print(BAR)
     print(f"\n  Files written in {os.getcwd()}:")
     print("    sample.pdf    the export before sealing")
-    print("    sealed.pdf    the sealed record        -> verifies PASS")
-    print("    tampered.pdf  the doctored record      -> verifies FAIL")
+    print("    sealed.pdf    the sealed record        -> PASS")
+    print("    resaved.pdf   opened and saved again   -> RE-FILE (routine)")
+    print("    tampered.pdf  the doctored record      -> FAIL (escalate)")
     print()
+    print("  To try these in the web interface:")
+    print("    uvicorn web.app:app --reload")
+    print("    then open http://127.0.0.1:8000 and drag each file in.")
+    print()
+
+
+def _resave(pdf_bytes: bytes) -> bytes:
+    """
+    Re-save a PDF the way a viewer application does.
+
+    Rewrites the file structure while leaving every word intact. This is the
+    single most common reason a genuine record fails its check.
+    """
+    import io
+
+    import pikepdf
+
+    with pikepdf.open(io.BytesIO(pdf_bytes)) as pdf:
+        out = io.BytesIO()
+        pdf.save(out)
+    return out.getvalue()
 
 
 if __name__ == "__main__":

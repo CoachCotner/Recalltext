@@ -35,8 +35,14 @@ pip install -r requirements-dev.txt
 python demo.py
 ```
 
-You will see a record sealed, verified (**PASS**), edited, and verified again
-(**FAIL**) — with the changed record named.
+That walks the whole story and writes four files you can test with:
+
+| File | Verifies as |
+|---|---|
+| `sample.pdf` | the export before sealing |
+| `sealed.pdf` | **PASS** |
+| `resaved.pdf` | **RE-FILE** — opened and saved again, content intact |
+| `tampered.pdf` | **FAIL** — names record 0003 and shows before/after |
 
 Then the web interface:
 
