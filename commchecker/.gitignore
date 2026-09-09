@@ -8,8 +8,10 @@
 # Demo and test output
 sample.pdf
 sealed.pdf
+resaved.pdf
 tampered.pdf
 ui_*.png
+*.log
 
 # Python
 venv/
