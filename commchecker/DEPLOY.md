@@ -42,18 +42,29 @@ base64 -w0 demo.p12
 
 On a Mac, use `base64 -i demo.p12`. Copy the whole line — it is long.
 
-**On Render:**
+**On Render** — there is a blueprint in the repository root (`render.yaml`),
+so Render configures itself rather than you filling in build commands:
 
-1. Sign in at [render.com](https://render.com) and choose **New → Web Service**.
+1. Sign in at [render.com](https://render.com) and choose **New → Blueprint**.
 2. Connect the `CoachCotner/Recalltext` repository and pick the branch
    `claude/commlocker-new-step-vxm0pg`.
-3. Set **Root Directory** to `commchecker`.
-4. Set **Build Command** to `pip install -r requirements.txt`.
-5. Set **Start Command** to `uvicorn web.app:app --host 0.0.0.0 --port $PORT`.
-6. Under **Environment**, add one variable:
-   `COMMCHECKER_DEMO_P12_BASE64` = the long line you copied.
-7. Set **Health Check Path** to `/healthz`.
-8. Create the service and wait for the first deploy to finish.
+3. Render reads `render.yaml` and fills in the runtime, root directory, build
+   and start commands, and the health check path on its own.
+4. It will prompt for **`COMMCHECKER_DEMO_P12_BASE64`** — paste the long line
+   you copied. That value is deliberately not in the repository; key material
+   does not belong in version control.
+5. Click apply and wait for the first deploy.
+
+If you would rather set it up by hand (New → Web Service instead of Blueprint),
+these are the same settings the blueprint applies:
+
+| Field | Value |
+|---|---|
+| Root Directory | `commchecker` |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `uvicorn web.app:app --host 0.0.0.0 --port $PORT` |
+| Health Check Path | `/healthz` |
+| Environment variable | `COMMCHECKER_DEMO_P12_BASE64` = the long line |
 
 Railway is the same idea: New Project → Deploy from GitHub, pick the branch,
 set the root directory to `commchecker`, add the same environment variable.
@@ -92,6 +103,23 @@ below and those notes go away.
    confirm **FAIL**
 
 Step 8 is the one people skip. Do not skip it.
+
+---
+
+## What this will and will not run on
+
+CommChecker is a Python service: it holds a PDF in memory, re-checks a
+cryptographic signature and reads the document back out. It needs a host that
+runs a Python process.
+
+That rules out **Netlify, GitHub Pages, Vercel's static hosting and Cloudflare
+Pages** for the app itself. Netlify in particular serves static files and runs
+serverless functions in JavaScript, TypeScript and Go — there is no Python
+runtime, so there is nothing to deploy this to. A Netlify site could point a
+domain at CommChecker hosted elsewhere, but it cannot host it.
+
+Hosts that do work: Render, Railway, Fly.io, Heroku, a plain server, or
+anything that runs the Docker image below.
 
 ---
 

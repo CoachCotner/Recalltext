@@ -1,0 +1,46 @@
+# Render Blueprint for CommChecker
+#
+# This file lets Render configure the service for you instead of you filling in
+# build commands by hand. In the Render dashboard: New > Blueprint, point it at
+# this repository and branch, and it reads everything below.
+#
+# The one thing it will ask you for is COMMCHECKER_DEMO_P12_BASE64. That is
+# marked `sync: false`, which means Render prompts for the value rather than
+# storing it in this file - key material does not belong in a repository.
+#
+# See commchecker/DEPLOY.md for the full walkthrough, and
+# commchecker/CONFIGURATION.md for what every setting means.
+
+services:
+  - type: web
+    name: commchecker
+    runtime: python
+    plan: free
+    # The repository root is the Recalltext marketing site; the app lives here.
+    rootDir: commchecker
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn web.app:app --host 0.0.0.0 --port $PORT
+    # Returns 503 when the configuration is broken, so a bad deploy fails
+    # visibly here instead of silently on every upload.
+    healthCheckPath: /healthz
+    envVars:
+      # Matches the version the test suite runs against.
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+
+      # The demo signing certificate, as base64 text.
+      #
+      # Render rebuilds the filesystem on every deploy, so a server left to
+      # create its own demo certificate would generate a new one each time and
+      # reject documents you sealed on your laptop as coming from an unknown
+      # signer. Supplying the same certificate to both keeps the demo working.
+      #
+      # On your laptop:  cd commchecker && python demo.py && base64 -w0 demo.p12
+      # (on a Mac:       base64 -i demo.p12)
+      - key: COMMCHECKER_DEMO_P12_BASE64
+        sync: false
+
+      # Printed and encoded into every sealed document. Left at the default
+      # unless you host the verifier somewhere other than commchecker.com.
+      - key: COMMCHECKER_VERIFY_URL
+        value: "https://commchecker.com"
