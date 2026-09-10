@@ -33,7 +33,7 @@ flowchart LR
 
 | You want to… | Today | Redesign |
 |---|---|---|
-| See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder. Everything filed there shows in one date-ordered thread, calls and voicemails inline. |
+| See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything filed there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
 | File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **1 drag, or 2 taps.** Drag the row onto the folder, or File → tap the folder. Whole conversation at once, or one message. |
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
 | Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. File it like anything else. |
@@ -54,7 +54,8 @@ flowchart LR
 ## What the right pane shows
 
 - **New folder is one field.** Name, Enter. It also accepts a drop: drop a conversation on it and it asks for a name.
-- **Each folder card** shows icon, name, category, contact and item counts split by type, plus Open and Export PDF.
+- **Each folder card** shows icon, name, category, contact and item counts split by type, plus Open timeline and Export PDF.
+- **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail filed there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
 - **On a phone** the pane becomes a strip of folder chips along the bottom. Chips take a drop, filter the list, and File → tap a chip does the same thing.
 
 ## Flowchart of the changes

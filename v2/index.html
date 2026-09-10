@@ -82,6 +82,14 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .btn.primary:hover{filter:brightness(.95);color:var(--orange-ink)}
 .btn.ghost{border-color:transparent}
 
+.seg.dark{background:color-mix(in srgb,var(--line) 60%,transparent);align-self:flex-start}
+.seg.dark button{color:var(--ink2)}
+.tl{padding:6px 16px 14px}
+.tl .who2{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--mute);margin:8px 0 2px}
+.tl .who2 .av{width:20px;height:20px;font-size:9px}
+.tl .out .who2{flex-direction:row-reverse}
+.tlsum{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px 4px;font-size:12px;color:var(--mute)}
+.tlsum .fchip{max-width:none}
 /* ---------- conversation rows ---------- */
 .row{display:grid;grid-template-columns:22px 40px 1fr auto;gap:12px;align-items:start;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
 .row:hover{background:var(--hover)}
@@ -247,7 +255,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 <div id="app">
   <header class="top">
     <div class="brand">RecallText<small>Filing desk</small></div>
-    <div class="tag">Every text, call and voicemail is hashed the moment it comes off your phone. Folders only organize them. Move a conversation into a folder by dragging it, tap File, or pick the messages you want.</div>
+    <div class="tag">Every text, call and voicemail is hashed the moment it comes off your phone. File it to a folder by dragging, tapping File, or picking messages. Tap a folder to see the transaction timeline.</div>
     <div class="seg" role="group" aria-label="Preview width">
       <button id="w-wide" aria-pressed="true" onclick="setPhone(false)">Wide</button>
       <button id="w-phone" aria-pressed="false" onclick="setPhone(true)">Phone</button>
@@ -296,7 +304,7 @@ const state = {
   contacts: DATA.contacts, folders: DATA.folders,
   folder: null, filter: 'all', q: '',
   open: new Set(['c12']), selected: new Set(), showRest: new Set(),
-  pickMode: new Set(['c12']), picked: new Set(),
+  pickMode: new Set(['c12']), picked: new Set(), view: 'timeline',
   phone: false, pop: null, pendingNew: null
 };
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -432,7 +440,8 @@ function renderBanner(){
   document.getElementById('lt').textContent='In this folder';
   el.innerHTML=`<div class="fbanner"><span class="fi">${f.icon}</span><div class="grow"><b>${esc(f.name)}</b><div class="m">${s.contacts} contacts · ${s.texts} texts · ${s.calls} calls · ${s.vms} voicemails</div></div>
     <button class="btn" onclick="toast('Export runs the existing PDF generator; every item carries its ingestion hash')"><svg class="ic"><use href="#i-pdf"/></svg> Export PDF</button>
-    <button class="btn ghost" onclick="state.folder=null;render()"><svg class="ic"><use href="#i-back"/></svg> Everything</button></div>`;
+    <button class="btn ghost" onclick="openFolder(null)"><svg class="ic"><use href="#i-back"/></svg> Everything</button></div>
+    <div class="seg dark" role="group" aria-label="Folder view"><button aria-pressed="${state.view==='timeline'}" onclick="state.view='timeline';render()">Timeline · everyone, by date</button><button aria-pressed="${state.view==='person'}" onclick="state.view='person';render()">By person</button></div>`;
 }
 function renderChips(){
   const all=state.contacts.filter(c=>!state.folder||itemsFor(c).length);
@@ -443,7 +452,9 @@ function renderChips(){
   document.getElementById('lc').textContent=all.length+' conversations · '+all.reduce((s,c)=>s+itemsFor(c).length,0)+' items';
 }
 function renderRows(){
-  const list=visibleContacts(); const el=document.getElementById('rows');
+  const el=document.getElementById('rows');
+  if(state.folder&&state.view==='timeline'){ el.innerHTML=renderTimeline(); return; }
+  const list=visibleContacts();
   if(!list.length){ el.innerHTML='<div class="empty">Nothing here yet. Drag a conversation onto this folder, or tap File on any row.</div>'; return; }
   el.innerHTML=list.map(c=>{
     const items=itemsFor(c); const last=items[items.length-1]; const k=counts(items); const fs=convFolders(c);
@@ -463,6 +474,36 @@ function renderRows(){
     </div>${open?renderThread(c):''}`;
   }).join('');
 }
+function itemHtml(i,c,pm,withName){
+  const pk=state.picked.has(i.id);
+  const rest=state.folder&&!i.folders.includes(state.folder);
+  const hline=`<div class="hash"><svg class="ic"><use href="#i-lock"/></svg><b>hashed at ingestion</b> ${fmtDay(i.t)} ${fmtTime(i.t)} · ${hashOf(i)}</div>`;
+  const fchips=i.folders.length?`<div class="ifolders">${i.folders.map(folderById).filter(Boolean).map(f=>`<span>${f.icon} ${esc(f.name)}</span>`).join('')}</div>`:'';
+  const fileBtn=`<button class="ifile" title="File this ${i.type==='text'?'message':i.type}" onclick="openPop(event,{kind:'item',cid:'${c.id}',id:'${i.id}'})"><svg class="ic"><use href="#i-folder"/></svg></button>`;
+  const nm=withName?`<div class="who2"><span class="av" style="background:${i.dir==='out'?'var(--orange)':c.color}">${i.dir==='out'?'LC':esc(c.avatar)}</span>${i.dir==='out'?'Lauren → '+esc(c.name):esc(c.name)}${c.role?' · '+esc(c.role):''}</div>`:'';
+  let body;
+  if(i.type==='text'){
+    body=`<div class="bubble"><div class="who">${esc(i.sender)}</div><div class="t">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}<div class="ts">${fmtTime(i.t)}</div>${hline}${fchips}</div>`;
+  } else if(i.type==='vm'){
+    body=`<div class="card vm"><div class="h"><svg class="ic"><use href="#i-vm"/></svg>${kindLabel(i)} · ${i.dur}<span class="ts">${fmtTime(i.t)}</span></div><div class="q">“${esc(i.transcript)}”</div>${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
+  } else {
+    body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="n">${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
+  }
+  const cb=pm?`<input type="checkbox" class="pk" ${pk?'checked':''} onclick="event.stopPropagation();togglePick('${i.id}')" aria-label="Pick this ${i.type}">`:'';
+  const wrap=`<div class="item ${i.dir==='out'?'out':''} ${rest?'rest':''} ${pm?'pickable':''} ${pk?'picked':''}" draggable="true" ondragstart="event.stopPropagation();dragStart(event,${pm&&pk?`{kind:'items',cid:'${c.id}'}`:`{kind:'item',cid:'${c.id}',id:'${i.id}'}`})" ondragend="dragEnd(event)" onclick="event.stopPropagation();${pm?`togglePick('${i.id}')`:''}">${cb}${body}${pm?'':fileBtn}</div>`;
+  return withName?`<div class="${i.dir==='out'?'out':''}">${nm}${wrap}</div>`:wrap;
+}
+function renderTimeline(){
+  const f=folderById(state.folder);
+  const all=[]; state.contacts.forEach(c=>c.items.forEach(i=>{ if(i.folders.includes(f.id)) all.push({i,c}); }));
+  all.sort((a,b)=>a.i.t-b.i.t);
+  if(!all.length) return '<div class="empty">Nothing filed here yet. Go back to Everything, open a conversation, pick the messages, and file them to this folder.</div>';
+  const people=[...new Set(all.map(x=>x.c))];
+  let html=`<div class="tlsum"><span>${all.length} items from</span>${people.map(c=>`<span class="fchip" style="border-color:${c.color}55;background:${c.color}14;color:${c.color}">${esc(c.name)}</span>`).join('')}</div><div class="tl">`;
+  let lastDay='';
+  all.forEach(({i,c})=>{ const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; } html+=itemHtml(i,c,false,true); });
+  return html+'</div>';
+}
 function renderThread(c){
   const show=state.showRest.has(c.id);
   const items=(state.folder&&show)?c.items:itemsFor(c);
@@ -476,21 +517,7 @@ function renderThread(c){
   </div>`, lastDay='';
   items.forEach(i=>{
     const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; }
-    const rest=state.folder&&!i.folders.includes(state.folder);
-    const hline=`<div class="hash"><svg class="ic"><use href="#i-lock"/></svg><b>hashed at ingestion</b> ${fmtDay(i.t)} ${fmtTime(i.t)} · ${hashOf(i)}</div>`;
-    const fchips=i.folders.length?`<div class="ifolders">${i.folders.map(folderById).filter(Boolean).map(f=>`<span>${f.icon} ${esc(f.name)}</span>`).join('')}</div>`:'';
-    const fileBtn=`<button class="ifile" title="File this ${i.type==='text'?'message':i.type}" onclick="openPop(event,{kind:'item',cid:'${c.id}',id:'${i.id}'})"><svg class="ic"><use href="#i-folder"/></svg></button>`;
-    let body;
-    if(i.type==='text'){
-      body=`<div class="bubble"><div class="who">${esc(i.sender)}</div><div class="t">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}<div class="ts">${fmtTime(i.t)}</div>${hline}${fchips}</div>`;
-    } else if(i.type==='vm'){
-      body=`<div class="card vm"><div class="h"><svg class="ic"><use href="#i-vm"/></svg>${kindLabel(i)} · ${i.dur}<span class="ts">${fmtTime(i.t)}</span></div><div class="q">“${esc(i.transcript)}”</div>${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
-    } else {
-      body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="n">${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
-    }
-    const pk=state.picked.has(i.id);
-    const cb=pm?`<input type="checkbox" class="pk" ${pk?'checked':''} onclick="event.stopPropagation();togglePick('${i.id}')" aria-label="Pick this ${i.type}">`:'';
-    html+=`<div class="item ${i.dir==='out'?'out':''} ${rest?'rest':''} ${pm?'pickable':''} ${pk?'picked':''}" draggable="true" ondragstart="event.stopPropagation();dragStart(event,${pm&&pk?`{kind:'items',cid:'${c.id}'}`:`{kind:'item',cid:'${c.id}',id:'${i.id}'}`})" ondragend="dragEnd(event)" onclick="event.stopPropagation();${pm?`togglePick('${i.id}')`:''}">${cb}${body}${pm?'':fileBtn}</div>`;
+    html+=itemHtml(i,c,pm,false);
   });
   if(hidden>0) html+=`<div class="more">${hidden} more in this conversation not filed here · <button onclick="event.stopPropagation();toggleRest('${c.id}')">${show?'hide':'show faded'}</button></div>`;
   if(pm) html+=`<div class="pickbar" onclick="event.stopPropagation()"><span style="white-space:nowrap">${pickedHere} of ${items.length} picked</span><span class="grow"></span>
@@ -503,24 +530,25 @@ function renderFolders(){
   document.getElementById('newf').dataset.drop='new';
   document.getElementById('folders').innerHTML=state.folders.map(f=>{
     const s=folderStats(f.id);
-    return `<div class="folder ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="state.folder=state.folder===f.id?null:${f.id};render()" tabindex="0" onkeydown="if(event.key==='Enter')this.click()">
+    return `<div class="folder ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="openFolder(${f.id})" tabindex="0" onkeydown="if(event.key==='Enter')this.click()">
       <div class="fi" style="background:var(--orange-soft)">${f.icon}</div>
       <div style="min-width:0">
         <div class="fn">${esc(f.name)}</div>
         <div class="fm">${esc(f.cat)} · ${s.contacts} contact${s.contacts!==1?'s':''} · ${s.items} items</div>
         <div class="fs"><span class="kind k-text">${s.texts} texts</span><span class="kind k-call">${s.calls} calls</span><span class="kind k-vm">${s.vms} voicemails</span></div>
-        <div class="fa"><button class="btn" onclick="event.stopPropagation();state.folder=${f.id};render()">Open</button><button class="btn" onclick="event.stopPropagation();toast('Export runs the existing PDF generator, hashes included')"><svg class="ic"><use href="#i-pdf"/></svg> Export PDF</button></div>
+        <div class="fa"><button class="btn ${state.folder===f.id?'primary':''}" onclick="event.stopPropagation();openFolder(${f.id})">${state.folder===f.id?'Viewing · close':'Open timeline'}</button><button class="btn" onclick="event.stopPropagation();toast('Export runs the existing PDF generator, hashes included')"><svg class="ic"><use href="#i-pdf"/></svg> Export PDF</button></div>
       </div>
     </div>`;
   }).join('');
 }
 function renderStrip(){
   document.getElementById('strip').innerHTML=
-    `<button class="sc ${!state.folder?'on':''}" onclick="state.folder=null;render()">Everything</button>`+
-    state.folders.map(f=>`<button class="sc ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="state.folder=state.folder===f.id?null:${f.id};render()">${f.icon} ${esc(f.name)} <span class="n">${folderStats(f.id).items}</span></button>`).join('')+
+    `<button class="sc ${!state.folder?'on':''}" onclick="openFolder(null)">Everything</button>`+
+    state.folders.map(f=>`<button class="sc ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="openFolder(${f.id})">${f.icon} ${esc(f.name)} <span class="n">${folderStats(f.id).items}</span></button>`).join('')+
     `<button class="sc add" onclick="stripNew()"><svg class="ic"><use href="#i-plus"/></svg> New folder</button>`;
 }
 function stripNew(){ const n=prompt('Folder name'); if(n&&n.trim()){ const f=createFolder(n.trim()); state.folder=f.id; toast('Folder created: '+f.name); render(); } }
+function openFolder(fid){ state.folder=(fid===null||state.folder===fid)?null:fid; state.view='timeline'; render(); const r=document.getElementById('rows'); if(r) r.scrollTop=0; }
 function togglePickMode(cid){ if(state.pickMode.has(cid)){ state.pickMode.delete(cid); contactById(cid).items.forEach(i=>state.picked.delete(i.id)); } else state.pickMode.add(cid); render(); }
 function togglePick(iid){ if(state.picked.has(iid)) state.picked.delete(iid); else state.picked.add(iid); render(); }
 function pickAll(cid,on){ itemsFor(contactById(cid)).forEach(i=>on?state.picked.add(i.id):state.picked.delete(i.id)); render(); }
