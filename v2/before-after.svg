@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 440" role="img" aria-label="Today: two tabs, a transaction screen with calls and voicemails in a separate block, and four forms. Redesign: one screen with the conversation stream on the left and folders on the right, joined by a single drag." font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="12" fill="none" stroke="currentColor" stroke-width="1.4">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="currentColor" stroke="none"/></marker>
+    <marker id="ah-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#F97316" stroke="none"/></marker>
+  </defs>
+
+  <!-- ===== TODAY ===== -->
+  <text x="20" y="24" font-weight="800" font-size="13" letter-spacing="1.5" fill="currentColor" stroke="none">TODAY · 3 SCREENS + 4 FORMS</text>
+
+  <!-- Home -->
+  <rect x="20" y="40" width="200" height="74" rx="8"/>
+  <text x="30" y="58" font-weight="700" fill="currentColor" stroke="none">Home</text>
+  <rect x="30" y="66" width="86" height="20" rx="4"/><text x="73" y="80" text-anchor="middle" fill="currentColor" stroke="none" font-size="10">My Transactions</text>
+  <rect x="122" y="66" width="86" height="20" rx="4" stroke-dasharray="3 3"/><text x="165" y="80" text-anchor="middle" fill="currentColor" stroke="none" font-size="10">All Texts</text>
+  <text x="30" y="104" fill="currentColor" stroke="none" font-size="10" opacity=".7">texts only · calls live elsewhere</text>
+
+  <!-- Home -> Transaction -->
+  <line x1="73" y1="114" x2="73" y2="150" marker-end="url(#ah)"/>
+  <text x="80" y="136" fill="currentColor" stroke="none" font-size="10">tap a transaction</text>
+
+  <!-- Transaction screen -->
+  <rect x="20" y="152" width="200" height="196" rx="8"/>
+  <text x="30" y="170" font-weight="700" fill="currentColor" stroke="none">Transaction</text>
+  <rect x="30" y="178" width="180" height="82" rx="6"/>
+  <text x="38" y="193" fill="currentColor" stroke="none" font-size="10">Texts, grouped by party</text>
+  <rect x="38" y="200" width="100" height="12" rx="6" fill="currentColor" opacity=".12" stroke="none"/>
+  <rect x="98" y="218" width="100" height="12" rx="6" fill="currentColor" opacity=".12" stroke="none"/>
+  <rect x="38" y="236" width="120" height="12" rx="6" fill="currentColor" opacity=".12" stroke="none"/>
+  <rect x="30" y="270" width="180" height="66" rx="6" stroke-dasharray="4 3"/>
+  <text x="38" y="286" fill="currentColor" stroke="none" font-size="10" font-weight="700">Phone Records (separate)</text>
+  <text x="38" y="300" fill="currentColor" stroke="none" font-size="10">calls + voicemails at the bottom</text>
+  <text x="38" y="313" fill="currentColor" stroke="none" font-size="10">scroll to reach them</text>
+  <text x="38" y="327" fill="currentColor" stroke="none" font-size="10" opacity=".7">missing from “By Date” view</text>
+
+  <!-- Forms -->
+  <g>
+    <rect x="290" y="152" width="150" height="34" rx="6"/>
+    <text x="298" y="167" fill="currentColor" stroke="none" font-size="10" font-weight="700">Add Conversations</text>
+    <text x="298" y="180" fill="currentColor" stroke="none" font-size="10">multi-select list</text>
+    <rect x="290" y="196" width="150" height="34" rx="6"/>
+    <text x="298" y="211" fill="currentColor" stroke="none" font-size="10" font-weight="700">Add Voicemail</text>
+    <text x="298" y="224" fill="currentColor" stroke="none" font-size="10">6-field form</text>
+    <rect x="290" y="240" width="150" height="34" rx="6"/>
+    <text x="298" y="255" fill="currentColor" stroke="none" font-size="10" font-weight="700">Add Call Log</text>
+    <text x="298" y="268" fill="currentColor" stroke="none" font-size="10">7-field form</text>
+    <rect x="290" y="284" width="150" height="34" rx="6"/>
+    <text x="298" y="299" fill="currentColor" stroke="none" font-size="10" font-weight="700">File This Message</text>
+    <text x="298" y="312" fill="currentColor" stroke="none" font-size="10">picker, one message at a time</text>
+  </g>
+  <line x1="220" y1="230" x2="288" y2="169" marker-end="url(#ah)"/>
+  <line x1="220" y1="230" x2="288" y2="213" marker-end="url(#ah)"/>
+  <line x1="220" y1="230" x2="288" y2="257" marker-end="url(#ah)"/>
+  <text x="228" y="222" fill="currentColor" stroke="none" font-size="10">scroll, tap</text>
+  <path d="M208 76 C 262 76 262 301 288 301" marker-end="url(#ah)"/>
+  <text x="228" y="130" fill="currentColor" stroke="none" font-size="10">tap, expand,</text>
+  <text x="228" y="142" fill="currentColor" stroke="none" font-size="10">tap 📁, pick</text>
+
+  <!-- Today caption -->
+  <text x="20" y="378" fill="currentColor" stroke="none" font-size="11" font-weight="700">To see one deal’s texts + calls + voicemails: 3 taps and a scroll, still in two blocks.</text>
+  <text x="20" y="394" fill="currentColor" stroke="none" font-size="11">To file a text: 4 taps. To log a call: a 7-field form.</text>
+
+  <!-- divider -->
+  <line x1="470" y1="30" x2="470" y2="410" stroke-dasharray="2 5" opacity=".5"/>
+
+  <!-- ===== REDESIGN ===== -->
+  <text x="500" y="24" font-weight="800" font-size="13" letter-spacing="1.5" fill="#F97316" stroke="none">REDESIGN · 1 SCREEN, 1 MOVE</text>
+
+  <!-- Everything pane -->
+  <rect x="500" y="40" width="270" height="308" rx="10"/>
+  <text x="512" y="60" font-weight="700" fill="currentColor" stroke="none">Everything</text>
+  <text x="590" y="60" fill="currentColor" stroke="none" font-size="10" opacity=".7">texts · calls · voicemails</text>
+  <rect x="512" y="70" width="246" height="16" rx="8" opacity=".5"/>
+  <text x="522" y="82" fill="currentColor" stroke="none" font-size="9" opacity=".6">search</text>
+
+  <!-- row 1: Paul, expanded -->
+  <g>
+    <circle cx="526" cy="110" r="10" fill="#2563EB" stroke="none"/>
+    <text x="542" y="106" fill="currentColor" stroke="none" font-size="11" font-weight="700">Paul Henderson</text>
+    <text x="542" y="119" fill="currentColor" stroke="none" font-size="9" opacity=".7">Buyer · 16 texts · 5 calls · 1 voicemail</text>
+    <rect x="700" y="100" width="54" height="18" rx="5" stroke="#F97316" stroke-dasharray="3 2"/>
+    <text x="727" y="112" text-anchor="middle" fill="#F97316" stroke="none" font-size="9" font-weight="700">File</text>
+  </g>
+  <!-- thread: texts + call + vm interleaved -->
+  <rect x="512" y="128" width="246" height="112" rx="6" fill="currentColor" opacity=".05" stroke="none"/>
+  <rect x="520" y="134" width="110" height="14" rx="7" fill="#2563EB" opacity=".18" stroke="none"/>
+  <text x="526" y="144" fill="currentColor" stroke="none" font-size="9">text · Mar 18</text>
+  <rect x="640" y="152" width="110" height="14" rx="7" fill="#F97316" opacity=".22" stroke="none"/>
+  <text x="646" y="162" fill="currentColor" stroke="none" font-size="9">text · Lauren</text>
+  <rect x="520" y="170" width="150" height="14" rx="3" stroke="#0F766E"/>
+  <text x="526" y="180" fill="#0F766E" stroke="none" font-size="9" font-weight="700">call · outbound · 17:38</text>
+  <rect x="520" y="188" width="170" height="14" rx="3" stroke="#16A34A"/>
+  <text x="526" y="198" fill="#16A34A" stroke="none" font-size="9" font-weight="700">voicemail · 1:12 · transcript</text>
+  <rect x="520" y="206" width="150" height="14" rx="3" stroke="#DC4B26"/>
+  <text x="526" y="216" fill="#DC4B26" stroke="none" font-size="9" font-weight="700">call · no answer</text>
+  <rect x="640" y="224" width="110" height="12" rx="6" fill="#F97316" opacity=".22" stroke="none"/>
+  <text x="646" y="233" fill="currentColor" stroke="none" font-size="9">text · Mar 27</text>
+
+  <!-- row 2, 3 -->
+  <circle cx="526" cy="262" r="10" fill="#16A34A" stroke="none"/>
+  <text x="542" y="258" fill="currentColor" stroke="none" font-size="11" font-weight="700">Maryann P</text>
+  <text x="542" y="271" fill="currentColor" stroke="none" font-size="9" opacity=".7">Escrow · 2 texts · 2 calls · 1 voicemail</text>
+  <circle cx="526" cy="298" r="10" fill="#94A3B8" stroke="none"/>
+  <text x="542" y="294" fill="currentColor" stroke="none" font-size="11" font-weight="700">(323) 555-1212</text>
+  <text x="542" y="307" fill="currentColor" stroke="none" font-size="9" opacity=".7">not in contacts · not filed</text>
+  <text x="512" y="338" fill="currentColor" stroke="none" font-size="9" opacity=".6">one list, newest first · filter: Texts / Calls / Voicemails / Not filed</text>
+
+  <!-- Folders pane -->
+  <rect x="800" y="40" width="160" height="308" rx="10"/>
+  <text x="812" y="60" font-weight="700" fill="currentColor" stroke="none">Folders</text>
+  <rect x="812" y="70" width="136" height="20" rx="6" stroke="#F97316" stroke-dasharray="3 2"/>
+  <text x="820" y="84" fill="#F97316" stroke="none" font-size="9" font-weight="700">+ name, Enter</text>
+  <g>
+    <rect x="812" y="100" width="136" height="44" rx="6" stroke="#F97316" stroke-width="2"/>
+    <text x="820" y="116" fill="currentColor" stroke="none" font-size="10" font-weight="700">🏡 1010 Catalina Ave</text>
+    <text x="820" y="129" fill="currentColor" stroke="none" font-size="9" opacity=".7">5 contacts · 31 items</text>
+    <text x="820" y="140" fill="currentColor" stroke="none" font-size="9" opacity=".7">Open · Export PDF</text>
+    <rect x="812" y="152" width="136" height="44" rx="6"/>
+    <text x="820" y="168" fill="currentColor" stroke="none" font-size="10" font-weight="700">🏠 Alvarez Drive</text>
+    <text x="820" y="181" fill="currentColor" stroke="none" font-size="9" opacity=".7">3 contacts · 18 items</text>
+    <text x="820" y="192" fill="currentColor" stroke="none" font-size="9" opacity=".7">Open · Export PDF</text>
+    <rect x="812" y="204" width="136" height="44" rx="6"/>
+    <text x="820" y="220" fill="currentColor" stroke="none" font-size="10" font-weight="700">🏢 Unit 4B Eviction</text>
+    <text x="820" y="233" fill="currentColor" stroke="none" font-size="9" opacity=".7">1 contact · 2 items</text>
+    <text x="820" y="244" fill="currentColor" stroke="none" font-size="9" opacity=".7">Open · Export PDF</text>
+  </g>
+
+  <!-- the one move -->
+  <path d="M690 298 C 760 298 760 122 806 122" stroke="#F97316" stroke-width="2.4" marker-end="url(#ah-o)"/>
+  <text x="742" y="290" fill="#F97316" stroke="none" font-size="10" font-weight="800" text-anchor="middle">drag</text>
+  <text x="742" y="302" fill="#F97316" stroke="none" font-size="9" font-weight="700" text-anchor="middle">or File → tap</text>
+
+  <!-- Redesign caption -->
+  <text x="500" y="378" fill="currentColor" stroke="none" font-size="11" font-weight="700">To see one deal: tap its folder. Everything filed there, in date order, calls and voicemails inline.</text>
+  <text x="500" y="394" fill="currentColor" stroke="none" font-size="11">To file anything: drag it, or tap File then a folder. Calls and voicemails arrive from the phone log, no form.</text>
+</svg>
