@@ -68,7 +68,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:center;gap:5px;background:var(--card)}
 .chip[aria-pressed="true"]{background:var(--hd);color:#fff;border-color:var(--hd)}
 .chip .n{font-variant-numeric:tabular-nums;opacity:.7;font-weight:600}
-.scroll{flex:1;overflow-y:auto;min-height:0;overscroll-behavior:contain}
+.scroll{flex:1;overflow-y:auto;min-height:0;overscroll-behavior:contain;position:relative}
 
 /* folder banner in left pane */
 .fbanner{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--sel);border:1px solid var(--orange-line)}
@@ -135,12 +135,23 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .card .h .ts{margin-left:auto;font-weight:500;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
 .card .q{font-style:italic;color:var(--ink2);margin-top:4px;font-size:13px}
 .card .n{margin-top:5px;font-size:12px;color:var(--ink2)}
-.ifile{opacity:0;transition:opacity .12s;align-self:center;padding:4px;border-radius:6px;color:var(--mute)}
+.ifile{opacity:.35;transition:opacity .12s;align-self:center;padding:4px;border-radius:6px;color:var(--mute)}
 .item:hover .ifile{opacity:1}
 .ifile:hover{color:var(--orange);background:var(--orange-soft)}
 .ifolders{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
 .ifolders span{font-size:10px;font-weight:700;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
 .more{margin:8px 6px 0;font-size:12px;color:var(--mute)}
+.thead{display:flex;align-items:center;gap:8px;padding:10px 4px 4px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.thead .grow{flex:1}
+.thead .btn{padding:5px 10px;font-size:12px}
+.thead .btn.on{background:var(--hd);color:#fff;border-color:var(--hd)}
+.pk{width:18px;height:18px;accent-color:var(--orange);align-self:center;flex:none;cursor:pointer}
+.item.pickable{cursor:pointer;border-radius:12px;padding:6px 4px}
+.item.pickable:hover{background:color-mix(in srgb,var(--orange) 8%,transparent)}
+.item.picked{background:var(--sel);outline:1.5px solid var(--orange-line)}
+.pickbar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px -16px -14px;padding:10px 16px;background:var(--card);border-top:1px solid var(--orange-line);font-size:13px;font-weight:600;box-shadow:0 -6px 16px rgba(16,28,56,.06)}
+.pickbar .grow{flex:1}
+.narrow .pickbar{margin:10px -10px -12px;padding:10px}
 .more button{color:var(--orange);font-weight:700}
 .item.rest{opacity:.42}
 
@@ -181,6 +192,8 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .pop .po .fn{flex:1;font-weight:600;font-size:13px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pop .po .ck{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff}
 .pop .po.in .ck{background:var(--vm-c);border-color:var(--vm-c)}
+.pop .ps{font-size:11px;color:var(--mute);padding:0 10px 6px}
+.pop .done{display:flex;justify-content:flex-end;padding:6px 8px 2px}
 .pop .newrow{display:flex;gap:6px;padding:6px 8px 4px;border-top:1px solid var(--line);margin-top:4px}
 .pop .newrow input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:0;min-width:0}
 .pop .newrow input:focus{border-color:var(--orange)}
@@ -229,7 +242,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 <div id="app">
   <header class="top">
     <div class="brand">RecallText<small>Filing desk</small></div>
-    <div class="tag">Left: everything on your phone, texts, calls and voicemails together. Right: your folders. Drag anything across, or tap File.</div>
+    <div class="tag">Left: everything on your phone, texts, calls and voicemails together. Right: your folders. Drag anything across, tap File, or pick the messages you want.</div>
     <div class="seg" role="group" aria-label="Preview width">
       <button id="w-wide" aria-pressed="true" onclick="setPhone(false)">Wide</button>
       <button id="w-phone" aria-pressed="false" onclick="setPhone(true)">Phone</button>
@@ -278,6 +291,7 @@ const state = {
   contacts: DATA.contacts, folders: DATA.folders,
   folder: null, filter: 'all', q: '',
   open: new Set(['c12']), selected: new Set(), showRest: new Set(),
+  pickMode: new Set(['c12']), picked: new Set(),
   phone: false, pop: null, pendingNew: null
 };
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -315,16 +329,17 @@ function payloadItems(p){
   if(p.kind==='conv') return contactById(p.id).items;
   if(p.kind==='item') return [contactById(p.cid).items.find(i=>i.id===p.id)];
   if(p.kind==='multi') return [...state.selected].flatMap(id=>contactById(id).items);
+  if(p.kind==='items') return contactById(p.cid).items.filter(i=>state.picked.has(i.id));
   return [];
 }
 function payloadName(p){
   if(p.kind==='conv') return contactById(p.id).name;
   if(p.kind==='item'){ const i=payloadItems(p)[0]; return (i.type==='text'?'message':i.type==='vm'?'voicemail':'call')+' from '+contactById(p.cid).name; }
+  if(p.kind==='items'){ const n=payloadItems(p).length; return n+' item'+(n!==1?'s':'')+' from '+contactById(p.cid).name; }
   return state.selected.size+' conversations';
 }
 function fileTo(p,fid){
   const f=folderById(fid); payloadItems(p).forEach(i=>addTo(i,fid));
-  if(p.kind==='multi') state.selected.clear();
   toast('Filed '+payloadName(p)+' → '+f.icon+' '+f.name); render();
 }
 function unfileFrom(p,fid){
@@ -348,19 +363,20 @@ function createFolderFromInput(){
 function openPop(ev,p){
   ev.stopPropagation();
   state.pop=p; const pop=document.getElementById('pop');
-  pop.innerHTML=`<div class="pt">File ${esc(payloadName(p))} to</div>`+
+  pop.innerHTML=`<div class="pt">File ${esc(payloadName(p))} to</div><div class="ps">Tap as many folders as you like. Tap again to remove.</div>`+
     state.folders.map(f=>`<button class="po ${inFolder(p,f.id)?'in':''}" onclick="togglePop(${f.id})"><span class="fi">${f.icon}</span><span class="fn">${esc(f.name)}</span><span class="ck"><svg class="ic" style="width:11px;height:11px"><use href="#i-check"/></svg></span></button>`).join('')+
-    `<div class="newrow"><input id="popnew" type="text" placeholder="New folder name" onkeydown="if(event.key==='Enter')popNew()"><button class="btn primary" onclick="popNew()">Create & file</button></div>`;
+    `<div class="newrow"><input id="popnew" type="text" placeholder="New folder name" onkeydown="if(event.key==='Enter')popNew()"><button class="btn primary" onclick="popNew()">Create & file</button></div>
+    <div class="done"><button class="btn" onclick="closePop()">Done</button></div>`;
   pop.classList.add('open');
   const r=ev.currentTarget.getBoundingClientRect(); const w=280,h=pop.offsetHeight;
   let x=Math.min(r.left, window.innerWidth-w-12), y=r.bottom+6;
   if(y+h>window.innerHeight-12) y=Math.max(12,r.top-h-6);
   pop.style.left=Math.max(12,x)+'px'; pop.style.top=y+'px';
 }
-function togglePop(fid){ const p=state.pop; if(inFolder(p,fid)) unfileFrom(p,fid); else fileTo(p,fid); if(p.kind==='multi') closePop(); else openPopRefresh(); }
+function togglePop(fid){ const p=state.pop; if(inFolder(p,fid)) unfileFrom(p,fid); else fileTo(p,fid); openPopRefresh(); }
 function openPopRefresh(){ const p=state.pop; const pop=document.getElementById('pop'); pop.querySelectorAll('.po').forEach((b,i)=>b.classList.toggle('in',inFolder(p,state.folders[i].id))); }
 function popNew(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){el.focus();return;} const f=createFolder(n); fileTo(state.pop,f.id); closePop(); }
-function closePop(){ document.getElementById('pop').classList.remove('open'); state.pop=null; }
+function closePop(){ const p=state.pop; document.getElementById('pop').classList.remove('open'); state.pop=null; if(p&&p.kind==='multi'){ state.selected.clear(); render(); } }
 document.addEventListener('click',e=>{ if(!e.target.closest('#pop')) closePop(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePop(); });
 
@@ -444,7 +460,13 @@ function renderThread(c){
   const show=state.showRest.has(c.id);
   const items=(state.folder&&show)?c.items:itemsFor(c);
   const hidden=state.folder?c.items.length-itemsFor(c).length:0;
-  let html='<div class="thread">', lastDay='';
+  const pm=state.pickMode.has(c.id);
+  const pickedHere=items.filter(i=>state.picked.has(i.id)).length;
+  let html=`<div class="thread"><div class="thead">
+    <span>${items.length} items in date order · texts, calls and voicemails together</span><span class="grow"></span>
+    <button class="btn ${pm?'on':''}" onclick="event.stopPropagation();togglePickMode('${c.id}')">${pm?'Picking…':'Pick messages'}</button>
+    ${pm?`<button class="btn ghost" onclick="event.stopPropagation();pickAll('${c.id}',true)">All</button><button class="btn ghost" onclick="event.stopPropagation();pickAll('${c.id}',false)">None</button>`:''}
+  </div>`, lastDay='';
   items.forEach(i=>{
     const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; }
     const rest=state.folder&&!i.folders.includes(state.folder);
@@ -458,9 +480,14 @@ function renderThread(c){
     } else {
       body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="n">${esc(i.note)}</div>`:''}${fchips}</div>`;
     }
-    html+=`<div class="item ${i.dir==='out'?'out':''} ${rest?'rest':''}" draggable="true" ondragstart="event.stopPropagation();dragStart(event,{kind:'item',cid:'${c.id}',id:'${i.id}'})" ondragend="dragEnd(event)" onclick="event.stopPropagation()">${body}${fileBtn}</div>`;
+    const pk=state.picked.has(i.id);
+    const cb=pm?`<input type="checkbox" class="pk" ${pk?'checked':''} onclick="event.stopPropagation();togglePick('${i.id}')" aria-label="Pick this ${i.type}">`:'';
+    html+=`<div class="item ${i.dir==='out'?'out':''} ${rest?'rest':''} ${pm?'pickable':''} ${pk?'picked':''}" draggable="true" ondragstart="event.stopPropagation();dragStart(event,${pm&&pk?`{kind:'items',cid:'${c.id}'}`:`{kind:'item',cid:'${c.id}',id:'${i.id}'}`})" ondragend="dragEnd(event)" onclick="event.stopPropagation();${pm?`togglePick('${i.id}')`:''}">${cb}${body}${pm?'':fileBtn}</div>`;
   });
   if(hidden>0) html+=`<div class="more">${hidden} more in this conversation not filed here · <button onclick="event.stopPropagation();toggleRest('${c.id}')">${show?'hide':'show faded'}</button></div>`;
+  if(pm) html+=`<div class="pickbar" onclick="event.stopPropagation()"><span style="white-space:nowrap">${pickedHere} of ${items.length} picked</span><span class="grow"></span>
+    <button class="btn primary" ${pickedHere?'':'disabled style="opacity:.5"'} onclick="openPop(event,{kind:'items',cid:'${c.id}'})"><svg class="ic"><use href="#i-folder"/></svg> File picked to folder(s)…</button>
+    <button class="btn ghost" onclick="togglePickMode('${c.id}')">Done</button></div>`;
   return html+'</div>';
 }
 function renderFolders(){
@@ -486,11 +513,16 @@ function renderStrip(){
     `<button class="sc add" onclick="stripNew()"><svg class="ic"><use href="#i-plus"/></svg> New folder</button>`;
 }
 function stripNew(){ const n=prompt('Folder name'); if(n&&n.trim()){ const f=createFolder(n.trim()); state.folder=f.id; toast('Folder created: '+f.name); render(); } }
+function togglePickMode(cid){ if(state.pickMode.has(cid)){ state.pickMode.delete(cid); contactById(cid).items.forEach(i=>state.picked.delete(i.id)); } else state.pickMode.add(cid); render(); }
+function togglePick(iid){ if(state.picked.has(iid)) state.picked.delete(iid); else state.picked.add(iid); render(); }
+function pickAll(cid,on){ itemsFor(contactById(cid)).forEach(i=>on?state.picked.add(i.id):state.picked.delete(i.id)); render(); }
 function toggleOpen(id){ if(state.open.has(id)) state.open.delete(id); else state.open.add(id); render(); }
 function toggleSel(id){ if(state.selected.has(id)) state.selected.delete(id); else state.selected.add(id); render(); }
 function toggleRest(id){ if(state.showRest.has(id)) state.showRest.delete(id); else state.showRest.add(id); render(); }
 function setPhone(on){ state.phone=on; document.getElementById('w-wide').setAttribute('aria-pressed',!on); document.getElementById('w-phone').setAttribute('aria-pressed',on); render(); }
 window.addEventListener('resize',()=>{ const a=document.getElementById('app'); a.classList.toggle('narrow',state.phone||window.innerWidth<760); });
+// first look: three items already picked in Paul's thread, so the pick flow is visible at rest
+(()=>{ const c=contactById('c12'); if(c){ c.items.filter(i=>i.type!=='text').slice(1,4).forEach(i=>state.picked.add(i.id)); } })();
 render();
 // first look: land on the expanded conversation so texts, calls and voicemails show together
 requestAnimationFrame(()=>{ const r=document.querySelector('.row.open'); if(r) document.getElementById('rows').scrollTop=r.offsetTop-8; });

@@ -18,14 +18,16 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
 | Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. File it like anything else. |
 | Start a new deal folder | **6 taps + 3 fields.** ＋ New Transaction → name → category → note → Create → Add Conversations → select → Add. | **1 field.** Type a name, press Enter. Or drop a conversation on "New folder" and name it. |
-| File the same conversation in two deals | **Per message.** Tag each message separately. | **Drag twice.** A conversation can sit in several folders; chips on the row show which. |
+| File only part of a conversation | **4 taps per message.** Expand the contact, tap 📁 on one message, pick the record, close. Repeat. | **Tick, then file once.** Open the conversation, tap Pick messages, tick any mix of texts, calls and voicemails, then File picked. All or None in one tap. |
+| Put the same messages in two or more deals | **Per message.** Tag each message separately. | **Tick more folders.** The folder list stays open with check marks; tap as many as apply, then Done. Chips on each item show where it lives. |
 | Export a certified record | Transaction → Export → Preview → Download | Export PDF on the folder. Same generator, same hashes. |
 
 ## What the left pane shows
 
 - **One row per person or number.** Name, role, number, the latest item with a type chip (Text / Call / Voicemail), counts, and the folders it is filed in. Unknown numbers and spam are in the same list, spam dimmed.
 - **Filters instead of tabs.** All · Texts · Calls · Voicemails · Not filed yet. "Not filed yet" is the to-do list.
-- **Tap a row to open the thread in place.** Texts as bubbles, calls and voicemails as cards, all on one timeline with date dividers. Hover any item for a small File button, or drag the item itself.
+- **Tap a row to open the thread in place.** Texts as bubbles, calls and voicemails as cards, all on one timeline with date dividers. Each item has its own small File button and can be dragged on its own.
+- **Pick messages.** Inside any open conversation, tap Pick messages and checkboxes appear on every text, call and voicemail. Tick what belongs to the deal (or All, then untick the personal ones). A bar at the bottom files the picked set to one or more folders in a single move. Unpicked items stay out of the folder.
 - **Inside a folder** the list narrows to what is filed there. Items from the same conversation that are not in the folder hide behind "n more, show faded".
 - **Checkboxes for bulk filing.** Tick several rows, a bar appears, "File selected to…".
 
@@ -43,7 +45,7 @@ flowchart TD
   B[1 · Unify the data<br/>one item list per contact:<br/>texts + calls + voicemails, each with a date and folder tags]
   B --> C[2 · Two-pane shell<br/>left Everything · right Folders<br/>replaces Home tabs and the detail screen]
   C --> D[3 · Thread in place<br/>tap a row, see all three types in date order<br/>calls and voicemails inline]
-  D --> E[4 · Filing in one move<br/>drag row or item to folder · File button popover · multi-select bar]
+  D --> E[4 · Filing in one move<br/>drag row or item · File popover with multi-folder check marks<br/>Pick messages: tick any mix, file the set once]
   E --> F[5 · New folder = one field<br/>name → Enter · drop onto New folder<br/>category optional later]
   F --> G{Screen narrower<br/>than 760px?}
   G -- yes --> H[Folders become a bottom strip<br/>File → tap a chip]
@@ -92,6 +94,6 @@ The app is one file, `index.html`, with sample data and screens in the same scri
 
 ## Three things to decide
 
-1. **Whole conversation or single message by default?** The mockup files the whole conversation when you drag a row and one item when you drag an item. A personal message to Ace can land in a deal folder until you unfile it; the faded "not filed here" items make that easy to spot.
+1. **What should dragging a whole row do?** The mockup files every item in that conversation. The alternative is to open it in Pick mode with everything ticked so you can untick before filing. One extra tap, fewer personal messages in deal records. I lean toward the second for contacts who are also friends.
 2. **Should "Not filed yet" nag?** A count badge on the filter is quiet. A daily reminder is not. Left quiet.
 3. **Where does the pitch site go?** If the two-pane version replaces recalltext.io, the incoming-call demo needs a new home, probably a button in the top bar.
