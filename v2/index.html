@@ -138,6 +138,10 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .ifile{opacity:.35;transition:opacity .12s;align-self:center;padding:4px;border-radius:6px;color:var(--mute)}
 .item:hover .ifile{opacity:1}
 .ifile:hover{color:var(--orange);background:var(--orange-soft)}
+.hash{display:flex;align-items:center;gap:5px;margin-top:6px;font-size:10px;color:var(--mute);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hash .ic{width:10px;height:10px;color:var(--vm-c)}
+.hash b{color:var(--vm-c);font-weight:700}
+.k-lock{color:var(--mute);background:color-mix(in srgb,var(--mute) 12%,transparent)}
 .ifolders{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
 .ifolders span{font-size:10px;font-weight:700;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
 .more{margin:8px 6px 0;font-size:12px;color:var(--mute)}
@@ -237,12 +241,13 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
   <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
 </svg>
 
 <div id="app">
   <header class="top">
     <div class="brand">RecallText<small>Filing desk</small></div>
-    <div class="tag">Left: everything on your phone, texts, calls and voicemails together. Right: your folders. Drag anything across, tap File, or pick the messages you want.</div>
+    <div class="tag">Every text, call and voicemail is hashed the moment it comes off your phone. Folders only organize them. Move a conversation into a folder by dragging it, tap File, or pick the messages you want.</div>
     <div class="seg" role="group" aria-label="Preview width">
       <button id="w-wide" aria-pressed="true" onclick="setPhone(false)">Wide</button>
       <button id="w-phone" aria-pressed="false" onclick="setPhone(true)">Phone</button>
@@ -275,7 +280,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
         </div>
       </div>
       <div class="scroll"><div class="fl" id="folders"></div></div>
-      <div class="hint">A folder is a transaction, a matter, a tenant, anything. One conversation can live in several folders. Filing never changes the original message, call log or voicemail.</div>
+      <div class="hint">A folder is a transaction, a matter, a tenant, anything. It is a label, not a copy: the hash stamped when an item came off your phone stays with it in every folder and every export.</div>
     </aside>
   </div>
 </div>
@@ -320,6 +325,7 @@ function folderStats(fid){
   state.contacts.forEach(c=>{const it=c.items.filter(i=>i.folders.includes(fid)); if(it.length){contacts++; const k=counts(it); texts+=k.text;calls+=k.call;vms+=k.vm;}});
   return {contacts,texts,calls,vms,items:texts+calls+vms};
 }
+function hashOf(i){ const src=(i.text||i.transcript||i.note||'')+'|'+i.ts+'|'+i.type; let h=0x811c9dc5; for(let k=0;k<src.length;k++){ h^=src.charCodeAt(k); h=Math.imul(h,16777619)>>>0; } const a=h.toString(16).padStart(8,'0'); let g=0x9747b28c; for(let k=0;k<src.length;k++){ g=Math.imul(g^src.charCodeAt(k),2246822519)>>>0; } return 'sha256:'+a+g.toString(16).padStart(8,'0')+'…'; }
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
 
 /* ---------- filing ---------- */
@@ -425,7 +431,7 @@ function renderBanner(){
   const f=folderById(state.folder), s=folderStats(f.id);
   document.getElementById('lt').textContent='In this folder';
   el.innerHTML=`<div class="fbanner"><span class="fi">${f.icon}</span><div class="grow"><b>${esc(f.name)}</b><div class="m">${s.contacts} contacts · ${s.texts} texts · ${s.calls} calls · ${s.vms} voicemails</div></div>
-    <button class="btn" onclick="toast('Export runs the existing PDF generator, hashes included')"><svg class="ic"><use href="#i-pdf"/></svg> Export PDF</button>
+    <button class="btn" onclick="toast('Export runs the existing PDF generator; every item carries its ingestion hash')"><svg class="ic"><use href="#i-pdf"/></svg> Export PDF</button>
     <button class="btn ghost" onclick="state.folder=null;render()"><svg class="ic"><use href="#i-back"/></svg> Everything</button></div>`;
 }
 function renderChips(){
@@ -444,13 +450,14 @@ function renderRows(){
     const open=state.open.has(c.id);
     const cnt=[k.text?k.text+' text'+(k.text>1?'s':''):'',k.call?k.call+' call'+(k.call>1?'s':''):'',k.vm?k.vm+' voicemail'+(k.vm>1?'s':''):''].filter(Boolean).map(s=>`<span>${s}</span>`).join('');
     const chips=fs.length?fs.map(f=>`<span class="fchip" title="${esc(f.name)}">${f.icon} ${esc(f.name)}</span>`).join(''):(c.spam?'':`<span class="fchip none">not filed</span>`);
+    const lock=c.spam?'':`<span class="kind k-lock" title="Every item was hashed when it was pulled from the phone"><svg class="ic"><use href="#i-lock"/></svg>${items.length} hashed</span>`;
     return `<div class="row ${open?'open':''} ${c.spam?'dim':''}" draggable="true" ondragstart="dragStart(event,{kind:'conv',id:'${c.id}'})" ondragend="dragEnd(event)" onclick="toggleOpen('${c.id}')">
       <input type="checkbox" class="sel" ${state.selected.has(c.id)?'checked':''} onclick="event.stopPropagation();toggleSel('${c.id}')" aria-label="Select ${esc(c.name)}">
       <div class="av" style="background:${c.color}">${esc(c.avatar)}</div>
       <div style="min-width:0">
         <div class="l1"><b>${esc(c.name)}</b><span class="role">${esc([c.role,c.number].filter(Boolean).join(' · '))}</span></div>
         <div class="l2"><span class="kind ${kindClass(last)}"><svg class="ic"><use href="#${kindIcon(last)}"/></svg>${kindLabel(last)}</span><span class="prev">${esc(summary(last))}</span></div>
-        <div class="l3"><span class="cnt">${cnt}</span>${chips}</div>
+        <div class="l3"><span class="cnt">${cnt}</span>${lock}${chips}</div>
       </div>
       <div class="rside"><span class="when">${fmtDay(last.t)}</span><button class="file" onclick="openPop(event,{kind:'conv',id:'${c.id}'})"><svg class="ic"><use href="#i-folder"/></svg> File</button></div>
     </div>${open?renderThread(c):''}`;
@@ -463,22 +470,23 @@ function renderThread(c){
   const pm=state.pickMode.has(c.id);
   const pickedHere=items.filter(i=>state.picked.has(i.id)).length;
   let html=`<div class="thread"><div class="thead">
-    <span>${items.length} items in date order · texts, calls and voicemails together</span><span class="grow"></span>
+    <span>${items.length} items in date order · each one hashed when it was pulled from the phone</span><span class="grow"></span>
     <button class="btn ${pm?'on':''}" onclick="event.stopPropagation();togglePickMode('${c.id}')">${pm?'Picking…':'Pick messages'}</button>
     ${pm?`<button class="btn ghost" onclick="event.stopPropagation();pickAll('${c.id}',true)">All</button><button class="btn ghost" onclick="event.stopPropagation();pickAll('${c.id}',false)">None</button>`:''}
   </div>`, lastDay='';
   items.forEach(i=>{
     const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; }
     const rest=state.folder&&!i.folders.includes(state.folder);
+    const hline=`<div class="hash"><svg class="ic"><use href="#i-lock"/></svg><b>hashed at ingestion</b> ${fmtDay(i.t)} ${fmtTime(i.t)} · ${hashOf(i)}</div>`;
     const fchips=i.folders.length?`<div class="ifolders">${i.folders.map(folderById).filter(Boolean).map(f=>`<span>${f.icon} ${esc(f.name)}</span>`).join('')}</div>`:'';
     const fileBtn=`<button class="ifile" title="File this ${i.type==='text'?'message':i.type}" onclick="openPop(event,{kind:'item',cid:'${c.id}',id:'${i.id}'})"><svg class="ic"><use href="#i-folder"/></svg></button>`;
     let body;
     if(i.type==='text'){
-      body=`<div class="bubble"><div class="who">${esc(i.sender)}</div><div class="t">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}<div class="ts">${fmtTime(i.t)}</div>${fchips}</div>`;
+      body=`<div class="bubble"><div class="who">${esc(i.sender)}</div><div class="t">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}<div class="ts">${fmtTime(i.t)}</div>${hline}${fchips}</div>`;
     } else if(i.type==='vm'){
-      body=`<div class="card vm"><div class="h"><svg class="ic"><use href="#i-vm"/></svg>${kindLabel(i)} · ${i.dur}<span class="ts">${fmtTime(i.t)}</span></div><div class="q">“${esc(i.transcript)}”</div>${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}${fchips}</div>`;
+      body=`<div class="card vm"><div class="h"><svg class="ic"><use href="#i-vm"/></svg>${kindLabel(i)} · ${i.dur}<span class="ts">${fmtTime(i.t)}</span></div><div class="q">“${esc(i.transcript)}”</div>${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
     } else {
-      body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="n">${esc(i.note)}</div>`:''}${fchips}</div>`;
+      body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="n">${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
     }
     const pk=state.picked.has(i.id);
     const cb=pm?`<input type="checkbox" class="pk" ${pk?'checked':''} onclick="event.stopPropagation();togglePick('${i.id}')" aria-label="Pick this ${i.type}">`:'';

@@ -9,6 +9,26 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 
 ![Today versus redesign](./before-after.svg)
 
+## In plain words
+
+- **A row** is one line in the left list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
+- **Dragging a row** means press on that line, move it onto a folder on the right, let go. Same motion as moving a file into a folder on a computer. On a phone you don't drag: tap **File**, then tap a folder.
+- **Filing** is a label, not a copy. It says "these records belong to the 1010 Catalina deal." The message, call log or voicemail is not changed, moved or duplicated. One item can carry several labels.
+- **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Filing happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
+
+```mermaid
+flowchart LR
+  P[Your phone<br/>text · call · voicemail] --> I[RecallText pulls it in]
+  I --> H[SHA-256 hash + timestamp<br/>stamped at ingestion]
+  H --> E[Appears in Everything<br/>already certified]
+  E --> F[You file it to one<br/>or more folders<br/>a label, nothing changes]
+  F --> X[Export PDF<br/>carries the original hash]
+  classDef key fill:#FFF1E6,stroke:#F97316,color:#7C2D12
+  classDef step fill:#FFFFFF,stroke:#1A2F5A,color:#111827
+  class H key
+  class P,I,E,F,X step
+```
+
 ## Steps, today versus redesign
 
 | You want to… | Today | Redesign |
