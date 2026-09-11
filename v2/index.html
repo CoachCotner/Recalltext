@@ -37,14 +37,14 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden;display:flex;align-items:center;justify-content:center}
 button,input{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0}
 button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
 .ic{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-2px}
 
 /* ---------- top bar ---------- */
-.top{height:54px;background:var(--hd);color:var(--hd-ink);display:flex;align-items:center;gap:18px;padding:0 18px}
+.top{height:50px;background:var(--hd);color:var(--hd-ink);display:flex;align-items:center;gap:12px;padding:0 14px}
 .brand{font-weight:800;font-size:19px;color:var(--orange);letter-spacing:-.3px;white-space:nowrap}
 .brand small{display:block;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--hd-dim);margin-top:-3px}
 .tag{font-size:12px;color:var(--hd-dim);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -53,15 +53,16 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .seg button[aria-pressed="true"]{background:var(--orange);color:var(--orange-ink)}
 
 /* ---------- shell ---------- */
-#app{max-width:430px;margin:0 auto;height:100vh;display:flex;flex-direction:column;background:var(--bg);position:relative}
-@media (min-width:481px){#app{border-left:1px solid var(--line);border-right:1px solid var(--line);box-shadow:0 0 60px rgba(0,0,0,.18)}}
+#app{width:100%;max-width:360px;height:100dvh;max-height:780px;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden}
+@media (min-width:481px){#app{border:1px solid var(--line);border-radius:22px;box-shadow:0 0 60px rgba(0,0,0,.18)}}
+@media (max-width:480px){#app{max-width:none;max-height:none;border:0;border-radius:0}}
 .top{flex:none}
 .top .grow{flex:1}
 .tourbtn{background:var(--orange);color:#fff;border-radius:999px;padding:7px 14px;font-weight:800;font-size:12px;white-space:nowrap}
 .shell{flex:1;min-height:0;display:flex;flex-direction:column;min-width:0}
 .pane{background:var(--card);display:flex;flex-direction:column;min-height:0;min-width:0}
 .left{flex:1 1 auto}
-.tour{position:absolute;top:62px;left:12px;right:12px;z-index:90;transition:top .2s,bottom .2s;}
+.tour{position:absolute;top:58px;left:12px;right:12px;z-index:90;transition:top .2s,bottom .2s;}
 .tour.bottom{top:auto;bottom:12px}
 .tour{background:var(--hd);color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .tour-h{display:flex;align-items:center;gap:8px;font-size:14px}
@@ -225,7 +226,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .pop .newrow{display:flex;gap:6px;padding:6px 8px 4px;border-top:1px solid var(--line);margin-top:4px}
 .pop .newrow input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:0;min-width:0}
 .pop .newrow input:focus{border-color:var(--orange)}
-.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(8px);background:var(--hd);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:60;box-shadow:var(--shadow);white-space:nowrap;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
+.toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(8px);background:var(--hd);color:#fff;padding:9px 14px;border-radius:999px;font-weight:600;font-size:12px;opacity:0;transition:.2s;pointer-events:none;z-index:95;box-shadow:var(--shadow);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translateX(-50%)}
 .empty{padding:40px 20px;text-align:center;color:var(--mute);font-size:13px}
 
@@ -234,55 +235,56 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .more-btn{width:34px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink2);font-weight:800;font-size:18px;line-height:1;display:inline-flex;align-items:center;justify-content:center}
 .more-btn:hover{border-color:var(--orange);color:var(--orange)}
 .pop .po small{display:block;font-size:11px;color:var(--mute);font-weight:500;margin-top:1px}
-.ov{position:fixed;inset:0;background:rgba(10,20,40,.55);z-index:70;display:none;align-items:center;justify-content:center;padding:16px}
-.ov.open{display:flex}
-.sheet{background:var(--card);color:var(--ink);border-radius:16px;width:100%;max-width:620px;max-height:calc(100vh - 32px);overflow-y:auto;box-shadow:var(--shadow);padding:18px 20px 20px}
-.sheet h3{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px}
-.sheet .sub{font-size:12px;color:var(--mute);margin-top:2px}
-.sheet h4{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:18px 0 8px}
-.chk{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);margin-bottom:6px;font-weight:700;font-size:13px;flex-wrap:wrap}
+.ov{position:absolute;inset:0;z-index:70;display:none;background:var(--card);color:var(--ink)}
+.ov.open{display:flex;flex-direction:column}
+.sheet{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px;padding:8px 12px 12px;overflow-y:auto}
+.xh{display:flex;align-items:center;gap:8px;height:44px;flex:none;margin:0 -12px;padding:0 8px;border-bottom:1px solid var(--line)}
+.xh .btn{padding:6px 8px}
+.xh .xt{min-width:0;line-height:1.15}
+.xh .xt b{display:block;font-size:14px}
+.xh .xt span{display:block;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chk{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;border:1px solid var(--line);font-weight:700;font-size:12px;flex-wrap:wrap}
 .chk.ok{border-color:color-mix(in srgb,var(--vm-c) 40%,transparent);background:color-mix(in srgb,var(--vm-c) 8%,transparent);color:var(--vm-c)}
 .chk.warn{border-color:var(--orange-line);background:var(--orange-soft);color:var(--amber)}
-.chk .d{margin-left:auto;font-weight:500;font-size:12px;color:var(--mute)}
-.chk .fix{width:100%;display:flex;gap:6px;margin-top:6px}
-.chk .fix input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;outline:0;min-width:0;font-weight:500;color:var(--ink)}
-.scope{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
-.scope .bx{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.scope .bx small{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
-.scope .bx b{font-size:15px;display:block}
-.scope .bx span{font-size:12px;color:var(--mute)}
-.scope .arr{color:var(--orange);font-weight:800;font-size:18px}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
-.tiles div{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:2px}
-.tiles div small{font-size:10px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
-.hashbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;line-height:1.55;margin-bottom:6px}
-.hashbox b{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}
+.chk .d{margin-left:auto;font-weight:500;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.chk .fix{width:100%;display:flex;gap:6px;margin-top:4px}
+.chk .fix input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;outline:0;min-width:0;font-weight:500;color:var(--ink);font-size:12px}
+.xscope{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink2);padding:2px 2px 0}
+.xscope b{color:var(--ink)}
+.xscope .xid{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--mute);white-space:nowrap}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.tiles div{border:1px solid var(--line);border-radius:9px;padding:5px 8px;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;line-height:1.15}
+.tiles div small{font-size:9px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.hashbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;line-height:1.45}
+.hashbox b{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}
 .hashbox .ok{color:var(--vm-c);font-weight:700}
-.hashbox .why{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:12px;color:var(--ink2);margin-top:4px;word-break:normal}
-.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer}
-.opt.on{border-color:var(--orange);background:var(--sel)}
-.opt input{margin-top:3px;accent-color:var(--orange);flex:none}
-.opt b{display:block;font-size:13px}
-.opt span{font-size:12px;color:var(--mute)}
-.files{font-size:12px;color:var(--ink2);margin-top:6px;display:flex;flex-direction:column;gap:2px}
-.files code{font-family:ui-monospace,Menlo,monospace;font-size:11px}
-.sheet .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;align-items:center}
-.sheet .actions .grow{flex:1}
-.preview{margin-top:14px;border:1px solid #cfd5df;border-radius:10px;padding:16px;background:#fff;color:#111;font-size:11.5px;line-height:1.5;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
-.preview h5{font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px;color:#1A2F5A}
-.preview .brand{font-size:16px;font-weight:800;color:#1A2F5A}.preview .brand em{color:#F97316;font-style:normal}
-.preview .row2{display:grid;grid-template-columns:auto 1fr;gap:1px 12px}
+.hashbox .why{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11px;color:var(--ink2);margin-top:2px;word-break:normal}
+.segx{display:flex;gap:6px}
+.segx button{flex:1;padding:9px 8px;border-radius:10px;border:1.5px solid var(--line);font-size:12px;font-weight:700;color:var(--ink2);background:var(--card)}
+.segx button.on{border-color:var(--orange);background:var(--sel);color:var(--amber)}
+.segx button:disabled{opacity:.45}
+.xfiles{font-size:11px;color:var(--mute);padding:0 2px}
+.xgrow{flex:1}
+.xbig{width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:12px}
+.xsmall{width:100%;justify-content:center}
+.pvscroll{flex:1;min-height:0;overflow-y:auto;padding-top:10px}
+.preview{border:1px solid #cfd5df;border-radius:8px;padding:14px;background:#fff;color:#111;font-size:11px;line-height:1.5;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.preview h5{font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px;color:#1A2F5A}
+.preview .brand{font-size:15px;font-weight:800;color:#1A2F5A}.preview .brand em{color:#F97316;font-style:normal}
+.preview .row2{display:grid;grid-template-columns:auto 1fr;gap:1px 10px}
 .preview .row2 span:nth-child(odd){color:#555}
-.preview .mono{font-family:ui-monospace,Menlo,monospace;font-size:10px;word-break:break-all;color:#333}
+.preview .mono{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;word-break:break-all;color:#333}
 .preview .m{color:#16A34A;font-weight:700}
 .preview hr{border:0;border-top:1px solid #ddd;margin:10px 0}
 .preview p{margin:0 0 4px}
-@media (max-width:520px){.tiles{grid-template-columns:repeat(2,1fr)}.scope{grid-template-columns:1fr;} .scope .arr{transform:rotate(90deg);justify-self:center}}
 
 /* ---------- narrow / phone layout ---------- */
-.narrow .strip{display:flex;flex:none;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;background:var(--card);border-top:1px solid var(--line)}
-.narrow .strip .lbl{width:100%;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:0 2px 2px}
-.sc{flex:none;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;border:1.5px solid var(--line);font-size:11px;font-weight:700;background:var(--card);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.narrow .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;flex:none;padding:6px 8px 8px;background:var(--card);border-top:1px solid var(--line)}
+.narrow .strip .lbl{grid-column:1/-1;display:flex;justify-content:space-between;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:0 2px}
+.narrow .strip .lbl span{font-weight:600;letter-spacing:0;text-transform:none}
+.sc{display:flex;align-items:center;gap:4px;padding:6px 7px;border-radius:9px;border:1.5px solid var(--line);font-size:11px;font-weight:700;background:var(--card);min-width:0;text-align:left}
+.sc .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc .n{flex:none}
 .sc.on{border-color:var(--orange);background:var(--sel)}
 .sc.hot{border-color:var(--orange);background:var(--drop)}
 .sc.add{border-style:dashed;color:var(--orange);border-color:var(--orange-line)}
@@ -339,7 +341,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
   <div class="tour-d" id="tour-d"></div>
   <div class="tour-a"><button class="btn ghost" onclick="tourExit()">Exit</button><span class="grow"></span><button class="btn" id="tour-back" onclick="tourStep(-1)">Back</button><button class="btn primary" id="tour-next" onclick="tourStep(1)">Next</button></div>
 </div>
-<div class="ov" id="ov" onclick="if(event.target===this)closeExport()"><div class="sheet" id="sheet" role="dialog" aria-label="Export"></div></div>
+<div class="ov" id="ov"><div class="sheet" id="sheet" role="dialog" aria-label="Export"></div></div>
 <div class="pop" id="pop" role="dialog" aria-label="File to folder"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -420,28 +422,26 @@ function renderExport(){
   const {sc,list,title,id,now,exportHash,files}=ex; const n=list.length;
   const k=counts(list.map(x=>x.i)); const first=list[0]?list[0].i.t:now.getTime();
   const parties=[...new Set(list.map(x=>x.c))]; const unknown=parties.filter(c=>c.unknown);
-  const partiesOk=unknown.length===0;
   const fk=t=>files.filter(f=>f.kind===t).length;
-  const filesHtml=files.length?`<div class="files">${files.slice(0,8).map(f=>`<div>${f.kind==='pdf'?'📄':f.kind==='video'?'🎬':f.kind==='image'?'🖼':f.kind==='audio'?'🎙':'📝'} <code>${esc(f.name)}</code> · ${esc(f.from)} · <code>sha256:${fullHash(f.seed).slice(0,12)}…</code></div>`).join('')}${files.length>8?`<div>… and ${files.length-8} more</div>`:''}</div>`:`<div class="files"><div>No photos, videos or voicemails in this scope, so no ZIP is needed.</div></div>`;
-  document.getElementById('sheet').innerHTML=`
-    <h3><svg class="ic" style="color:var(--orange)"><use href="#i-pdf"/></svg> Export · ${esc(title)}</h3>
-    <div class="sub">${sc.kind==='conv'?'Single conversation':'Folder record'} · ${n} record${n!==1?'s':''} · ${n?fmtDay(first)+' → today':'nothing in scope'} · Export ID ${id}</div>
-    <h4>Readiness</h4>
-    <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Records verified <span class="d">${n} of ${n} · ingestion hash = current hash</span></div>
-    ${partiesOk?`<div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Parties labeled <span class="d">${parties.map(c=>esc(c.name)).join(' · ')}</span></div>`
-      :`<div class="chk warn"><svg class="ic"><use href="#i-x"/></svg> ${unknown.length} number${unknown.length>1?'s':''} not labeled <span class="d">the export needs a name for each party; the carrier number is kept</span>${unknown.map(c=>`<div class="fix"><input id="lbl-${c.id}" placeholder="Who is ${esc(c.number)}? e.g. Sarah from ABC Realty" onkeydown="if(event.key==='Enter')labelParty('${c.id}')"><button class="btn primary" onclick="labelParty('${c.id}')">Save</button></div>`).join('')}</div>`}
-    <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Exporter identity set <span class="d">${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span></div>
-    <h4>Scope</h4>
-    <div class="scope"><div class="bx"><small>Beginning</small><b>First record</b><span>${n?fmtDivider(first):'—'}</span></div><div class="arr">→</div><div class="bx"><small>End</small><b>Present</b><span>through today, ${fmtDivider(now.getTime())}</span></div></div>
-    <div class="tiles"><div>${k.text}<small>texts</small></div><div>${k.call}<small>calls</small></div><div>${k.vm}<small>voicemails</small></div><div>${files.length}<small>attachments</small></div></div>
-    <h4>Verification</h4>
-    <div class="hashbox"><b>Matching hash · every record</b>${n} of ${n} records: ingestion hash = current hash → <span class="ok">MATCH</span><span class="why">The PDF prints both hashes under every text, call and voicemail. If a single character had changed since it came off your phone, that line would read MISMATCH.</span></div>
-    <div class="hashbox"><b>Export hash · fingerprint of this export</b>${exportHash}<span class="why">Computed over every record hash plus the Export ID at ${fmtFull(now)}. Anyone holding this PDF can recompute it; a different value means the export was altered.</span></div>
-    <h4>What you get</h4>
-    <label class="opt ${ex.pdf?'on':''}"><input type="checkbox" ${ex.pdf?'checked':''} onchange="exOpt('pdf')"><div><b>PDF record</b><span>Cover sheet · full timeline with both hashes on every record · attachment index · chain of custody · export hash</span></div></label>
-    <label class="opt ${ex.zip?'on':''}"><input type="checkbox" ${ex.zip?'checked':''} onchange="exOpt('zip')" ${files.length?'':'disabled'}><div><b>ZIP of attachments${files.length?' · '+files.length+' files':''}</b><span>${fk('image')} photos · ${fk('video')} videos · ${fk('pdf')} documents · ${fk('audio')} voicemail recordings · ${fk('text')} transcripts, each listed with its own SHA-256 in the attachment index</span>${filesHtml}</div></label>
-    <div class="actions"><button class="btn primary" onclick="doExport()"><svg class="ic"><use href="#i-pdf"/></svg> Export ${ex.pdf&&ex.zip&&files.length?'PDF + ZIP':ex.zip&&files.length&&!ex.pdf?'ZIP':'PDF'}</button><button class="btn" onclick="exPreview()">${ex.preview?'Hide':'Preview'} cover sheet</button><span class="grow"></span><button class="btn ghost" onclick="closeExport()">Close</button></div>
-    ${ex.preview?renderPreview():''}`;
+  const head=(t,sub,back)=>`<div class="xh"><button class="btn ghost" onclick="${back}"><svg class="ic"><use href="#i-back"/></svg> Back</button><div class="xt"><b>${t}</b><span>${sub}</span></div></div>`;
+  if(ex.preview){
+    document.getElementById('sheet').innerHTML=head('Cover sheet','as it prints · first page','exPreview()')+`<div class="pvscroll">${renderPreview()}</div>`;
+    return;
+  }
+  document.getElementById('sheet').innerHTML=head('Export',esc(title)+' · '+n+' record'+(n!==1?'s':''),'closeExport()')+`
+    <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Records verified <span class="d">${n} of ${n} · MATCH</span></div>
+    ${unknown.length===0?`<div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Parties labeled <span class="d">${parties.map(c=>esc(c.name)).join(' · ')}</span></div>`
+      :`<div class="chk warn"><svg class="ic"><use href="#i-x"/></svg> ${unknown.length} number${unknown.length>1?'s':''} not labeled <span class="d">carrier number is kept</span>${unknown.map(c=>`<div class="fix"><input id="lbl-${c.id}" placeholder="Who is ${esc(c.number)}?" onkeydown="if(event.key==='Enter')labelParty('${c.id}')"><button class="btn primary" onclick="labelParty('${c.id}')">Save</button></div>`).join('')}</div>`}
+    <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Exporter set <span class="d">${EXPORTER.name} · ${EXPORTER.lic}</span></div>
+    <div class="xscope"><span><b>Scope</b> ${n?fmtDay(first)+', '+new Date(first).getFullYear():'—'} → today</span><span class="xid">${id}</span></div>
+    <div class="tiles"><div>${k.text}<small>texts</small></div><div>${k.call}<small>calls</small></div><div>${k.vm}<small>voicemails</small></div><div>${files.length}<small>files</small></div></div>
+    <div class="hashbox"><b>Matching hash · every record</b>${n} of ${n}: ingestion hash = current hash → <span class="ok">MATCH</span><span class="why">Both hashes print under every text, call and voicemail. Any change since ingestion would read MISMATCH.</span></div>
+    <div class="hashbox"><b>Export hash · fingerprint of this export</b>${exportHash}<span class="why">Over every record hash + Export ID, ${fmtFull(now)}.</span></div>
+    <div class="segx"><button class="${ex.pdf?'on':''}" onclick="exOpt('pdf')">PDF record</button><button class="${ex.zip&&files.length?'on':''}" ${files.length?'':'disabled'} onclick="exOpt('zip')">+ ZIP · ${files.length} file${files.length!==1?'s':''}</button></div>
+    <div class="xfiles">${files.length?`${fk('image')} photos · ${fk('video')} videos · ${fk('pdf')} documents · ${fk('audio')} voicemail recordings · ${fk('text')} transcripts, each with its own SHA-256 in the attachment index`:'No photos, videos or voicemail recordings in this scope.'}</div>
+    <div class="xgrow"></div>
+    <button class="btn primary xbig" onclick="doExport()"><svg class="ic"><use href="#i-pdf"/></svg> Export ${ex.pdf&&ex.zip&&files.length?'PDF + ZIP':ex.zip&&files.length&&!ex.pdf?'ZIP':'PDF'}</button>
+    <button class="btn xsmall" onclick="exPreview()">Preview cover sheet</button>`;
 }
 function renderPreview(){
   const {sc,list,title,id,now,exportHash,files}=ex; const n=list.length; const k=counts(list.map(x=>x.i));
@@ -635,9 +635,9 @@ function renderThread(c){
 }
 function renderStrip(){
   document.getElementById('strip').innerHTML=
-    `<div class="lbl">Folders · tap one to open its timeline · tap again to go back</div><button class="sc ${!state.folder?'on':''}" onclick="openFolder(null)"><svg class="ic" style="width:11px;height:11px"><use href="#i-back"/></svg> All conversations</button>`+
-    state.folders.map(f=>`<button class="sc ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="openFolder(${f.id})">${f.icon} ${esc(f.name)} <span class="n">${folderStats(f.id).items}</span></button>`).join('')+
-    `<button class="sc add" onclick="stripNew(event)"><svg class="ic"><use href="#i-plus"/></svg> New folder</button>`;
+    `<div class="lbl">Folders <span>tap to open · tap again to go back</span></div><button class="sc ${!state.folder?'on':''}" onclick="openFolder(null)"><svg class="ic" style="width:11px;height:11px"><use href="#i-back"/></svg><span class="t">All</span></button>`+
+    state.folders.map(f=>`<button class="sc ${state.folder===f.id?'on':''}" data-drop="${f.id}" title="${esc(f.name)}" onclick="openFolder(${f.id})"><span>${f.icon}</span><span class="t">${esc(f.name)}</span><span class="n">${folderStats(f.id).items}</span></button>`).join('')+
+    `<button class="sc add" onclick="stripNew(event)"><svg class="ic"><use href="#i-plus"/></svg><span class="t">New folder</span></button>`;
 }
 function stripNew(ev){ ev.stopPropagation(); state.pop={kind:'newfolder'}; const pop=document.getElementById('pop'); pop.innerHTML=`<div class="pt">New folder</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" placeholder="Name it, e.g. 1234 Main St" onkeydown="if(event.key==='Enter')stripNewCreate()"><button class="btn primary" onclick="stripNewCreate()">Create</button></div>`; pop.classList.add('open'); placePop(ev,pop); setTimeout(()=>{ const i=document.getElementById('popnew'); if(i) i.focus(); },50); }
 function stripNewCreate(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){ el.focus(); return; } const f=createFolder(n); closePop(); toast('Folder created: '+f.name); openFolder(f.id); }
@@ -658,7 +658,7 @@ const TOUR=[
  {t:'Add to folder: everything starts ticked',d:'Untick what should stay out. We untick two personal texts. Calls and voicemails sit in the same list, so they are picked the same way.',go:()=>{ tourReset(); startFiling('c12'); const c=contactById('c12'); c.items.filter(i=>i.type==='text').slice(0,2).forEach(i=>state.picked.delete(i.id)); render(); scrollRow('c12'); }},
  {t:'File picked, then tick the folders',d:'One folder or several. No folder yet? Type a name in the box and it is created and filed in one go. We tick Alvarez Drive Listing.',go:()=>{ closePop(); if(!state.pickMode.has('c12')) startFiling('c12'); render(); scrollRow('c12'); const b=document.querySelector('.pickbar .btn.primary'); if(b){ openPop(fakeEv(b),{kind:'items',cid:'c12'}); if(!inFolder(state.pop,1)) fileTo(state.pop,1); openPopRefresh(); } }},
  {pos:'bottom',t:'Tap the folder at the bottom',d:'This is the transaction timeline: everyone in the deal, by date, calls and voicemails inline, the hash under every record. The orange button at the top takes you back.',go:()=>{ closePop(); state.pickMode.clear(); state.picked.clear(); state.folder=null; openFolder(1); }},
- {pos:'bottom',t:'Export…',d:'The checks run, every record shows ingestion hash = current hash (MATCH), and the export gets its own hash. You get the PDF and a ZIP of the photos, videos and voicemails.',go:()=>{ closePop(); openExport({kind:'folder',id:1}); ex.preview=true; renderExport(); }},
+ {t:'Export…',d:'The checks run, every record shows ingestion hash = current hash (MATCH), and the export gets its own hash. You get the PDF and a ZIP of the photos, videos and voicemails.',go:()=>{ closePop(); openExport({kind:'folder',id:1}); }},
  {t:'That is the whole app',d:'One list. Folders along the bottom. ⋯ to file or export. Tap Finish and keep exploring; Paul’s items stay filed in Alvarez until you untick them.',go:()=>{ closeExport(); openFolder(null); }},
 ];
 let tourIdx=-1;
