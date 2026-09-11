@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecallText Phone Walkthrough</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#F5F6FA;--paper:#FFFFFF;--line:#E1E6EF;--ink:#111827;--ink2:#3B4657;--mute:#6B7480;--navy:#1A2F5A;--orange:#F97316;--orange-soft:#FFF1E6;--orange-line:#F7C79E;--good:#16A34A;--good-soft:#EAF8EE}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C182E;--paper:#14233F;--line:#25375A;--ink:#EEF2F8;--ink2:#C3CCDB;--mute:#8E9BB0;--navy:#DCE6FF;--orange-soft:#3A2410;--orange-line:#7A4A1F;--good:#4ADE80;--good-soft:#14301F}}
+:root[data-theme="dark"]{--bg:#0C182E;--paper:#14233F;--line:#25375A;--ink:#EEF2F8;--ink2:#C3CCDB;--mute:#8E9BB0;--navy:#DCE6FF;--orange-soft:#3A2410;--orange-line:#7A4A1F;--good:#4ADE80;--good-soft:#14301F}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;padding:0 16px;padding-block:40px 80px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+h1{font-size:32px;font-weight:800;line-height:1.15;letter-spacing:-.5px;color:var(--navy);text-wrap:balance;max-width:22ch}
+.lede{font-size:17px;color:var(--ink2);max-width:60ch;margin-top:14px}
+a{color:var(--orange);font-weight:600}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;border-radius:999px;padding:10px 18px;font-weight:800;text-decoration:none;margin-top:16px}
+.cta:hover{filter:brightness(.95)}
+.tally{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:28px 0 8px}
+.tally div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tally b{display:block;font-size:24px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.1}
+.tally span{font-size:12px;color:var(--mute)}
+.step{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:start;padding:28px 0;border-bottom:1px solid var(--line)}
+.step:last-of-type{border-bottom:0}
+.phone{width:100%;max-width:300px;border-radius:26px;border:6px solid #1c2233;box-shadow:0 14px 40px rgba(16,28,56,.22);display:block;background:#000}
+.n{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:13px;margin-bottom:8px}
+:root[data-theme="dark"] .n{color:#0C182E}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .n{color:#0C182E}}
+.step h2{font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--navy);text-wrap:balance}
+.tap{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--orange);background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:999px;padding:3px 10px;margin:8px 0 10px}
+.step p{max-width:52ch;color:var(--ink2)}
+.step p+p{margin-top:8px}
+.step .why{font-size:13px;color:var(--mute);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.stick{position:sticky;top:20px}
+h3{font-size:20px;font-weight:800;color:var(--navy);margin:44px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+tr:last-child td{border-bottom:0}
+td b{font-variant-numeric:tabular-nums;white-space:nowrap}
+td.g{background:var(--good-soft);color:var(--good);font-weight:700}
+.tbl{overflow-x:auto}
+@media (max-width:680px){.step{grid-template-columns:1fr;gap:14px}.phone{max-width:260px}.stick{position:static}.tally{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">RecallText · phone app · how it works</div>
+  <h1>Seven screens. Four taps to file, one to open, one to export.</h1>
+  <p class="lede">This is the whole app on a phone, using the real sample data. Every screen below is a live capture of the mockup. The same walk-through runs inside the mockup itself: open it and tap <b>Show me how</b>.</p>
+  <a class="cta" href="https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8">▶ Open the mockup on your phone</a>
+
+  <div class="tally">
+    <div><b>1</b><span>screen. No tabs, no detail page.</span></div>
+    <div><b>4</b><span>taps to file a conversation, choosing what goes in.</span></div>
+    <div><b>1</b><span>tap to open a folder’s timeline.</span></div>
+    <div><b>1</b><span>tap to export PDF + ZIP with both hashes.</span></div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-1.png" alt="Everything list on the phone"></div>
+    <div><span class="n">1</span><h2>Your phone, in one list</h2><span class="tap">No taps yet</span>
+      <p>Every text, call and voicemail on the phone, newest first, one line per person. Each line shows the latest item, how many texts, calls and voicemails there are, and which folders it is already in.</p>
+      <p>The lock chip, for example “22 hashed”, means every item was hashed the moment it came off the phone. That happens before you do anything.</p>
+      <div class="why">Filters along the top: All, Texts, Calls, Voicemails, Not filed yet. “Not filed yet” is your to-do list. Folders sit along the bottom, always visible, nothing to scroll sideways.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-2.png" alt="Three-dot menu open on Paul Henderson"></div>
+    <div><span class="n">2</span><h2>Tap ⋯ on a conversation</h2><span class="tap">Tap 1 · ⋯ on Paul Henderson</span>
+      <p>Two choices, and this is the only menu in the app: <b>Add to folder…</b> and <b>Export this conversation…</b>. Nothing else to learn.</p>
+      <div class="why">Tapping anywhere else on the line opens the conversation to read it. Calls and voicemails appear inside it in date order with the texts.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-3.png" alt="Pick mode with everything ticked except two personal texts"></div>
+    <div><span class="n">3</span><h2>Choose what goes in</h2><span class="tap">Tap 2 · Add to folder…</span>
+      <p>The conversation opens with every text, call and voicemail already ticked. You only untick what should stay out. Here two personal texts are unticked; the calls and the voicemail stay in.</p>
+      <p>The bar at the bottom keeps count, “20 of 22 picked”. <b>All</b> and <b>None</b> are one tap each.</p>
+      <div class="why">Nothing has been filed yet. The originals are never edited or copied; a folder is a label on records that already exist.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-4.png" alt="Folder list with check marks and a new folder box"></div>
+    <div><span class="n">4</span><h2>Tick the folder, or make one</h2><span class="tap">Tap 3 · File picked · Tap 4 · the folder</span>
+      <p>The folder list opens with check marks. Tick one folder or several; the list stays open so the same items can go into two deals. Tap <b>Done</b> when finished.</p>
+      <p>No folder fits? Type a name in the box and tap <b>Create &amp; file</b>. The folder is made and the picked items are filed in the same move.</p>
+      <div class="why">That is the whole filing job: ⋯, Add to folder, File picked, tap the folder. Four taps, and you saw every item before it went in.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-5.png" alt="Alvarez Drive Listing folder open as a timeline"></div>
+    <div><span class="n">5</span><h2>Open the folder: the transaction timeline</h2><span class="tap">Tap 1 · the folder chip at the bottom</span>
+      <p>Everything filed to Alvarez Drive Listing, from every person, in date order. Texts, calls and voicemails are in one stream, each with who it was with and the hash under it. This is the record you export.</p>
+      <p><b>By person</b> shows the same items grouped by contact. The orange <b>Back to all conversations</b> button at the top takes you out, or tap the folder chip again.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-6.png" alt="Export sheet with readiness checks, scope and counts"></div>
+    <div><span class="n">6</span><h2>Export…</h2><span class="tap">Tap 1 · Export… in the folder header, or ⋯ on any conversation</span>
+      <p>Three checks run first: every record verified, every party labeled, exporter identity set. An unlabeled number can be named right there; the carrier number is kept.</p>
+      <p>Then the proof. <b>Matching hash:</b> every record’s ingestion hash equals its current hash, printed as MATCH under each item in the PDF. <b>Export hash:</b> one fingerprint over the whole export, printed in the chain of custody.</p>
+      <div class="why">You get the PDF record and a ZIP of every photo, video, document, voicemail recording and transcript in scope, each listed with its own SHA-256. “Preview cover sheet” shows page one exactly as it prints.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="stick"><img class="phone" src="shots/step-7.png" alt="Back on the Everything list"></div>
+    <div><span class="n">7</span><h2>That is the whole app</h2><span class="tap">Back to the list</span>
+      <p>One list. Folders along the bottom. ⋯ to file or export. There is no separate transaction screen, no add-call form, no add-voicemail form, no tab for texts.</p>
+    </div>
+  </div>
+
+  <h3>Taps, current app versus this</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>You want to…</th><th>Current app</th><th>This</th></tr></thead>
+    <tbody>
+      <tr><td>See a deal’s texts, calls and voicemails together</td><td><b>3 taps + scroll</b>, calls in a separate block</td><td class="g">1 tap on the folder</td></tr>
+      <tr><td>File a conversation, choosing what goes in</td><td><b>4 taps per message</b></td><td class="g">4 taps for the whole conversation</td></tr>
+      <tr><td>Record a call or voicemail</td><td><b>3 taps + 6 or 7 fields</b></td><td class="g">0, it is already in the list</td></tr>
+      <tr><td>Start a new folder</td><td><b>6 taps + 3 fields</b></td><td class="g">Type a name, tap Create</td></tr>
+      <tr><td>Export with hashes, plus attachments</td><td><b>4 taps</b>, PDF only</td><td class="g">1 tap, PDF + ZIP</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+</body>
+</html>

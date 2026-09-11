@@ -53,10 +53,25 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .seg button[aria-pressed="true"]{background:var(--orange);color:var(--orange-ink)}
 
 /* ---------- shell ---------- */
-.shell{height:calc(100vh - 54px);display:flex;gap:14px;padding:14px;min-width:0}
-.pane{background:var(--card);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-height:0;min-width:0}
-.left{flex:1 1 0}
-.right{flex:0 0 330px}
+#app{max-width:430px;margin:0 auto;height:100vh;display:flex;flex-direction:column;background:var(--bg);position:relative}
+@media (min-width:481px){#app{border-left:1px solid var(--line);border-right:1px solid var(--line);box-shadow:0 0 60px rgba(0,0,0,.18)}}
+.top{flex:none}
+.top .grow{flex:1}
+.tourbtn{background:var(--orange);color:#fff;border-radius:999px;padding:7px 14px;font-weight:800;font-size:12px;white-space:nowrap}
+.shell{flex:1;min-height:0;display:flex;flex-direction:column;min-width:0}
+.pane{background:var(--card);display:flex;flex-direction:column;min-height:0;min-width:0}
+.left{flex:1 1 auto}
+.tour{position:absolute;top:62px;left:12px;right:12px;z-index:90;transition:top .2s,bottom .2s;}
+.tour.bottom{top:auto;bottom:12px}
+.tour{background:var(--hd);color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tour-h{display:flex;align-items:center;gap:8px;font-size:14px}
+.tour-n{background:var(--orange);color:#fff;font-weight:800;font-size:11px;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.tour-d{font-size:13px;line-height:1.45;color:rgba(255,255,255,.85);margin-top:6px}
+.tour-a{display:flex;gap:6px;align-items:center;margin-top:10px}
+.tour-a .grow{flex:1}
+.tour .btn{background:rgba(255,255,255,.12);border-color:transparent;color:#fff}
+.tour .btn.primary{background:var(--orange)}
+.tour .btn:hover{color:#fff}
 .ph{padding:14px 16px 10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
 .ph-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .ph h2{font-size:16px;font-weight:800;letter-spacing:-.2px}
@@ -265,10 +280,6 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 @media (max-width:520px){.tiles{grid-template-columns:repeat(2,1fr)}.scope{grid-template-columns:1fr;} .scope .arr{transform:rotate(90deg);justify-self:center}}
 
 /* ---------- narrow / phone layout ---------- */
-.narrow .shell{flex-direction:column;padding:0;gap:0}
-.narrow .pane{border-radius:0;border-left:0;border-right:0}
-.narrow .left{flex:1 1 auto}
-.narrow .right{display:none}
 .narrow .strip{display:flex;flex:none;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;background:var(--card);border-top:1px solid var(--line)}
 .narrow .strip .lbl{width:100%;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:0 2px 2px}
 .sc{flex:none;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;border:1.5px solid var(--line);font-size:11px;font-weight:700;background:var(--card);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -276,13 +287,11 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .sc.hot{border-color:var(--orange);background:var(--drop)}
 .sc.add{border-style:dashed;color:var(--orange);border-color:var(--orange-line)}
 .sc .n{font-variant-numeric:tabular-nums;color:var(--mute);font-weight:600}
-.narrow .row{grid-template-columns:18px 36px 1fr auto;gap:10px;padding:11px 12px}
+.narrow .row{grid-template-columns:36px 1fr auto;gap:10px;padding:11px 12px}
 .narrow .l1 .role{display:none}
 .narrow .bubble,.narrow .card{max-width:84%}
 .narrow .ifile{opacity:1}
 .narrow .thread{padding:4px 10px 12px}
-.narrow .tag{display:none}
-.phone .shell{max-width:400px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -306,11 +315,8 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 <div id="app">
   <header class="top">
     <div class="brand">RecallText<small>Filing desk</small></div>
-    <div class="tag">Every text, call and voicemail is hashed the moment it comes off your phone. The ⋯ on any conversation adds it to a folder or exports it: PDF with both hashes on every record, plus a ZIP of photos, videos and voicemails.</div>
-    <div class="seg" role="group" aria-label="Preview width">
-      <button id="w-wide" aria-pressed="true" onclick="setPhone(false)">Wide</button>
-      <button id="w-phone" aria-pressed="false" onclick="setPhone(true)">Phone</button>
-    </div>
+    <span class="grow"></span>
+    <button class="tourbtn" onclick="tourStart()">▶ Show me how</button>
   </header>
 
   <div class="shell" id="shell">
@@ -322,28 +328,17 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
         <div class="chips" id="chips"></div>
       </div>
       <div class="scroll" id="rows"></div>
-      <div class="selbar" id="selbar">
-        <span id="selcount"></span><span class="grow"></span>
-        <button class="btn primary" onclick="openPop(event,{kind:'multi'})"><svg class="ic"><use href="#i-folder"/></svg> File selected to…</button>
-        <button class="btn ghost" onclick="state.selected.clear();render()">Clear</button>
-      </div>
       <div class="strip" id="strip"></div>
     </section>
 
-    <aside class="pane right" aria-label="Folders">
-      <div class="ph">
-        <div class="ph-row"><h2>Folders</h2><span class="count" id="fc"></span></div>
-        <div class="newf" id="newf" title="Type a name, or drop a conversation here to start a folder with it">
-          <svg class="ic" style="color:var(--orange)"><use href="#i-plus"/></svg>
-          <input id="newname" type="text" placeholder="New folder name, then Enter" onkeydown="if(event.key==='Enter')createFolderFromInput()">
-        </div>
-      </div>
-      <div class="scroll"><div class="fl" id="folders"></div></div>
-      <div class="hint">A folder is a transaction, a matter, a tenant, anything. It is a label, not a copy: the hash stamped when an item came off your phone stays with it in every folder and every export.</div>
-    </aside>
   </div>
 </div>
 
+<div class="tour" id="tour" hidden>
+  <div class="tour-h"><span class="tour-n" id="tour-n"></span><b id="tour-t"></b></div>
+  <div class="tour-d" id="tour-d"></div>
+  <div class="tour-a"><button class="btn ghost" onclick="tourExit()">Exit</button><span class="grow"></span><button class="btn" id="tour-back" onclick="tourStep(-1)">Back</button><button class="btn primary" id="tour-next" onclick="tourStep(1)">Next</button></div>
+</div>
 <div class="ov" id="ov" onclick="if(event.target===this)closeExport()"><div class="sheet" id="sheet" role="dialog" aria-label="Export"></div></div>
 <div class="pop" id="pop" role="dialog" aria-label="File to folder"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -356,8 +351,8 @@ const state = {
   contacts: DATA.contacts, folders: DATA.folders,
   folder: null, filter: 'all', q: '',
   open: new Set(['c12']), selected: new Set(), showRest: new Set(),
-  pickMode: new Set(['c12']), picked: new Set(), view: 'timeline',
-  phone: false, pop: null, pendingNew: null
+  pickMode: new Set(), picked: new Set(), view: 'timeline',
+  pop: null
 };
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAY=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -494,13 +489,6 @@ function createFolder(name){
   const id=Math.max(0,...state.folders.map(f=>f.id))+1;
   const f={id,name,cat:'New',icon:'📁',note:''}; state.folders.push(f); return f;
 }
-function createFolderFromInput(){
-  const el=document.getElementById('newname'); const name=el.value.trim(); if(!name){el.focus();return;}
-  const f=createFolder(name); el.value='';
-  if(state.pendingNew){ fileTo(state.pendingNew,f.id); state.pendingNew=null; }
-  else { toast('Folder created: '+f.name); render(); }
-  document.getElementById('newf').classList.remove('hot');
-}
 
 /* ---------- popover ---------- */
 function openPop(ev,p){
@@ -530,8 +518,7 @@ function dropTargets(){
     el.addEventListener('drop',e=>{
       e.preventDefault(); el.classList.remove('hot'); if(!drag) return;
       const fid=el.dataset.drop;
-      if(fid==='new'){ state.pendingNew=drag; el.classList.add('hot'); const inp=document.getElementById('newname'); inp.placeholder='Name the new folder for '+payloadName(drag)+', press Enter'; inp.focus(); }
-      else fileTo(drag,+fid);
+      fileTo(drag,+fid);
       drag=null;
     });
   });
@@ -551,12 +538,8 @@ function visibleContacts(){
   });
 }
 function render(){
-  const app=document.getElementById('app');
-  app.classList.toggle('phone',state.phone);
-  app.classList.toggle('narrow',state.phone||window.innerWidth<760);
-  renderBanner(); renderChips(); renderRows(); renderFolders(); renderStrip(); dropTargets();
-  const sb=document.getElementById('selbar'); sb.classList.toggle('on',state.selected.size>0);
-  document.getElementById('selcount').textContent=state.selected.size+' selected';
+  document.getElementById('app').classList.add('narrow');
+  renderBanner(); renderChips(); renderRows(); renderStrip(); dropTargets();
 }
 function renderBanner(){
   const el=document.getElementById('fbanner');
@@ -581,15 +564,14 @@ function renderRows(){
   const el=document.getElementById('rows');
   if(state.folder&&state.view==='timeline'){ el.innerHTML=renderTimeline(); return; }
   const list=visibleContacts();
-  if(!list.length){ el.innerHTML='<div class="empty">Nothing here yet. Drag a conversation onto this folder, or tap File on any row.</div>'; return; }
+  if(!list.length){ el.innerHTML='<div class="empty">Nothing here yet. Tap ⋯ on any conversation, then Add to folder.</div>'; return; }
   el.innerHTML=list.map(c=>{
     const items=itemsFor(c); const last=items[items.length-1]; const k=counts(items); const fs=convFolders(c);
     const open=state.open.has(c.id);
     const cnt=[k.text?k.text+' text'+(k.text>1?'s':''):'',k.call?k.call+' call'+(k.call>1?'s':''):'',k.vm?k.vm+' voicemail'+(k.vm>1?'s':''):''].filter(Boolean).map(s=>`<span>${s}</span>`).join('');
     const chips=fs.length?fs.map(f=>`<span class="fchip" title="${esc(f.name)}">${f.icon} ${esc(f.name)}</span>`).join(''):(c.spam?'':`<span class="fchip none">not filed</span>`);
     const lock=c.spam?'':`<span class="kind k-lock" title="Every item was hashed when it was pulled from the phone"><svg class="ic"><use href="#i-lock"/></svg>${items.length} hashed</span>`;
-    return `<div class="row ${open?'open':''} ${c.spam?'dim':''}" draggable="true" ondragstart="dragStart(event,{kind:'conv',id:'${c.id}'})" ondragend="dragEnd(event)" onclick="toggleOpen('${c.id}')">
-      <input type="checkbox" class="sel" ${state.selected.has(c.id)?'checked':''} onclick="event.stopPropagation();toggleSel('${c.id}')" aria-label="Select ${esc(c.name)}">
+    return `<div class="row ${open?'open':''} ${c.spam?'dim':''}" data-cid="${c.id}" draggable="true" ondragstart="dragStart(event,{kind:'conv',id:'${c.id}'})" ondragend="dragEnd(event)" onclick="toggleOpen('${c.id}')">
       <div class="av" style="background:${c.color}">${esc(c.avatar)}</div>
       <div style="min-width:0">
         <div class="l1"><b>${esc(c.name)}</b><span class="role">${esc([c.role,c.number].filter(Boolean).join(' · '))}</span></div>
@@ -651,41 +633,39 @@ function renderThread(c){
     <button class="btn ghost" onclick="togglePickMode('${c.id}')">Done</button></div>`;
   return html+'</div>';
 }
-function renderFolders(){
-  document.getElementById('fc').textContent=state.folders.length+' folders';
-  document.getElementById('newf').dataset.drop='new';
-  document.getElementById('folders').innerHTML=state.folders.map(f=>{
-    const s=folderStats(f.id);
-    return `<div class="folder ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="openFolder(${f.id})" tabindex="0" onkeydown="if(event.key==='Enter')this.click()">
-      <div class="fi" style="background:var(--orange-soft)">${f.icon}</div>
-      <div style="min-width:0">
-        <div class="fn">${esc(f.name)}</div>
-        <div class="fm">${esc(f.cat)} · ${s.contacts} contact${s.contacts!==1?'s':''} · ${s.items} items</div>
-        <div class="fs"><span class="kind k-text">${s.texts} texts</span><span class="kind k-call">${s.calls} calls</span><span class="kind k-vm">${s.vms} voicemails</span></div>
-        <div class="fa"><button class="btn ${state.folder===f.id?'primary':''}" onclick="event.stopPropagation();openFolder(${f.id})">${state.folder===f.id?'Viewing · close':'Open timeline'}</button><button class="btn" onclick="event.stopPropagation();openExport({kind:'folder',id:${f.id}})"><svg class="ic"><use href="#i-pdf"/></svg> Export…</button></div>
-      </div>
-    </div>`;
-  }).join('');
-}
 function renderStrip(){
   document.getElementById('strip').innerHTML=
     `<div class="lbl">Folders · tap one to open its timeline · tap again to go back</div><button class="sc ${!state.folder?'on':''}" onclick="openFolder(null)"><svg class="ic" style="width:11px;height:11px"><use href="#i-back"/></svg> All conversations</button>`+
     state.folders.map(f=>`<button class="sc ${state.folder===f.id?'on':''}" data-drop="${f.id}" onclick="openFolder(${f.id})">${f.icon} ${esc(f.name)} <span class="n">${folderStats(f.id).items}</span></button>`).join('')+
-    `<button class="sc add" onclick="stripNew()"><svg class="ic"><use href="#i-plus"/></svg> New folder</button>`;
+    `<button class="sc add" onclick="stripNew(event)"><svg class="ic"><use href="#i-plus"/></svg> New folder</button>`;
 }
-function stripNew(){ const n=prompt('Folder name'); if(n&&n.trim()){ const f=createFolder(n.trim()); state.folder=f.id; toast('Folder created: '+f.name); render(); } }
+function stripNew(ev){ ev.stopPropagation(); state.pop={kind:'newfolder'}; const pop=document.getElementById('pop'); pop.innerHTML=`<div class="pt">New folder</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" placeholder="Name it, e.g. 1234 Main St" onkeydown="if(event.key==='Enter')stripNewCreate()"><button class="btn primary" onclick="stripNewCreate()">Create</button></div>`; pop.classList.add('open'); placePop(ev,pop); setTimeout(()=>{ const i=document.getElementById('popnew'); if(i) i.focus(); },50); }
+function stripNewCreate(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){ el.focus(); return; } const f=createFolder(n); closePop(); toast('Folder created: '+f.name); openFolder(f.id); }
 function openFolder(fid){ state.folder=(fid===null||state.folder===fid)?null:fid; state.view='timeline'; render(); const r=document.getElementById('rows'); if(r) r.scrollTop=0; }
 function startFiling(cid){ const c=contactById(cid); state.open.add(cid); state.pickMode.add(cid); itemsFor(c).forEach(i=>state.picked.add(i.id)); render(); const rows=document.getElementById('rows'); const r=rows.querySelector('.row.open'); if(r) rows.scrollTop=r.offsetTop-8; toast('Everything is ticked. Untick what should stay out, then File picked.'); }
 function togglePickMode(cid){ if(state.pickMode.has(cid)){ state.pickMode.delete(cid); contactById(cid).items.forEach(i=>state.picked.delete(i.id)); } else state.pickMode.add(cid); render(); }
 function togglePick(iid){ if(state.picked.has(iid)) state.picked.delete(iid); else state.picked.add(iid); render(); }
 function pickAll(cid,on){ itemsFor(contactById(cid)).forEach(i=>on?state.picked.add(i.id):state.picked.delete(i.id)); render(); }
 function toggleOpen(id){ if(state.open.has(id)) state.open.delete(id); else state.open.add(id); render(); }
-function toggleSel(id){ if(state.selected.has(id)) state.selected.delete(id); else state.selected.add(id); render(); }
 function toggleRest(id){ if(state.showRest.has(id)) state.showRest.delete(id); else state.showRest.add(id); render(); }
-function setPhone(on){ state.phone=on; document.getElementById('w-wide').setAttribute('aria-pressed',!on); document.getElementById('w-phone').setAttribute('aria-pressed',on); render(); }
-window.addEventListener('resize',()=>{ const a=document.getElementById('app'); a.classList.toggle('narrow',state.phone||window.innerWidth<760); });
-// first look: three items already picked in Paul's thread, so the pick flow is visible at rest
-(()=>{ const c=contactById('c12'); if(c){ c.items.filter(i=>i.type!=='text').slice(1,4).forEach(i=>state.picked.add(i.id)); } })();
+/* ---------- guided tour ---------- */
+const fakeEv = el => ({ stopPropagation(){}, currentTarget: el });
+function scrollRow(cid){ const rows=document.getElementById('rows'); const r=rows.querySelector(`.row[data-cid="${cid}"]`); if(r) rows.scrollTop=r.offsetTop-8; }
+function tourReset(){ closePop(); if(ex) closeExport(); state.folder=null; state.pickMode.clear(); state.picked.clear(); state.open.clear(); state.filter='all'; state.q=''; const q=document.getElementById('q'); if(q) q.value=''; render(); document.getElementById('rows').scrollTop=0; }
+const TOUR=[
+ {t:'Your phone, in one list',d:'Every text, call and voicemail, newest first, one line per person. Each item was hashed the moment it came off the phone, before you touch anything. Nothing to set up.',go:()=>{ tourReset(); }},
+ {t:'Tap ⋯ on a conversation',d:'Here, Paul Henderson. Two choices: Add to folder, or Export. That is the only menu in the app.',go:()=>{ tourReset(); const btn=document.querySelector('.row[data-cid="c12"] .more-btn'); if(btn){ scrollRow('c12'); openMenu(fakeEv(btn),'c12'); } }},
+ {t:'Add to folder: everything starts ticked',d:'Untick what should stay out. We untick two personal texts. Calls and voicemails sit in the same list, so they are picked the same way.',go:()=>{ tourReset(); startFiling('c12'); const c=contactById('c12'); c.items.filter(i=>i.type==='text').slice(0,2).forEach(i=>state.picked.delete(i.id)); render(); scrollRow('c12'); }},
+ {t:'File picked, then tick the folders',d:'One folder or several. No folder yet? Type a name in the box and it is created and filed in one go. We tick Alvarez Drive Listing.',go:()=>{ closePop(); if(!state.pickMode.has('c12')) startFiling('c12'); render(); scrollRow('c12'); const b=document.querySelector('.pickbar .btn.primary'); if(b){ openPop(fakeEv(b),{kind:'items',cid:'c12'}); if(!inFolder(state.pop,1)) fileTo(state.pop,1); openPopRefresh(); } }},
+ {pos:'bottom',t:'Tap the folder at the bottom',d:'This is the transaction timeline: everyone in the deal, by date, calls and voicemails inline, the hash under every record. The orange button at the top takes you back.',go:()=>{ closePop(); state.pickMode.clear(); state.picked.clear(); state.folder=null; openFolder(1); }},
+ {pos:'bottom',t:'Export…',d:'The checks run, every record shows ingestion hash = current hash (MATCH), and the export gets its own hash. You get the PDF and a ZIP of the photos, videos and voicemails.',go:()=>{ closePop(); openExport({kind:'folder',id:1}); ex.preview=true; renderExport(); }},
+ {t:'That is the whole app',d:'One list. Folders along the bottom. ⋯ to file or export. Tap Finish and keep exploring; Paul’s items stay filed in Alvarez until you untick them.',go:()=>{ closeExport(); openFolder(null); }},
+];
+let tourIdx=-1;
+function tourStart(){ tourGo(0); }
+function tourGo(i){ tourIdx=Math.max(0,Math.min(TOUR.length-1,i)); const st=TOUR[tourIdx]; st.go(); const t=document.getElementById('tour'); t.hidden=false; t.classList.toggle('bottom',st.pos==='bottom'); requestAnimationFrame(()=>{ const pop=document.getElementById('pop'); if(pop.classList.contains('open')&&st.pos!=='bottom'){ const tb=t.getBoundingClientRect().bottom+8; if(pop.getBoundingClientRect().top<tb) pop.style.top=tb+'px'; } }); document.getElementById('tour-n').textContent='Step '+(tourIdx+1)+' of '+TOUR.length; document.getElementById('tour-t').textContent=st.t; document.getElementById('tour-d').textContent=st.d; document.getElementById('tour-back').disabled=tourIdx===0; document.getElementById('tour-back').style.opacity=tourIdx===0?'.4':'1'; document.getElementById('tour-next').textContent=tourIdx===TOUR.length-1?'Finish':'Next'; }
+function tourStep(d){ if(tourIdx===TOUR.length-1&&d>0){ tourExit(); return; } tourGo(tourIdx+d); }
+function tourExit(){ document.getElementById('tour').hidden=true; tourIdx=-1; closePop(); }
 render();
 // first look: land on the expanded conversation so texts, calls and voicemails show together
 requestAnimationFrame(()=>{ const r=document.querySelector('.row.open'); if(r) document.getElementById('rows').scrollTop=r.offsetTop-8; });

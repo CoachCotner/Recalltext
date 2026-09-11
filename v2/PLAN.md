@@ -2,9 +2,10 @@
 
 **One screen. Left is what's on your phone. Right is where it goes.**
 
-Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign puts every text, call and voicemail in one stream on the left, folders on the right, and makes filing a single drag or two taps.
+Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to file or export.
 
-- Clickable mockup: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap the ⋯ on Paul Henderson to add him to a folder or export, or switch to the Phone view in the top bar)
+- Clickable mockup: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me how** for a guided walk-through)
+- Seven-screen walkthrough with captures: [`v2/walkthrough.html`](./walkthrough.html) · live: https://claude.ai/code/artifact/24840a15-2166-44f8-af48-f918ab4f34ba
 - Before/after drawing: [`v2/before-after.svg`](./before-after.svg)
 
 ![Today versus redesign](./before-after.svg)
@@ -12,7 +13,7 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 ## In plain words
 
 - **A row** is one line in the left list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
-- **Filing a conversation** starts with the **⋯** on its row, then **Add to folder…**. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders or type a new folder name, Done. On a computer you can also drag the row onto a folder, which files all of it in one motion.
+- **Filing a conversation** starts with the **⋯** on its row, then **Add to folder…**. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders or type a new folder name, Done.
 - **Filing** is a label, not a copy. It says "these records belong to the 1010 Catalina deal." The message, call log or voicemail is not changed, moved or duplicated. One item can carry several labels.
 - **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Filing happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
 
@@ -34,7 +35,7 @@ flowchart LR
 | You want to… | Today | Redesign |
 |---|---|---|
 | See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything filed there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
-| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **4 taps.** ⋯ → Add to folder… (everything ticked) → File picked → tap the folder. Untick anything that should stay out first. On a computer, dragging the row onto a folder files all of it in one motion. |
+| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **4 taps.** ⋯ → Add to folder… (everything ticked) → File picked → tap the folder. Untick anything that should stay out first. |
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
 | Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. File it like anything else. |
 | Start a new deal folder | **6 taps + 3 fields.** ＋ New Transaction → name → category → note → Create → Add Conversations → select → Add. | **1 field.** Type a name, press Enter. Or drop a conversation on "New folder" and name it. |
@@ -46,10 +47,9 @@ flowchart LR
 
 - **One row per person or number.** Name, role, number, the latest item with a type chip (Text / Call / Voicemail), counts, and the folders it is filed in. Unknown numbers and spam are in the same list, spam dimmed.
 - **Filters instead of tabs.** All · Texts · Calls · Voicemails · Not filed yet. "Not filed yet" is the to-do list.
-- **Tap a row to open the thread in place.** Texts as bubbles, calls and voicemails as cards, all on one timeline with date dividers. Each item has its own small File button and can be dragged on its own.
+- **Tap a row to open the thread in place.** Texts as bubbles, calls and voicemails as cards, all on one timeline with date dividers. Each item has its own small File button.
 - **Pick messages.** Inside any open conversation, tap Pick messages and checkboxes appear on every text, call and voicemail. Tick what belongs to the deal (or All, then untick the personal ones). A bar at the bottom files the picked set to one or more folders in a single move. Unpicked items stay out of the folder.
 - **Inside a folder** the list narrows to what is filed there. Items from the same conversation that are not in the folder hide behind "n more, show faded".
-- **Checkboxes for bulk filing.** Tick several rows, a bar appears, "File selected to…".
 - **The ⋯ menu on every conversation** has two jobs: **Add to folder…** opens the conversation with everything ticked so you choose what goes in, then pick one or more folders or type a new folder name right there. **Export this conversation…** opens the export sheet.
 
 ## What an export contains
@@ -61,13 +61,13 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - **PDF record.** Cover sheet (file, scope, Export ID, generated, exporter, date range, counts, participants), full timeline, attachment index, chain of custody, export hash.
 - **ZIP of attachments.** Every photo, video, document, voicemail recording and transcript in scope, each listed in the attachment index with its own SHA-256.
 
-## What the right pane shows
+## Folders along the bottom
 
-- **New folder is one field.** Name, Enter. It also accepts a drop: drop a conversation on it and it asks for a name.
-- **Each folder card** shows icon, name, category, contact and item counts split by type, plus Open timeline and Export PDF.
+- **New folder is one field.** Tap + New folder, type a name, Create. Or type the name inside the filing list and it is created and filed in the same move.
+- **Each folder chip** shows its icon, name and item count. Tap to open its timeline; tap again to go back.
 - **Getting back out of a folder** is the orange "Back to all conversations" button at the top of the list, or tapping the same folder again.
 - **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail filed there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
-- **On a phone** the pane becomes a fixed block of folder chips along the bottom, all visible, nothing to scroll sideways. Tap a chip to open that folder's timeline.
+- **Always visible.** The folder chips sit in a fixed block along the bottom, all of them, nothing to scroll sideways.
 
 ## Flowchart of the changes
 
@@ -75,15 +75,11 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 flowchart TD
   A([Today: index.html<br/>2 tabs · detail screen · 4 forms]) --> B
   B[1 · Unify the data<br/>one item list per contact:<br/>texts + calls + voicemails, each with a date and folder tags]
-  B --> C[2 · Two-pane shell<br/>left Everything · right Folders<br/>replaces Home tabs and the detail screen]
+  B --> C[2 · One-screen shell<br/>the list, folders along the bottom<br/>replaces Home tabs and the detail screen]
   C --> D[3 · Thread in place<br/>tap a row, see all three types in date order<br/>calls and voicemails inline]
-  D --> E[4 · Filing in one move<br/>drag row or item · File popover with multi-folder check marks<br/>Pick messages: tick any mix, file the set once]
+  D --> E[4 · Filing in one move<br/>⋯ → Add to folder · everything ticked · untick · File picked<br/>multi-folder check marks · new folder in the same box]
   E --> F[5 · New folder = one field<br/>name → Enter · drop onto New folder<br/>category optional later]
-  F --> G{Screen narrower<br/>than 760px?}
-  G -- yes --> H[Folders become a bottom strip<br/>File → tap a chip]
-  G -- no --> I[Panes side by side]
-  H --> J
-  I --> J[6 · Export sheet<br/>readiness checks · matching hash per record · export hash<br/>PDF plus ZIP of photos, videos and voicemails]
+  F --> J[6 · Export sheet<br/>readiness checks · matching hash per record · export hash<br/>PDF plus ZIP of photos, videos and voicemails]
   J --> K[7 · Remove the old steps<br/>All Texts tab · Add Call Log form · Add Voicemail form<br/>Add Conversations · File This Message picker]
   K --> L[8 · Live phone data<br/>call log and voicemail feed into the stream automatically<br/>replaces the simulated forms for good]
   L --> M([Done: one screen, one move])
@@ -92,7 +88,7 @@ flowchart TD
   classDef key fill:#FFF1E6,stroke:#F97316,color:#7C2D12
   classDef done fill:#F97316,stroke:#F97316,color:#FFFFFF
   class A now
-  class B,C,D,F,H,I,J,K,L step
+  class B,C,D,F,J,K,L step
   class E key
   class M done
 ```
@@ -102,9 +98,9 @@ flowchart TD
 The app is one file, `index.html`, with sample data and screens in the same script. The mockup was built from that file's real data, so this is the mockup's code moved into the app, step by step. Estimates are working days for one developer on the prototype.
 
 1. **Unify the data (1 day).** Texts live in `ALL_CONVS`, calls and voicemails inside each transaction's `extra` list, and the All Texts tab has a third list (`ALL_TEXTS`). Merge into one list of contacts, each with items of type text / call / voicemail, a real timestamp, and a list of folder ids. Match calls and voicemails to contacts by phone number.
-2. **Two-pane shell (1 day).** Drop the 430px phone frame as the only layout. One flex row: left pane, right pane; below 760px the right pane becomes the bottom strip. Replaces `#screen-home`, `#screen-detail`, `.bnav`, `.fab`.
+2. **One-screen shell (1 day).** Keep the 430px phone frame. One column: header, search and filter chips, the list, and a fixed block of folder chips along the bottom. Replaces `#screen-home`, `#screen-detail`, `.bnav`, `.fab`.
 3. **Thread in place (1.5 days).** Reuse the bubble renderer and the call/voicemail cards, rendered from one sorted item list with date dividers, inside the row. Keep notes, attachments, Identify and Beginning of Record on each item. Refactors `renderDetailByDate` + `renderExtraItem` into `renderThread(contact)`; deletes `renderDetailByParty`, `renderFullConv`.
-4. **Filing in one move (1.5 days).** Rows and items draggable; folder cards and chips are drop targets. File button opens a popover of folders with check marks. Multi-select bar. Filing adds a folder id to the item and never edits the original. Replaces `openTagPicker`, `openSimpleTagPicker`, `openExtraTagPicker`, `openTextFilePicker`, `openAddConvs`.
+4. **Filing in one move (1.5 days).** The ⋯ menu opens the conversation with everything ticked; File picked opens the folder list with check marks and a new-folder box. Filing adds a folder id to the item and never edits the original. Replaces `openTagPicker`, `openSimpleTagPicker`, `openExtraTagPicker`, `openTextFilePicker`, `openAddConvs`.
 5. **New folder is one field (0.5 day).** Name + Enter; drop on New folder creates and files. Category, icon and notes become an optional edit using the existing category grid.
 6. **Reconnect export (0.5 day).** Export PDF on a folder builds the input `generatePDF` expects from the items tagged to that folder. Hashes, Beginning of Record and notes unchanged.
 7. **Remove the old steps (0.5 day).** Delete `m-call`, `m-vm`, `m-add-convs`, `m-tag`, `switchHomeTab`, `renderAllTexts`, `addCall`, `addVM`. Keep Identify Caller, the annotation sheet and the incoming-call demo.
