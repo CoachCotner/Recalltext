@@ -75,7 +75,8 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - **Getting back out of a folder** is the orange "Back to all conversations" button at the top of the list, or tapping the same folder again.
 - **Taking someone out of a folder** is the × on the folder chip: on the row it removes the whole conversation from that folder, on an item just that item.
 - **Rename or delete a folder** from "manage" in the folder block or the ⋯ in an open folder's header. Delete removes only the label; every item stays in Everything with its hash.
-- **Many folders stay out of the way.** The bottom block is always two rows: All, four folders (the open one always shown), and either + New folder or "All N folders". Fifteen folders cost no list space.
+- **Many folders stay out of the way.** The bottom block is always two rows of pills sized to their names (35 characters max); as many as fit are shown, the open one always, and the rest collapse into "All N folders". Fifteen folders cost no list space.
+- **Permissions fix themselves.** Anything not granted shows as Needs attention with a Fix button that opens the exact Android screen, and a one-line banner on the list says what isn't being captured.
 - **Emails are records too.** Texts, calls, voicemails and emails sit in one list; an email shows subject, from/to and body, its attachments go into the export ZIP, and it is hashed like everything else. Sources: the phone's mail accounts, or an .eml shared to the app.
 - **Settings, Exports, Backup, Permissions stay as they are** behind a gear in the header; the bottom navigation bar goes, because it cost list space on a phone.
 - **Export then asks where.** This phone, Google Drive, Dropbox, email, or any app on the phone; PDF and ZIP go together.

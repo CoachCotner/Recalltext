@@ -79,7 +79,9 @@ Rules:
 - Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail / Email) and preview, counts by type, lock chip "N hashed", folder chips or "not filed", a **⋯** button. Spam rows dimmed.
 - Every folder chip, on a row and on an item, carries an **×**. On a row it takes that whole conversation out of the folder; on an item it takes only that item out. Toast confirms. Nothing is deleted; the label is removed.
 - Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Pick messages**.
-- Bottom: fixed 3-column, **two-row** block: **All**, up to four folder chips (the open folder is always one of them), then **+ New folder** when there are four or fewer folders, or **All N folders ▸** when there are more. The block never grows past two rows, so fifteen folders cost no list space; larger system fonts grow the chips, not the row count. The label row has a **manage** link. Tap a chip → open that folder. Tap the open chip again → back.
+- Bottom: a **two-row** block of folder pills. Pills size to their text, left-justified, wrapping; a folder name is capped at **35 characters** with an ellipsis on the pill (the full name is in the tooltip and everywhere else). Order: **All**, the open folder first, then folders in creation order, then **+ New folder**. As many pills as fit in two rows are shown; the rest collapse into **All N folders ▸**, which opens the Folders sheet. The open folder is never hidden. Larger system fonts grow the pills, not the row count. The label row has a **manage** link. Tap a pill → open that folder. Tap the open pill again → back.
+- Folder chips on rows and items follow the same 35-character cap.
+- The list is sorted by each person's most recent item, newest first; spam sinks to the bottom. Inside a conversation and inside a folder timeline, items run oldest to newest with date dividers, the way a record reads.
 
 ### 3.2 ⋯ menu
 
@@ -126,7 +128,13 @@ Opened from **manage** in the folder block, from **All N folders ▸**, or from 
 - **Delete** asks inline: "Delete “X”? Its N items stay in Everything and in any other folder. Only this label goes." then **Delete folder** / Cancel. Deleting removes the folder id from every item and never touches an item, a hash or an attachment. Temporary folders made for a one-off export are deleted this way.
 - Footer: note that folders and filing are stored on the device, and **Reset sample data** (mockup only).
 
-### 3.7 New folder
+### 3.7 Permissions that fix themselves
+
+Settings › Permissions never just says "All granted". Each permission is a row with what it does in plain words and a status: **Granted**, or **Needs attention** highlighted in orange with a **Fix** button. Fix opens the exact Android screen for that permission, with the path printed under it, for example RCS: `Settings › Notifications › Notification access › CommLocker`. The row explains: "Tap Fix. On the screen that opens, turn on CommLocker, then come back. We re-check the moment you return." When anything is missing, the Everything list shows a one-line orange banner at the top, "RCS messages not being captured · Fix", so nobody has to go looking, and the Settings row reads "1 needs attention".
+
+Implementation: re-check on every `onResume`. Deep links: runtime permissions → `ACTION_APPLICATION_DETAILS_SETTINGS` for the package; RCS notification access → `ACTION_NOTIFICATION_LISTENER_SETTINGS` (Android 11+: `ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS` with the component); visual voicemail → the carrier app or `ACTION_APPLICATION_DETAILS_SETTINGS`. If a deep link is unavailable on a device, fall back to App info and keep the printed path visible.
+
+### 3.8 New folder
 
 - From the bottom block: **+ New folder** → small popover with a name field and **Create**. Creates and opens the folder.
 - From the filing popover: name field + **Create & file** creates the folder and files the picked set in one action.
@@ -229,6 +237,8 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Every popover and sheet (⋯ menu, folder list, export destinations, Folders sheet, Export page) renders inside the phone frame; nothing extends past its edges.
 - [ ] Export destination menu offers this phone, Google Drive, Dropbox, Email, More; PDF and ZIP arrive together at the destination.
 - [ ] An imported .eml appears as an Email item with subject, from, to, body and attachments, hashed at import.
+- [ ] Folder pills size to their text, capped at 35 characters; the bottom block never exceeds two rows; the open folder is always visible; the rest collapse into "All N folders".
+- [ ] Revoking RCS notification access shows the banner on the list and "1 needs attention" in Settings; Fix opens the notification-access screen; returning to the app clears both without a restart.
 
 ## 7. Out of scope for this pass
 
