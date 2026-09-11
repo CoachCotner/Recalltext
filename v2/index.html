@@ -800,7 +800,7 @@ function renderPerms(){
     <div class="scroll" style="margin:0 -12px;padding:6px 12px 0">`+state.perms.map(x=>`
     <div class="prow ${x.ok?'':'bad'}"><div class="pm"><b>${x.name}</b><span>${esc(x.why)}</span>${x.ok?'':`<div class="pfix"><span>Tap <b>Fix</b>. On the screen that opens, turn on <b>CommLocker</b>, then come back. We re-check the moment you return.</span><code>${esc(x.fix)}</code></div>`}</div>
       ${x.ok?`<span class="pill ok"><svg class="ic"><use href="#i-check"/></svg> Granted</span>`:`<button class="btn primary" onclick="fixPerm('${x.k}')">Fix</button>`}</div>`).join('')+`</div>
-    <div class="fnote"><span>Re-checked every time the app comes to the front.</span><button onclick="togglePermDemo()">${state.perms.every(x=>x.ok)?'Demo: revoke RCS':''}</button></div>`;
+    <div class="fnote"><span>Re-checked every time the app comes to the front.</span><button onclick="togglePermDemo()">${state.perms.every(x=>x.ok)?'Run the RCS demo again':''}</button></div>`;
 }
 function fixPerm(k){ const x=state.perms.find(p=>p.k===k); toast('Opening Android '+x.fix); setTimeout(()=>{ x.ok=true; saveState(); renderPerms(); toast(x.name+' granted · capturing now'); },900); }
 function togglePermDemo(){ const x=state.perms.find(p=>p.k==='rcs'); x.ok=false; saveState(); renderPerms(); }
@@ -840,6 +840,7 @@ const TOUR=[
  {t:'File picked, then tick the folders',d:'One folder or several. No folder yet? Type a name in the box and it is created and filed in one go. We tick Alvarez Drive Listing.',go:()=>{ closePop(); if(!state.pickMode.has('c12')) startFiling('c12'); render(); scrollRow('c12'); const b=document.querySelector('.pickbar .btn.primary'); if(b){ openPop(fakeEv(b),{kind:'items',cid:'c12'}); if(!inFolder(state.pop,1)) fileTo(state.pop,1); openPopRefresh(); } }},
  {pos:'bottom',t:'Tap the folder at the bottom',d:'This is the transaction timeline: everyone in the deal, by date, calls and voicemails inline, the hash under every record. The orange button at the top takes you back.',go:()=>{ closePop(); state.pickMode.clear(); state.picked.clear(); state.folder=null; openFolder(1); }},
  {t:'Export…',d:'The checks run, every record shows ingestion hash = current hash (MATCH), and the export gets its own hash. Export gives you the PDF and a ZIP of photos, videos, voicemails and email attachments, then asks where: this phone, Drive, Dropbox, email, or any app.',go:()=>{ closePop(); openExport({kind:'folder',id:1}); }},
+ {pos:'bottom',t:'Permissions fix themselves',d:'Your RCS case. When a permission slips, the first line of the list says what is not being captured. Fix opens the exact Android screen and the app re-checks when you come back. Tap Fix now, or leave it and try later from Settings › Permissions.',go:()=>{ closePop(); if(ex) closeExport(); openFolder(null); const x=state.perms.find(p=>p.k==='rcs'); x.ok=false; saveState(); render(); document.getElementById('rows').scrollTop=0; }},
  {t:'That is the whole app',d:'One list. Folders along the bottom, with “manage” to rename or delete one. ⋯ to file or export. Your folders and filing are saved on this phone; “Reset sample data” under manage puts the demo back.',go:()=>{ closeExport(); openFolder(null); }},
 ];
 let tourIdx=-1;
