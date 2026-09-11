@@ -68,6 +68,12 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - **PDF record.** Cover sheet (file, scope, Export ID, generated, exporter, date range, counts, participants), full timeline, attachment index, chain of custody, export hash.
 - **ZIP of attachments.** Every photo, video, document, voicemail recording and transcript in scope, each listed in the attachment index with its own SHA-256.
 
+## Dates and several people at once
+
+- A calendar button next to search limits the whole screen to a date range (presets or From/To). Every count follows it.
+- The Export page carries the same range and can change it, so a record can cover only the weeks that matter. The cover sheet says so.
+- ⋯ → Export with other people ticks several people and exports each one as its own separate PDF and ZIP in one go. Nothing is merged.
+
 ## Folders along the bottom
 
 - **New folder is one field.** Tap + New folder, type a name, Create. Or type the name inside the filing list and it is created and filed in the same move.

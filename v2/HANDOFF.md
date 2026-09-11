@@ -108,8 +108,8 @@ Top to bottom, in this order:
 
 1. Header: **Back**, "Export", "<scope name> · N records".
 2. Three readiness rows: **Records verified** (N of N · MATCH), **Parties labeled** (names) or a warning "K numbers not labeled · carrier number is kept" with an inline name field + Save per number, **Exporter set** (name · license).
-3. Scope line: "First record <date> → today", Export ID right-aligned.
-4. Four tiles: texts, calls, voicemails, files.
+3. Date-range row (tappable): calendar icon, "All dates ▾ · N of N records" or "Mar 11 – Apr 10 ▾ · k of N records", Export ID right-aligned. Tapping opens the same date popover as the list (3.9); the export rebuilds with the new range.
+4. Five tiles: texts, calls, voicemails, emails, files.
 5. **Matching hash · every record** box: "N of N: ingestion hash = current hash → MATCH" and one line of explanation. If any record does not match, this box turns red, says how many, and the Export button is disabled until the user acknowledges (see 4.3).
 6. **Export hash** box: 64-hex value, "Over every record hash + Export ID, <timestamp>".
 7. Segmented toggles: **PDF record** / **+ ZIP · F files** (ZIP disabled when F = 0). One line under it: "P photos · V videos · D documents · A voicemail recordings · T transcripts, each with its own SHA-256 in the attachment index".
@@ -139,6 +139,29 @@ Implementation: re-check on every `onResume`. Deep links: runtime permissions �
 - From the bottom block: **+ New folder** → small popover with a name field and **Create**. Creates and opens the folder.
 - From the filing popover: name field + **Create & file** creates the folder and files the picked set in one action.
 - Category, icon and notes are optional edits later; not required to create.
+
+### 3.9 Date range (list, folders and export)
+
+One filter, stored once, applied everywhere: `DateRange(from: Long?, to: Long?)` in the list ViewModel, compared against the item's ingestion timestamp. Everything that reads items (the Everything list, the filter-chip counts, an open folder, the timeline, pick mode) goes through the same query, so the counts always agree with the rows.
+
+- Control: a **calendar button** at the right end of the search field reads "All dates"; when a range is active it turns orange, reads "Mar 11 – Apr 10" (year only when it differs from the current year), and an **×** next to it clears the range.
+- Tapping it opens a popover with four presets, each with its item count (**All dates**, **Last 30 days**, **Last 90 days**, **This year**), and **From / To** fields with **Apply**. In Kotlin use `MaterialDatePicker.Builder.dateRangePicker()` for the custom range; the presets are one-line arithmetic. "From" after "To" is refused inline.
+- Room: `WHERE (:from IS NULL OR ts >= :from) AND (:to IS NULL OR ts <= :to)`, with `to` set to 23:59:59.999 of the chosen day. Index `ts`.
+- A contact with no items inside the range drops out of the list; the count line reads "N people · M items" for the range. Search matches only inside the range too.
+- Export starts from the range active on the list, and can change it on the Export page without leaving it (3.5, step 3). The cover sheet prints "Scope: … · limited to <from> – <to>" and the "Date range" line shows the first and last record actually included. The export hash covers only the included records, so a date-limited export has its own hash and its own Export ID.
+
+### 3.10 Export several people separately (batch)
+
+Not a merged file. The same single export, run once per person, delivered together.
+
+- Entry: ⋯ → **Export with other people…** puts the list in tick mode: a checkbox appears at the left of every row, the ⋯ buttons hide, tapping a row ticks it. A bar above the folder block reads "N people ticked · Cancel · **Export N separately**".
+- The Export page header reads "Export separately · N people · N PDFs, one each". Readiness rows are the union (records verified, parties labeled, exporter set). The date-range row applies to every person at once. Then one card per person: name, "k of n records · f files · own PDF + ZIP", its own Export ID and export hash, and an × to leave that person out. Segmented **PDF records** / **+ ZIPs · F files**, then **Export N PDFs + Z ZIPs** and **Preview cover sheets** (tabs across the top switch between people).
+- Implementation: `ExportJob(scope, range)` is what already exists. Batch = `ids.map { ExportJob(Scope.Conversation(it), range) }` run sequentially inside one `WorkManager` job with one progress notification. Each job writes `<ExportId>.pdf` (and `.zip` when it has attachments) into the same output folder `Downloads/CommLocker/<yyyy-MM-dd>/`; the destination step shares them with `ACTION_SEND_MULTIPLE` (Drive, Dropbox, Email, More…) or leaves them on the device. Each file gets its own row in Settings › Exports with its own ID, hash and date range.
+- Nothing about hashing changes: per-record hashes are the stored ones, the export hash is per file, and no file contains two people's records.
+
+### 3.11 Search
+
+Search matches the contact name, number and role first (listed first), then whole words inside message text, voicemail transcripts, email subjects and call notes. "ace" finds Ace Johnson and the one person whose text mentions "Ace"; it no longer finds "place". A row that is listed only because of a message match shows why: "mentions “ace” in 1 item". The count line reads "N people match “ace”". Room: `MATCH` on an FTS4 table over `body`, joined to contacts; name matches with `LIKE '%q%'`.
 
 ## 4. Hashing and the PDF (this is the product)
 
@@ -238,8 +261,12 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Export destination menu offers this phone, Google Drive, Dropbox, Email, More; PDF and ZIP arrive together at the destination.
 - [ ] An imported .eml appears as an Email item with subject, from, to, body and attachments, hashed at import.
 - [ ] Folder pills size to their text, capped at 35 characters; the bottom block never exceeds two rows; the open folder is always visible; the rest collapse into "All N folders".
+- [ ] Date range: choosing "Last 30 days" changes the rows, the chip counts and the count line together; clearing with × restores all; a contact with nothing in the range disappears from the list.
+- [ ] Date-limited export: the PDF contains only records inside the range, prints "limited to <from> – <to>" on the cover sheet, and its export hash differs from the all-dates export of the same person.
+- [ ] Batch export of two people produces two PDFs (and a ZIP for each person with attachments), each with its own Export ID and export hash, delivered together to the chosen destination; Settings › Exports lists them as two rows.
+- [ ] Search "ace" lists Ace Johnson first and a message-only match with a "mentions" tag; "place" does not match "ace".
 - [ ] Revoking RCS notification access shows the banner on the list and "1 needs attention" in Settings; Fix opens the notification-access screen; returning to the app clears both without a restart.
 
 ## 7. Out of scope for this pass
 
-Multi-select across rows, drag and drop, category templates on folder creation, the incoming-call capture demo. All can come later without touching the data model above.
+Drag and drop, category templates on folder creation, the incoming-call capture demo. All can come later without touching the data model above.

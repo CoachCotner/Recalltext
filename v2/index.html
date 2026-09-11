@@ -59,7 +59,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 
 /* ---------- shell ---------- */
 #app{position:fixed;top:0;left:0;width:100%;height:100%;max-width:100%;min-width:0;margin:0;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;z-index:1}
-@media (min-width:481px){#app{width:360px;max-height:780px;border:1px solid var(--line);border-radius:0 0 22px 0;box-shadow:0 0 60px rgba(0,0,0,.18)}}
+@media (min-width:481px){#app{inset:0;margin:auto;width:360px;height:min(780px,100%);border:1px solid var(--line);border-radius:22px;box-shadow:0 0 60px rgba(0,0,0,.18)} body{background:color-mix(in srgb,var(--bg) 70%,#071B42 30%)}}
 .top{flex:none}
 .top .grow{flex:0 0 2px}
 .tourbtn{background:var(--orange);}
@@ -89,6 +89,14 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .search{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--mute)}
 .search input{flex:1;background:none;border:0;outline:0;min-width:0}
 .search input::placeholder{color:var(--mute)}
+.srow{display:flex;gap:6px;align-items:stretch}
+.srow .search{flex:1;min-width:0}
+.dbtn{display:inline-flex;align-items:center;gap:5px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink2);font-size:12px;font-weight:700;white-space:nowrap}
+.dbtn.on{border-color:var(--orange);background:var(--orange-soft);color:var(--amber)}
+.dclr{width:30px;border-radius:10px;border:1px solid var(--orange-line);background:var(--orange-soft);color:var(--amber);font-size:16px;font-weight:800}
+.selbar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--orange-line);background:var(--card);font-size:13px;flex:none}
+.selbar .grow{flex:1}
+.narrow .row.selmode{grid-template-columns:22px 36px 1fr auto}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:center;gap:5px;background:var(--card)}
 .chip[aria-pressed="true"]{background:#071B42;color:#EDEDED;border-color:#071B42}
@@ -235,10 +243,6 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .more button{color:var(--orange);font-weight:700}
 .item.rest{opacity:.42}
 
-/* multi-select bar */
-.selbar{display:none;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--line);background:var(--sel);font-size:13px;font-weight:600}
-.selbar.on{display:flex}
-.selbar .grow{flex:1}
 
 /* ---------- folders pane ---------- */
 .newf{display:flex;gap:8px;align-items:center;border:1.5px dashed var(--orange-line);border-radius:10px;padding:8px 10px;background:var(--card)}
@@ -277,6 +281,10 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .pop .newrow{display:flex;gap:6px;padding:6px 8px 4px;border-top:1px solid var(--line);margin-top:4px}
 .pop .newrow input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:0;min-width:0}
 .pop .newrow input:focus{border-color:var(--orange)}
+.pop .drow{display:flex;gap:6px;padding:6px 8px 4px;border-top:1px solid var(--line);margin-top:4px}
+.pop .drow label{flex:1;display:flex;flex-direction:column;gap:3px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--eyebrow);min-width:0}
+.pop .drow input{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px;outline:0;min-width:0;font:inherit;font-size:12px;color:var(--ink);width:100%}
+.pop .drow input:focus{border-color:var(--orange)}
 .toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(8px);background:var(--hd);color:#fff;padding:9px 14px;border-radius:999px;font-weight:600;font-size:12px;opacity:0;transition:.2s;pointer-events:none;z-index:95;box-shadow:var(--shadow);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translateX(-50%)}
 .empty{padding:40px 20px;text-align:center;color:var(--mute);font-size:13px}
@@ -300,7 +308,17 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .chk .d{margin-left:auto;font-weight:500;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
 .chk .fix{width:100%;display:flex;gap:6px;margin-top:4px}
 .chk .fix input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;outline:0;min-width:0;font-weight:500;color:var(--ink);font-size:12px}
-.xscope{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink2);padding:2px 2px 0}
+.xscope{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2);padding:5px 8px;width:100%;text-align:left;border:1px solid var(--line);border-radius:9px;background:var(--card);flex-wrap:wrap}
+.xscope.on{border-color:var(--orange-line);background:var(--orange-soft)}
+.xscope .ic{width:14px;height:14px;color:var(--orange)}
+.xlist{flex:1;min-height:90px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.xcard{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:6px 8px;font-size:12px}
+.xcard .xc1{flex:1;min-width:0;line-height:1.25}
+.xcard .xc1 b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xcard .xc1 span{color:var(--mute);font-size:11px}
+.xcard .xc2{font-family:ui-monospace,Menlo,monospace;font-size:9px;color:var(--mute);line-height:1.3;text-align:right;white-space:nowrap}
+.pvtabs{display:flex;gap:6px;flex:none;padding:8px 0 0;overflow-x:auto}
+.pvtabs .chip{flex:none}
 .xscope b{color:var(--ink)}
 .xscope .xid{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--mute);white-space:nowrap}
 .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
@@ -357,7 +375,8 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
   <symbol id="i-miss" viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a12 12 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/><path d="M15 3l6 6M21 3l-6 6"/></symbol>
   <symbol id="i-vm" viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="3.5"/><circle cx="17.5" cy="12" r="3.5"/><path d="M6.5 15.5h11"/></symbol>
   <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></symbol>
-  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
   <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h6"/></symbol>
@@ -390,10 +409,11 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
       <div class="ph">
         <div id="fbanner"></div>
         <div class="ph-row"><h2 id="lt">Everything on this phone</h2><span class="count" id="lc"></span></div>
-        <label class="search"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search names, numbers, what was said" oninput="state.q=this.value;render()"></label>
+        <div class="srow"><label class="search"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search names, numbers, what was said" oninput="state.q=this.value;render()"></label><button class="dbtn" id="dbtn" onclick="openDates(event,'main')" title="Show only a date range" aria-label="Date range"><svg class="ic"><use href="#i-cal"/></svg><span id="dbtn-t">All dates</span></button><button class="dclr" id="dclr" hidden onclick="clearRange()" title="Show all dates" aria-label="Clear date range">×</button></div>
         <div class="chips" id="chips"></div>
       </div>
       <div class="scroll" id="rows"></div>
+      <div class="selbar" id="selbar" hidden></div>
       <div class="strip" id="strip"></div>
     </section>
   </div>
@@ -428,7 +448,7 @@ const state = {
     {k:'rcs',name:'RCS messages',why:'Notification access · captures RCS chats your messaging app shows',ok:false,fix:'Settings › Notifications › Notification access › CommLocker'},
     {k:'vm',name:'Voicemail audio',why:'Reads visual-voicemail recordings when the carrier exposes them',ok:true,fix:'Settings › Apps › CommLocker › Permissions › Files'},
   ],
-  pop: null
+  pop: null, range:{from:null,to:null}, selMode:false
 };
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAY=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -440,7 +460,12 @@ const folderById = id => state.folders.find(f=>f.id===id);
 const cut25 = n => n.length>35 ? n.slice(0,34).trimEnd()+'…' : n;
 const contactById = id => state.contacts.find(c=>c.id===id);
 const convFolders = c => [...new Set(c.items.flatMap(i=>i.folders))].map(folderById).filter(Boolean);
-const itemsFor = c => state.folder ? c.items.filter(i=>i.folders.includes(state.folder)) : c.items;
+const LATEST = Math.max(...DATA.contacts.flatMap(c=>c.items.map(i=>i.t)));
+const rangeOn = r => !!(r && (r.from||r.to));
+const inRange = (i,r) => (!r.from||i.t>=r.from)&&(!r.to||i.t<=r.to);
+const yr = t => new Date(t).getFullYear();
+function fmtRange(r,short){ if(!rangeOn(r)) return 'All dates'; const Y=yr(LATEST); const f=t=>fmtDay(t)+((!short||yr(t)!==Y)?', '+yr(t):''); return (r.from?f(r.from):'Start')+' – '+(r.to?f(r.to):'today'); }
+const itemsFor = c => { const base = state.folder ? c.items.filter(i=>i.folders.includes(state.folder)) : c.items; return rangeOn(state.range) ? base.filter(i=>inRange(i,state.range)) : base; };
 const kindIcon = i => i.type==='text'?'i-text':i.type==='vm'?'i-vm':i.type==='email'?'i-mail':i.missed?'i-miss':'i-call';
 const kindClass = i => i.type==='text'?'k-text':i.type==='vm'?'k-vm':i.type==='email'?'k-mail':i.missed?'k-miss':'k-call';
 const kindLabel = i => i.type==='text'?'Text':i.type==='vm'?(i.dir==='out'?'Voicemail left':'Voicemail'):i.type==='email'?(i.dir==='out'?'Email sent':'Email'):i.missed?'No answer':(i.dir==='in'?'Inbound call':'Outbound call');
@@ -472,6 +497,7 @@ function openMenu(ev,cid){
   pop.innerHTML=`<div class="pt">${esc(c.name)}</div>
     <button class="po" onclick="closePop();startFiling('${cid}')"><span class="fi"><svg class="ic"><use href="#i-folder"/></svg></span><span class="fn">Add to folder…<small>Pick the texts, calls and voicemails, then one or more folders. No folder yet? Make one right there.</small></span></button>
     <button class="po" onclick="closePop();openExport({kind:'conv',id:'${cid}'})"><span class="fi"><svg class="ic"><use href="#i-pdf"/></svg></span><span class="fn">Export this conversation…<small>PDF with both hashes on every record, plus a ZIP of photos, videos and voicemails.</small></span></button>
+    <button class="po" onclick="closePop();startSelect('${cid}')"><span class="fi"><svg class="ic"><use href="#i-check"/></svg></span><span class="fn">Export with other people…<small>Tick more people. Each one gets its own PDF, ZIP and Export ID in one go. Nothing is merged.</small></span></button>
     <button class="po" onclick="closePop();toggleOpen('${cid}')"><span class="fi"><svg class="ic"><use href="#i-text"/></svg></span><span class="fn">${state.open.has(cid)?'Collapse':'Open'} conversation</span></button>`;
   pop.classList.add('open'); placePop(ev,pop);
 }
@@ -481,18 +507,38 @@ const EXPORTER={name:'Lauren Cotner',lic:'DRE #01242185',org:'Épique Realty',li
 let ex=null;
 function scopeItems(sc){ const out=[]; if(sc.kind==='conv'){ const c=contactById(sc.id); c.items.forEach(i=>out.push({i,c})); } else { state.contacts.forEach(c=>c.items.forEach(i=>{ if(i.folders.includes(sc.id)) out.push({i,c}); })); } out.sort((a,b)=>a.i.t-b.i.t); return out; }
 function attachmentsOf(list){ const files=[]; list.forEach(({i,c})=>{ (i.att||[]).forEach(a=>files.push({name:a.name,kind:a.type,from:c.name,seed:a.name+i.ts})); if(i.type==='vm'){ const d=new Date(i.t); const stamp=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0'); files.push({name:'voicemail-'+stamp+'.m4a',kind:'audio',from:c.name,seed:'a'+i.ts}); files.push({name:'voicemail-'+stamp+'-transcript.txt',kind:'text',from:c.name,seed:'t'+i.ts}); } }); return files; }
-function openExport(sc){
-  const list=scopeItems(sc); const title=sc.kind==='conv'?contactById(sc.id).name:folderById(sc.id).name;
-  const now=new Date(); const ymd=now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0'); const al='ABCDEFGHJKLMNPQRSTUVWXYZ0123456789'; const hx=fullHash(title+list.length+ymd); let code=''; for(let k=0;k<8;k++) code+=al[parseInt(hx.slice(k*2,k*2+2),16)%al.length]; const id='CL-'+ymd+'-'+code;
+function buildOne(sc,list,title,now){
+  const ymd=now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0'); const al='ABCDEFGHJKLMNPQRSTUVWXYZ0123456789'; const hx=fullHash(title+list.length+ymd); let code=''; for(let k=0;k<8;k++) code+=al[parseInt(hx.slice(k*2,k*2+2),16)%al.length]; const id='CL-'+ymd+'-'+code;
   const exportHash=fullHash(list.map(x=>fullHash(itemSeed(x.i))).join('')+id);
-  ex={sc,list,title,id,now,exportHash,pdf:true,zip:true,preview:false,files:attachmentsOf(list)};
-  renderExport(); document.getElementById('ov').classList.add('open');
+  return {sc,list,title,id,exportHash,files:attachmentsOf(list)};
 }
+/* one export = one scope + one date range. A batch is that same build run once per person; nothing is merged. */
+function rebuildExport(){
+  const {sc,now,range}=ex; const filt=l=>rangeOn(range)?l.filter(x=>inRange(x.i,range)):l;
+  if(sc.kind==='batch'){
+    ex.batch=sc.ids.map(id=>{ const all=scopeItems({kind:'conv',id}); const o=buildOne({kind:'conv',id},filt(all),contactById(id).name,now); o.total=all.length; return o; });
+    ex.all=ex.batch.flatMap(b=>scopeItems(b.sc)); ex.list=ex.batch.flatMap(b=>b.list); ex.files=ex.batch.flatMap(b=>b.files);
+    ex.title=sc.ids.length+' people · separate files'; ex.id=''; ex.exportHash=''; if(ex.pv>=ex.batch.length) ex.pv=0;
+  } else {
+    ex.all=scopeItems(sc); const title=sc.kind==='conv'?contactById(sc.id).name:folderById(sc.id).name;
+    Object.assign(ex,buildOne(sc,filt(ex.all),title,now)); ex.batch=null;
+  }
+}
+function openExport(sc){
+  ex={sc,now:new Date(),pdf:true,zip:true,preview:false,range:{...state.range},pv:0};
+  rebuildExport(); renderExport(); document.getElementById('ov').classList.add('open');
+}
+function dropFromBatch(id){ ex.sc={kind:'batch',ids:ex.sc.ids.filter(x=>x!==id)}; if(!ex.sc.ids.length){ closeExport(); endSelect(); return; } rebuildExport(); renderExport(); }
 function closeExport(){ document.getElementById('ov').classList.remove('open'); ex=null; }
 function exOpt(k){ ex[k]=!ex[k]; renderExport(); }
 function exPreview(){ ex.preview=!ex.preview; renderExport(); }
-function labelParty(cid){ const inp=document.getElementById('lbl-'+cid); const v=inp&&inp.value.trim(); if(!v){inp.focus({preventScroll:true});return;} const c=contactById(cid); c.name=v; c.unknown=false; c.role='Labeled by you · carrier number kept'; c._labeled=true; saveState(); toast('Labeled '+c.number+' as '+v); if(ex) ex.title=ex.sc.kind==='conv'?contactById(ex.sc.id).name:ex.title; renderExport(); render(); }
-function doExport(dest){ closePop(); const what=[ex.pdf?'PDF record':'',ex.zip&&ex.files.length?'ZIP ('+ex.files.length+' files)':''].filter(Boolean).join(' + '); const pages=6+Math.ceil(ex.list.length/3); const mb=(0.4+pages*0.12+ex.files.length*0.9).toFixed(1); state.exports.unshift({id:ex.id,title:ex.title,when:ex.now.getTime(),pages,mb,zip:ex.zip&&ex.files.length?ex.files.length:0,dest,hash:ex.exportHash}); saveState(); toast(what+' → '+dest+' · hash '+ex.exportHash.slice(0,10)+'…'); closeExport(); }
+function labelParty(cid){ const inp=document.getElementById('lbl-'+cid); const v=inp&&inp.value.trim(); if(!v){inp.focus({preventScroll:true});return;} const c=contactById(cid); c.name=v; c.unknown=false; c.role='Labeled by you · carrier number kept'; c._labeled=true; saveState(); toast('Labeled '+c.number+' as '+v); if(ex){ rebuildExport(); renderExport(); } render(); }
+function doExport(dest){ closePop(); const entries=ex.batch||[ex]; const rng=rangeOn(ex.range)?fmtRange(ex.range):null;
+  entries.forEach(b=>{ const pages=6+Math.ceil(b.list.length/3); const mb=(0.4+pages*0.12+b.files.length*0.9).toFixed(1); state.exports.unshift({id:b.id,title:b.title,when:ex.now.getTime(),pages,mb,zip:ex.zip&&b.files.length?b.files.length:0,dest,hash:b.exportHash,range:rng}); });
+  saveState();
+  if(ex.batch){ const zips=ex.zip?entries.filter(b=>b.files.length).length:0; toast(entries.length+' separate PDFs'+(zips?' + '+zips+' ZIP'+(zips>1?'s':''):'')+' → '+dest); closeExport(); endSelect(); return; }
+  const what=[ex.pdf?'PDF record':'',ex.zip&&ex.files.length?'ZIP ('+ex.files.length+' files)':''].filter(Boolean).join(' + ');
+  toast(what+' → '+dest+' · hash '+ex.exportHash.slice(0,10)+'…'); closeExport(); }
 function fmtFull(d){ return d.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
 function renderExport(){
   const {sc,list,title,id,now,exportHash,files}=ex; const n=list.length;
@@ -500,8 +546,26 @@ function renderExport(){
   const parties=[...new Set(list.map(x=>x.c))]; const unknown=parties.filter(c=>c.unknown);
   const fk=t=>files.filter(f=>f.kind===t).length;
   const head=(t,sub,back)=>`<div class="xh"><button class="btn ghost" onclick="${back}"><svg class="ic"><use href="#i-back"/></svg> Back</button><div class="xt"><b>${t}</b><span>${sub}</span></div></div>`;
+  const batch=ex.batch;
   if(ex.preview){
-    document.getElementById('sheet').innerHTML=head('Cover sheet','as it prints · first page','exPreview()')+`<div class="pvscroll">${renderPreview()}</div>`;
+    const x=batch?batch[ex.pv]:ex;
+    document.getElementById('sheet').innerHTML=head('Cover sheet',(batch?esc(x.title)+' · ':'')+'as it prints · first page','exPreview()')+(batch?`<div class="pvtabs">${batch.map((b,i)=>`<button class="chip" aria-pressed="${i===ex.pv}" onclick="ex.pv=${i};renderExport()">${esc(b.title)}</button>`).join('')}</div>`:'')+`<div class="pvscroll">${renderPreview(x)}</div>`;
+    return;
+  }
+  const dates=`<button class="xscope ${rangeOn(ex.range)?'on':''}" onclick="openDates(event,'ex')" title="Limit this export to a date range"><svg class="ic"><use href="#i-cal"/></svg><span><b>${fmtRange(ex.range,true)}</b> ▾ · ${n} of ${ex.all.length} record${ex.all.length!==1?'s':''}</span>${batch?'':`<span class="xid">${id}</span>`}</button>`;
+  if(batch){
+    const zips=ex.zip?batch.filter(b=>b.files.length).length:0;
+    document.getElementById('sheet').innerHTML=head('Export separately',batch.length+' people · '+batch.length+' PDFs, one each','closeExport()')+`
+    <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Records verified <span class="d">${n} of ${n} · MATCH</span></div>
+    ${unknown.length===0?`<div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Parties labeled <span class="d">${parties.map(c=>esc(c.name)).join(' · ')}</span></div>`
+      :`<div class="chk warn"><svg class="ic"><use href="#i-x"/></svg> ${unknown.length} number${unknown.length>1?'s':''} not labeled <span class="d">carrier number is kept</span>${unknown.map(c=>`<div class="fix"><input id="lbl-${c.id}" placeholder="Who is ${esc(c.number)}?" onkeydown="if(event.key==='Enter')labelParty('${c.id}')"><button class="btn primary" onclick="labelParty('${c.id}')">Save</button></div>`).join('')}</div>`}
+    <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Exporter set <span class="d">${EXPORTER.name} · ${EXPORTER.lic}</span></div>
+    ${dates}
+    <div class="xlist">${batch.map(b=>`<div class="xcard"><div class="xc1"><b>${esc(b.title)}</b><span>${b.list.length} of ${b.total} records · ${b.files.length} file${b.files.length!==1?'s':''} · own PDF${b.files.length?' + ZIP':''}</span></div><div class="xc2">${b.id}<br>hash ${b.exportHash.slice(0,18)}…</div><button class="fx" title="Leave ${esc(b.title)} out" aria-label="Leave ${esc(b.title)} out" onclick="dropFromBatch('${b.sc.id}')">×</button></div>`).join('')}</div>
+    <div class="xfiles">Each person gets a separate PDF with both hashes on every record, a separate ZIP, an Export ID and an export hash. One tap saves or shares all of them together.</div>
+    <div class="segx"><button class="${ex.pdf?'on':''}" onclick="exOpt('pdf')">PDF records</button><button class="${ex.zip&&files.length?'on':''}" ${files.length?'':'disabled'} onclick="exOpt('zip')">+ ZIPs · ${files.length} file${files.length!==1?'s':''}</button></div>
+    <button class="btn primary xbig" onclick="openSaveMenu(event)"><svg class="ic"><use href="#i-pdf"/></svg> Export ${batch.length} PDFs${zips?' + '+zips+' ZIP'+(zips>1?'s':''):''}</button>
+    <button class="btn xsmall" onclick="exPreview()">Preview cover sheets</button>`;
     return;
   }
   document.getElementById('sheet').innerHTML=head('Export',esc(title)+' · '+n+' record'+(n!==1?'s':''),'closeExport()')+`
@@ -509,7 +573,7 @@ function renderExport(){
     ${unknown.length===0?`<div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Parties labeled <span class="d">${parties.map(c=>esc(c.name)).join(' · ')}</span></div>`
       :`<div class="chk warn"><svg class="ic"><use href="#i-x"/></svg> ${unknown.length} number${unknown.length>1?'s':''} not labeled <span class="d">carrier number is kept</span>${unknown.map(c=>`<div class="fix"><input id="lbl-${c.id}" placeholder="Who is ${esc(c.number)}?" onkeydown="if(event.key==='Enter')labelParty('${c.id}')"><button class="btn primary" onclick="labelParty('${c.id}')">Save</button></div>`).join('')}</div>`}
     <div class="chk ok"><svg class="ic"><use href="#i-check"/></svg> Exporter set <span class="d">${EXPORTER.name} · ${EXPORTER.lic}</span></div>
-    <div class="xscope"><span><b>Scope</b> ${n?fmtDay(first)+', '+new Date(first).getFullYear():'—'} → today</span><span class="xid">${id}</span></div>
+    ${dates}
     <div class="tiles"><div>${k.text}<small>texts</small></div><div>${k.call}<small>calls</small></div><div>${k.vm}<small>vmails</small></div><div>${k.email}<small>emails</small></div><div>${files.length}<small>files</small></div></div>
     <div class="hashbox"><b>Matching hash · every record</b>${n} of ${n}: ingestion hash = current hash → <span class="ok">MATCH</span><span class="why">Both hashes print under every text, call and voicemail. Any change since ingestion would read MISMATCH.</span></div>
     <div class="hashbox"><b>Export hash · fingerprint of this export</b>${exportHash}<span class="why">Over every record hash + Export ID, ${fmtFull(now)}.</span></div>
@@ -519,15 +583,15 @@ function renderExport(){
     <button class="btn primary xbig" onclick="openSaveMenu(event)"><svg class="ic"><use href="#i-pdf"/></svg> Export ${ex.pdf&&ex.zip&&files.length?'PDF + ZIP':ex.zip&&files.length&&!ex.pdf?'ZIP':'PDF'}</button>
     <button class="btn xsmall" onclick="exPreview()">Preview cover sheet</button>`;
 }
-function renderPreview(){
-  const {sc,list,title,id,now,exportHash,files}=ex; const n=list.length; const k=counts(list.map(x=>x.i));
+function renderPreview(x){
+  const {sc,list,title,id,exportHash,files}=x; const now=ex.now; const n=list.length; const k=counts(list.map(x=>x.i));
   const parties=[...new Set(list.map(x=>x.c))];
   const first=list[0]?fmtDay(list[0].i.t)+', '+new Date(list[0].i.t).getFullYear():'—', last=list[n-1]?fmtDay(list[n-1].i.t)+', '+new Date(list[n-1].i.t).getFullYear():'—';
   const entry=({i,c})=>{ const h=fullHash(itemSeed(i)); const who=i.dir==='out'?'This device':c.name; const line=i.type==='text'?'SMS':i.type==='vm'?'Voicemail':i.type==='email'?'Email':'Call log';
     return `<p><b>${fmtDivider(i.t).replace(/^\w+, /,'')} ${fmtTime(i.t)}</b><br>${line} - ${esc(who)}<br>${i.type==='email'?`${i.dir==='out'?'To':'From'}: ${esc(i.dir==='out'?i.to:i.from)}<br><b>${esc(i.subject)}</b>`:`${esc(c.name)} | ${i.dir==='out'?'To':'From'} carrier #: ${esc(c.number)}${i.dir==='out'?' · Device line: '+EXPORTER.line:''}`}<br>${esc(i.text||i.transcript||i.note||'')}<br><span class="mono">Ingestion record hash (SHA-256): ${h}<br>Current record hash (SHA-256): ${h}</span><br>Verification: <span class="m">MATCH</span></p>`; };
   return `<div class="preview">
     <div class="pvhead"><img class="wm" alt="CommLocker" src="data:image/png;base64,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"></div><div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#111C32;font-weight:700;margin-bottom:6px">Logged<span style="color:#B95722">.</span> Secure<span style="color:#B95722">.</span> Tamper-evident<span style="color:#B95722">.</span></div><h5>Tamper-evident communication record</h5>
-    <div class="row2"><span>File:</span><span>${esc(title)}</span><span>Scope:</span><span>${sc.kind==='conv'?'Single conversation/thread':'Folder record'}</span><span>Export ID:</span><span>${id}</span><span>Generated:</span><span>${fmtFull(now)}</span><span>Exporter:</span><span>${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span><span>Date range:</span><span>${first} – ${last}</span><span>Messages:</span><span>${k.text}</span><span>Calls:</span><span>${k.call}</span><span>Voicemails:</span><span>${k.vm}</span><span>Emails:</span><span>${k.email}</span><span>Attachments:</span><span>${files.length}</span><span>Participants:</span><span>${parties.length+1}</span>${parties.map(c=>`<span>Participant (party):</span><span>${esc(c.name)} · ${esc(c.number)}</span>`).join('')}</div>
+    <div class="row2"><span>File:</span><span>${esc(title)}</span><span>Scope:</span><span>${sc.kind==='conv'?'Single conversation/thread':'Folder record'}${rangeOn(ex.range)?' · limited to '+fmtRange(ex.range):''}</span><span>Export ID:</span><span>${id}</span><span>Generated:</span><span>${fmtFull(now)}</span><span>Exporter:</span><span>${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span><span>Date range:</span><span>${first} – ${last}</span><span>Messages:</span><span>${k.text}</span><span>Calls:</span><span>${k.call}</span><span>Voicemails:</span><span>${k.vm}</span><span>Emails:</span><span>${k.email}</span><span>Attachments:</span><span>${files.length}</span><span>Participants:</span><span>${parties.length+1}</span>${parties.map(c=>`<span>Participant (party):</span><span>${esc(c.name)} · ${esc(c.number)}</span>`).join('')}</div>
     <hr><h5>Conversation timeline (first ${Math.min(2,n)} of ${n})</h5>${list.slice(0,2).map(entry).join('')}${n>2?`<p style="color:#666">… ${n-2} more records, each with both hashes and a MATCH line …</p>`:''}
     <hr><h5>Attachment index</h5>${files.length?files.map(f=>`<p class="mono">${esc(f.name)} · sha256:${fullHash(f.seed)}</p>`).join(''):'<p>No attachments in scope.</p>'}
     <hr><h5>Chain of custody</h5><p>This record was generated on-device by CommLocker from device-native communication data available to the app. Message content, call records, voicemail records, attachments and record hashes are processed locally. Hashes verify that included items are unaltered since first observation by CommLocker; this record makes no claim of completeness. Notes are labeled separately and do not alter original communication content.</p>
@@ -604,19 +668,31 @@ function dropTargets(){
 function visibleContacts(){
   const q=state.q.trim().toLowerCase();
   return state.contacts.filter(c=>{
-    const items=itemsFor(c); if(state.folder && !items.length) return false;
+    const items=itemsFor(c); if((state.folder||rangeOn(state.range)) && !items.length) return false;
     if(state.filter==='text'&&!items.some(i=>i.type==='text')) return false;
     if(state.filter==='call'&&!items.some(i=>i.type==='call')) return false;
     if(state.filter==='vm'&&!items.some(i=>i.type==='vm')) return false;
     if(state.filter==='email'&&!items.some(i=>i.type==='email')) return false;
     if(state.filter==='unfiled'&&(c.spam||convFolders(c).length)) return false;
-    if(q){ const hay=(c.name+' '+c.number+' '+c.role+' '+c.items.map(i=>(i.subject||'')+' '+(i.text||i.transcript||i.note||'')).join(' ')).toLowerCase(); if(!hay.includes(q)) return false; }
+    if(q){ const m=searchMatch(c,q); if(!m) return false; }
     return true;
-  });
+  }).sort((a,b)=>q?(searchMatch(a,q).rank-searchMatch(b,q).rank):0);
+}
+/* who matches: the name, number or role (rank 0, listed first), or a whole word inside a message (rank 1) */
+function searchMatch(c,q){
+  if((c.name+' '+c.number+' '+(c.role||'')).toLowerCase().includes(q)) return {rank:0};
+  const re=new RegExp('(^|[^a-z0-9])'+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?=$|[^a-z0-9])','i');
+  const hits=itemsFor(c).filter(i=>re.test((i.subject||'')+' '+(i.text||i.transcript||i.note||''))).length;
+  return hits?{rank:1,hits}:null;
 }
 function render(){
   document.getElementById('app').classList.add('narrow');
-  renderBanner(); renderChips(); renderRows(); renderStrip(); dropTargets();
+  renderBanner(); renderChips(); renderRows(); renderStrip(); renderSelbar(); dropTargets();
+}
+function renderSelbar(){
+  const sb=document.getElementById('selbar'); sb.hidden=!state.selMode; if(!state.selMode) return;
+  const n=state.selected.size;
+  sb.innerHTML=`<span><b>${n} ${n===1?'person':'people'}</b> ticked</span><span class="grow"></span><button class="btn ghost" onclick="endSelect()">Cancel</button><button class="btn primary" ${n?'':'disabled style="opacity:.5"'} onclick="openExport({kind:'batch',ids:[...state.selected]})"><svg class="ic"><use href="#i-pdf"/></svg> Export ${n} separately</button>`;
 }
 function renderBanner(){
   const el=document.getElementById('fbanner');
@@ -636,7 +712,8 @@ function renderChips(){
   const defs=[['all',pl(items.length,'item','items')],['text',pl(k.text,'text','texts')],['call',pl(k.call,'call','calls')],['vm',pl(k.vm,'voicemail','voicemails')],['email',pl(k.email,'email','emails')]];
   if(!state.folder){ const np=all.filter(c=>!c.spam&&!convFolders(c).length).length; defs.push(['unfiled',pl(np,'person','people')+' not filed yet']); }
   document.getElementById('chips').innerHTML=defs.map(([k,l])=>`<button class="chip" aria-pressed="${state.filter===k}" onclick="state.filter='${k}';render()">${l}</button>`).join('');
-  document.getElementById('lc').textContent=pl(all.length,'person','people')+' · '+pl(items.length,'item','items');
+  const q=state.q.trim(); document.getElementById('lc').textContent=q?pl(visibleContacts().length,'person','people')+' match “'+q+'”':pl(all.length,'person','people')+' · '+pl(items.length,'item','items');
+  const on=rangeOn(state.range); const db=document.getElementById('dbtn'); db.classList.toggle('on',on); document.getElementById('dbtn-t').textContent=on?fmtRange(state.range,true):'All dates'; document.getElementById('dclr').hidden=!on;
 }
 function renderRows(){
   const el=document.getElementById('rows');
@@ -649,14 +726,16 @@ function renderRows(){
     const cnt=[k.text?k.text+' text'+(k.text>1?'s':''):'',k.call?k.call+' call'+(k.call>1?'s':''):'',k.vm?k.vm+' voicemail'+(k.vm>1?'s':''):'',k.email?k.email+' email'+(k.email>1?'s':''):''].filter(Boolean).map(s=>`<span>${s}</span>`).join('');
     const chips=fs.length?fs.map(f=>`<span class="fchip" title="${esc(f.name)}">${f.icon} ${esc(cut25(f.name))}<button class="fx" title="Take ${esc(c.name)} out of ${esc(f.name)}" aria-label="Remove from ${esc(f.name)}" onclick="event.stopPropagation();unfileConv('${c.id}',${f.id})">×</button></span>`).join(''):(c.spam?'':`<span class="fchip none">not filed</span>`);
     const lock=c.spam?'':`<span class="kind k-lock" title="Every item was hashed when it was pulled from the phone"><svg class="ic"><use href="#i-lock"/></svg>${items.length} hashed</span>`;
-    return `<div class="row ${open?'open':''} ${c.spam?'dim':''}" data-cid="${c.id}" draggable="true" ondragstart="dragStart(event,{kind:'conv',id:'${c.id}'})" ondragend="dragEnd(event)" onclick="toggleOpen('${c.id}')">
-      <div class="av" style="background:${c.color}">${esc(c.avatar)}</div>
+    const q=state.q.trim().toLowerCase(); const sm0=q?searchMatch(c,q):null; const why=sm0&&sm0.rank===1?`<span class="fchip none">mentions “${esc(state.q.trim())}” in ${sm0.hits} item${sm0.hits!==1?'s':''}</span>`:'';
+    const sm=state.selMode, sel=state.selected.has(c.id);
+    return `<div class="row ${open?'open':''} ${c.spam?'dim':''} ${sm?'selmode':''}" data-cid="${c.id}" draggable="${!sm}" ondragstart="dragStart(event,{kind:'conv',id:'${c.id}'})" ondragend="dragEnd(event)" onclick="${sm?`toggleSel('${c.id}')`:`toggleOpen('${c.id}')`}">
+      ${sm?`<input type="checkbox" class="sel" ${sel?'checked':''} aria-label="Tick ${esc(c.name)} for export" onclick="event.stopPropagation();toggleSel('${c.id}')">`:''}<div class="av" style="background:${c.color}">${esc(c.avatar)}</div>
       <div style="min-width:0">
         <div class="l1"><b>${esc(c.name)}</b><span class="role">${esc([c.role,c.number].filter(Boolean).join(' · '))}</span></div>
         <div class="l2"><span class="kind ${kindClass(last)}"><svg class="ic"><use href="#${kindIcon(last)}"/></svg>${kindLabel(last)}</span><span class="prev">${esc(summary(last))}</span></div>
-        <div class="l3"><span class="cnt">${cnt}</span>${lock}${chips}</div>
+        <div class="l3"><span class="cnt">${cnt}</span>${lock}${why}${chips}</div>
       </div>
-      <div class="rside"><span class="when">${fmtDay(last.t)}</span><button class="more-btn" title="Add to folder, export" aria-label="More actions for ${esc(c.name)}" onclick="openMenu(event,'${c.id}')">⋯</button></div>
+      <div class="rside"><span class="when">${fmtDay(last.t)}</span>${sm?'':`<button class="more-btn" title="Add to folder, export" aria-label="More actions for ${esc(c.name)}" onclick="openMenu(event,'${c.id}')">⋯</button>`}</div>
     </div>${open?renderThread(c):''}`;
   }).join('');
 }
@@ -786,7 +865,7 @@ function renderSettings(){
 function renderExportsList(){
   const el=document.getElementById('exlist'); if(!el) return;
   if(el.innerHTML){ el.innerHTML=''; return; }
-  el.innerHTML=state.exports.length?state.exports.map(e=>`<div class="frow" style="padding-left:36px"><div class="fm"><b>${esc(e.title)}</b><span>Communication Record · ${fmtDay(e.when)}, ${new Date(e.when).getFullYear()} · ${e.mb} MB · ${e.pages} pages${e.zip?' · ZIP '+e.zip+' files':''}<br><code style="font-size:10px">${e.id}</code> · ${esc(e.dest)}</span></div><button class="btn" onclick="toast('Shared ${e.id}')"><svg class="ic"><use href="#i-share"/></svg></button></div>`).join('')
+  el.innerHTML=state.exports.length?state.exports.map(e=>`<div class="frow" style="padding-left:36px"><div class="fm"><b>${esc(e.title)}</b><span>Communication Record · ${fmtDay(e.when)}, ${new Date(e.when).getFullYear()} · ${e.mb} MB · ${e.pages} pages${e.zip?' · ZIP '+e.zip+' files':''}${e.range?' · '+esc(e.range):''}<br><code style="font-size:10px">${e.id}</code> · ${esc(e.dest)}</span></div><button class="btn" onclick="toast('Shared ${e.id}')"><svg class="ic"><use href="#i-share"/></svg></button></div>`).join('')
    :`<div class="frow" style="padding-left:36px"><span style="font-size:12px;color:var(--mute)">No exports yet on this phone. Export any folder or conversation and it will be listed here with its ID, size, page count and where it went.</span></div>`;
 }
 
@@ -814,6 +893,25 @@ function openSaveMenu(ev){ ev.stopPropagation(); if(!ex.pdf&&!ex.zip){ toast('Ch
   const opts=[['i-save','Save on this phone','Downloads › CommLocker › '+ex.id],['i-share','Google Drive','CommLocker folder in your Drive'],['i-share','Dropbox','CommLocker folder in your Dropbox'],['i-mail','Email it','attached to a new message'],['i-share','More…','any app on this phone']];
   pop.innerHTML=`<div class="pt">${what} ready · save or share to</div>`+opts.map(([ic,l,sub])=>`<button class="po" onclick="doExport('${l}')"><span class="fi"><svg class="ic"><use href="#${ic}"/></svg></span><span class="fn">${l}<small>${sub}</small></span></button>`).join('');
   pop.classList.add('open'); placePop(ev,pop); }
+/* ---------- date range: one filter on item timestamp, used by the list, folders and export ---------- */
+function presetRange(k){ const day=86400000; const end=new Date(LATEST); end.setHours(23,59,59,999); const to=end.getTime(); if(k==='30') return {from:to-30*day,to}; if(k==='90') return {from:to-90*day,to}; if(k==='year') return {from:new Date(yr(LATEST),0,1).getTime(),to}; return {from:null,to:null}; }
+function countIn(r,target){ const src=target==='ex'?ex.all.map(x=>x.i):state.contacts.flatMap(c=>state.folder?c.items.filter(i=>i.folders.includes(state.folder)):c.items); return src.filter(i=>inRange(i,r)).length; }
+function openDates(ev,target){ ev.stopPropagation(); const r=target==='ex'?ex.range:state.range; state.pop={kind:'dates',target}; const pop=document.getElementById('pop');
+  const d2v=t=>{ if(!t) return ''; const d=new Date(t); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+  const same=k=>{ const p=presetRange(k); return p.from===r.from&&p.to===r.to; };
+  pop.innerHTML=`<div class="pt">${target==='ex'?'Export only these dates':'Show only these dates'}</div>`+
+    [['all','All dates'],['30','Last 30 days'],['90','Last 90 days'],['year','This year']].map(([k,l])=>`<button class="po ${same(k)?'in':''}" onclick="setRange('${k}')"><span class="fn">${l}<small>${countIn(presetRange(k),target)} items</small></span><span class="ck"><svg class="ic" style="width:11px;height:11px"><use href="#i-check"/></svg></span></button>`).join('')+
+    `<div class="drow"><label>From<input type="date" id="dfrom" value="${d2v(r.from)}"></label><label>To<input type="date" id="dto" value="${d2v(r.to)}"></label></div>
+    <div class="done"><button class="btn ghost" onclick="closePop()">Cancel</button><button class="btn primary" onclick="applyDates()">Apply</button></div>`;
+  pop.classList.add('open'); placePop(ev,pop); }
+function setRange(k){ applyRange(presetRange(k)); }
+function applyDates(){ const f=document.getElementById('dfrom').value, t=document.getElementById('dto').value; const p=s=>{ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }; const r={from:f?p(f).getTime():null,to:null}; if(t){ const d=p(t); d.setHours(23,59,59,999); r.to=d.getTime(); } if(r.from&&r.to&&r.from>r.to){ toast('“From” is after “To”'); return; } applyRange(r); }
+function applyRange(r){ const target=state.pop&&state.pop.target; closePop(); if(target==='ex'){ ex.range=r; rebuildExport(); renderExport(); toast(rangeOn(r)?'Export limited to '+fmtRange(r):'Export covers all dates'); } else { state.range=r; state.open.clear(); render(); toast(rangeOn(r)?'Showing '+fmtRange(r)+' only':'Showing all dates'); } }
+function clearRange(){ state.range={from:null,to:null}; render(); }
+/* ---------- select several people, export each separately ---------- */
+function startSelect(cid){ state.selMode=true; state.selected.clear(); state.selected.add(cid); state.open.clear(); state.pickMode.clear(); render(); toast('Tick the other people, then Export separately.'); }
+function toggleSel(cid){ if(state.selected.has(cid)) state.selected.delete(cid); else state.selected.add(cid); render(); }
+function endSelect(){ state.selMode=false; state.selected.clear(); render(); }
 function openFolder(fid){ state.folder=(fid===null||state.folder===fid)?null:fid; state.view='timeline'; render(); const r=document.getElementById('rows'); if(r) r.scrollTop=0; }
 function startFiling(cid){ const c=contactById(cid); state.open.add(cid); state.pickMode.add(cid); itemsFor(c).forEach(i=>state.picked.add(i.id)); render(); const rows=document.getElementById('rows'); const r=rows.querySelector('.row.open'); if(r) rows.scrollTop=r.offsetTop-8; toast('Everything is ticked. Untick what should stay out, then File picked.'); }
 function togglePickMode(cid){ if(state.pickMode.has(cid)){ state.pickMode.delete(cid); contactById(cid).items.forEach(i=>state.picked.delete(i.id)); } else state.pickMode.add(cid); render(); }
@@ -835,7 +933,7 @@ function cycleTheme(){ applyTheme((themeIdx+1)%THEMES.length); }
 /* ---------- guided tour ---------- */
 const fakeEv = el => ({ stopPropagation(){}, currentTarget: el });
 function scrollRow(cid){ const rows=document.getElementById('rows'); const r=rows.querySelector(`.row[data-cid="${cid}"]`); if(r) rows.scrollTop=r.offsetTop-8; }
-function tourReset(){ closePop(); if(ex) closeExport(); state.folder=null; state.pickMode.clear(); state.picked.clear(); state.open.clear(); state.filter='all'; state.q=''; const q=document.getElementById('q'); if(q) q.value=''; render(); document.getElementById('rows').scrollTop=0; }
+function tourReset(){ closePop(); if(ex) closeExport(); state.folder=null; state.pickMode.clear(); state.picked.clear(); state.open.clear(); state.filter='all'; state.q=''; state.range={from:null,to:null}; state.selMode=false; state.selected.clear(); const q=document.getElementById('q'); if(q) q.value=''; render(); document.getElementById('rows').scrollTop=0; }
 const TOUR=[
  {t:'Your phone, in one list',d:'Every text, call, voicemail and email, newest first, one line per person. Each item was hashed the moment it came off the phone, before you touch anything. Nothing to set up.',go:()=>{ tourReset(); }},
  {t:'Tap ⋯ on a conversation',d:'Here, Paul Henderson. Two choices: Add to folder, or Export. That is the only menu in the app.',go:()=>{ tourReset(); const btn=document.querySelector('.row[data-cid="c12"] .more-btn'); if(btn){ scrollRow('c12'); openMenu(fakeEv(btn),'c12'); } }},
