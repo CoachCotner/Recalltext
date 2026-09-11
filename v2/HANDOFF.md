@@ -60,12 +60,13 @@ data class Attachment(val id: String, val kind: String /* image|video|pdf|audio|
 
 data class Contact(val id: String, val displayName: String, val userLabel: String?, val carrierNumber: String, val role: String?, val isUnknown: Boolean, val isSpam: Boolean)
 
-data class Folder(val id: String, val name: String, val icon: String, val category: String?, val note: String?, val status: FolderStatus = ACTIVE, val closedAt: Long? = null, val createdAt: Long)
+data class Folder(val id: String, val name: String, val icon: String, val category: String?, val note: String?, val status: FolderStatus = ACTIVE, val closedAt: Long? = null, val createdAt: Long, val roles: Map<String, String> = emptyMap() /* contactId → role in this folder */)
 
 enum class FolderStatus { ACTIVE, CLOSED }
 
-// per-device, not hashed: contact ids the user chose to hide from the Everything list
+// per-device, not hashed: contact ids the user chose to hide from the Everything list, and tips already dismissed
 val hiddenContactIds: Set<String>
+val tipsSeen: Set<String>
 ```
 
 Rules:
@@ -192,7 +193,34 @@ A group thread is a **room**, not a contact. Android already gives you what is n
 - A number not in contacts prints as the number. The export page lists it under "N numbers not named · export still works" with a name field, **Save**, or **Leave**.
 - A withheld caller ID has no number: store the call-log row id and print "Private number · caller ID withheld · call log ref <id>". It can be named later like any number; the ref stays on the line.
 
-### 3.14 Search
+### 3.14 Roles, per folder
+
+A person's role belongs to the deal, not to the person. Maria Torres is the inspector on Alvarez Drive and your seller on Maple St.
+
+- `Contact.role` is the **usual** role. `Folder.roles[contactId]` overrides it inside that folder. `roleIn(contact, folder) = folder.roles[contact.id] ?: contact.role`.
+- The role is always a **pill** you can tap, never part of the name: on the row ("Maria Torres [Inspector ▾]"), on every timeline line, in ⋯ → **Set role / Change role**. Tapping opens a single-choice list (radio behavior): Buyer, Seller, Buyer Client, Seller's Agent, Co-op Agent, Lender, Escrow Officer, Title, Inspector, Appraiser, Contractor, Transaction Coordinator, Referring Agent, Tenant, Landlord, Attorney, Potential Client, Personal, Other, plus any role already in use, plus "Another role…". Inside a folder the sheet says "in Alvarez Drive Listing only · usual role stays Inspector"; in Everything it sets the usual role.
+- The cover sheet prints the role **for that folder** next to each participant. A conversation export uses the usual role.
+- People with no role show no pill in the Everything list (Mom, Whole Foods); the ⋯ menu still offers Set role. Unknown numbers and groups have no role pill.
+
+### 3.15 One color per person
+
+Every person has one avatar color, and inside a folder no two participants share one. Twelve deep, distinct colors (`#2B4169 #0F766E #B45309 #6D28D9 #BE185D #0369A1 #4D7C0F #9A3412 #1D4ED8 #7C2D12 #0E7490 #A21CAF`) are assigned in order of first appearance in the folder; in Everything by list position. Unknown numbers and spam are gray, a group is sky blue, you are orange.
+
+### 3.16 Notes on any record, typed or spoken
+
+Every text, call, voicemail and email has a **note** action beside its **+ folder** action. It opens a small sheet: a text box, **Speak** (Android `SpeechRecognizer`, live transcript into the box), Save, Cancel. The note is stored beside the record (`Item.note`), prints as **Your note** on the thread, the timeline and the PDF, and is never inside the hashed bytes. Calls are the main case: after a call the agent taps note and says what was agreed.
+
+### 3.17 Moving items between folders from inside a folder
+
+- Every item shows **+ folder** (add this item to another folder as well) and its folder chips with × (take it out of one).
+- In a folder's Timeline, **Select items** puts a checkbox on every item across every person; the bar reads "N of M selected · **Add selected to folder…** · **Take out of this folder** · Done". A conversation about two properties is split in one pass.
+
+### 3.18 Tips and the tour, in the user's own words
+
+- **Tips**: the first time a control is used, one dark line appears under the header (or above the folder row) saying what to do here, with **Got it ×**. Eleven of them: folders row, ⋯ menu, add to folder, inside a folder, export, dates, filter, select people, role, note, select items. Dismissed tips are stored per device; Settings › **Tips · show again** resets them. A tip never appears while the tour is running.
+- **Tour**: the same 8 steps, but every name comes from the phone: the person is the first row with at least four items, the folder is the newest active folder. "Here, Lily." on Lauren's phone; "Here, Bob Bishop." on Bob's. Android: `TapTargetView` or Material `MaterialTapTargetPrompt`, one step per screen state, text templated from the live data.
+
+### 3.19 Search
 
 Search matches the contact name, number and role first (listed first), then whole words inside message text, voicemail transcripts, email subjects and call notes. "ace" finds Ace Johnson and the one person whose text mentions "Ace"; it no longer finds "place". A row that is listed only because of a message match shows why: "mentions “ace” in 1 item". The count line reads "N people match “ace”". Room: `MATCH` on an FTS4 table over `body`, joined to contacts; name matches with `LIKE '%q%'`.
 
@@ -251,6 +279,9 @@ Cover / Export Summary → Conversation Timeline (both hashes per record) → At
 
 ## 5. Palette and type (locked)
 
+How the palette is applied (this pass): navy carries the interface, orange is only for actions (Export, Add selected, Tour, the active date/filter), green only for MATCH and verified. Type chips (Text, Call, Voicemail, Email) are all navy tint; a missed call is the one burnt-orange chip. Folder chips are white with a navy outline. Bubbles: inbound warm gray, outbound light navy. The hash line is gray monospace. Background `#F6F5F1`, lines `#E3E1DB`, muted text `#6B7688`.
+
+
 Logo palette: Navy `#071B42`, Burnt orange `#B95722`, Secondary burnt orange `#C56230`, Beige `#F4F1EC`, Soft white `#EDEDED`. Website palette is managed separately; the app uses the mapping below and nothing else.
 
 | Token | Light | Dark | Used for |
@@ -305,6 +336,12 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Group thread: each inbound bubble shows the sender's name, role and number; renaming the group changes only the room name; a member's role edited elsewhere shows in the group.
 - [ ] Folder with a group thread and a member's direct call: the timeline shows both in time order, group lines tagged "in group", the call tagged "direct"; the cover sheet lists the group and its members under Participants.
 - [ ] Export with an unnamed number and a private-number call completes without naming; lines print the number, or "caller ID withheld · call log ref"; naming afterwards keeps the number on the line.
+- [ ] Roles: setting Maria Torres to Seller inside Alvarez shows Seller on every Alvarez line and on the Alvarez cover sheet, while her row in Everything and in Maple St still reads Inspector.
+- [ ] Inside a folder no two participants share an avatar color.
+- [ ] A note added to a call prints as "Your note" in the thread, the timeline and the PDF; the record's two hashes still MATCH.
+- [ ] Select items in a folder timeline, add two items to a second folder: both folders list them; Take out of this folder removes only this folder's label.
+- [ ] Each tip appears once, Got it hides it for good, Settings › Tips brings them back; no tip appears during the tour.
+- [ ] The tour names the first real person and the newest active folder on the device.
 - [ ] Search "ace" lists Ace Johnson first and a message-only match with a "mentions" tag; "place" does not match "ace".
 - [ ] Revoking RCS notification access shows the banner on the list and "1 needs attention" in Settings; Fix opens the notification-access screen; returning to the app clears both without a restart.
 

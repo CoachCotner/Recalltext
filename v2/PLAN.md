@@ -61,6 +61,19 @@ flowchart LR
 - Every record line prints the carrier number next to the name, because names can be edited. Outbound calls put the other party in Participants, sorted by name.
 - Unknown and private numbers never block an export: the number is the identifier, the name is a label. Name it on the export page, or Leave it.
 
+## How to bring this to the developer
+
+Three iterations, each shippable on its own: one list (deleting the tabs and forms, most of the value), the export the broker asked for, then guidance. Everything under the screen stays: ingestion, hashing, PDF, settings. `DEVELOPER-BRIEF.md` says it in one page, in a tone that keeps them as partners; the same page is at https://claude.ai/code/artifact/d021d298-fd57-4c45-a765-4e2447e49803.
+
+## Roles per deal, notes, colors, tips
+
+- A role belongs to the deal. Tap the role pill next to a name and choose from a list, like a radio button: Maria is the inspector in Alvarez and the seller in Maple St. The cover sheet prints the role for that deal.
+- Every record has **note**: type it or tap Speak. It prints as "Your note" and never touches the hash. Calls are the main case.
+- Inside a folder, **Select items** lets you tick items across everyone and add them to another folder, or take them out of this one. A conversation about two properties is split in one pass.
+- One color per person, no two alike inside a folder.
+- Navy carries the screen, orange only where you act, green only for MATCH.
+- Tips: one line the first time you meet a control, with Got it ×. The tour uses the names on your own phone.
+
 ## One thing in the current export to fix first
 
 The two sample exports disagree. The single-conversation export (Debt collectors, 8 records) prints **Verification: MATCH** on every record. The transaction export (811 Amapola no 6, 39 records) prints **Verification: MISMATCH** on every record, and the counterparty number appears in two formats inside the same thread. That points at the export re-hashing a re-serialized record after a phone-number normalization change, rather than re-hashing the bytes stored at ingestion.

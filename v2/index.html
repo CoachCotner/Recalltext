@@ -7,13 +7,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Michroma&display=swap">
 <style>
 :root{
-  --bg:#F4F1EC;--card:#FFFFFF;--line:color-mix(in srgb,#2B4169 22%,transparent);--ink:#111C32;--ink2:#2A3650;--mute:#515D71;
+  --bg:#F6F5F1;--card:#FFFFFF;--line:#E3E1DB;--ink:#111C32;--ink2:#3A465E;--mute:#6B7688;--ok:#16A34A;
   --hd:#071B42;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.7);--hd-field:rgba(237,237,237,.14);
   --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 10%,#FFFFFF);--orange-line:color-mix(in srgb,#C56230 45%,transparent);
   --eyebrow:#B95722;
-  --txt-c:#2B4169;--call-c:#0F766E;--vm-c:#16A34A;--miss-c:#B95722;--mail-c:#5B4B8A;
+  --txt-c:#2B4169;--call-c:#2B4169;--vm-c:#2B4169;--miss-c:#B95722;--mail-c:#2B4169;
   --amber:#B95722;--amber-soft:color-mix(in srgb,#B95722 9%,#FFFFFF);--amber-line:color-mix(in srgb,#B95722 35%,transparent);
-  --in-b:#F4F1EC;--out-b:color-mix(in srgb,#C56230 12%,#FFFFFF);--hover:#F4F1EC;--drop:color-mix(in srgb,#C56230 14%,#FFFFFF);--sel:color-mix(in srgb,#C56230 8%,#FFFFFF);
+  --in-b:#F1F0EB;--out-b:color-mix(in srgb,#2B4169 9%,#FFFFFF);--hover:#F6F5F1;--drop:color-mix(in srgb,#2B4169 12%,#FFFFFF);--sel:color-mix(in srgb,#2B4169 7%,#FFFFFF);
   --shadow:0 6px 24px rgba(7,27,66,.16);
 }
 @media (prefers-color-scheme:dark){
@@ -22,7 +22,7 @@
     --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
     --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
     --eyebrow:#E8793A;
-    --txt-c:#9FB3D9;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#E8793A;--mail-c:#B9A7E8;
+    --txt-c:#9FB3D9;--call-c:#9FB3D9;--vm-c:#9FB3D9;--miss-c:#E8793A;--mail-c:#9FB3D9;--ok:#4ADE80;
     --amber:#E8793A;--amber-soft:color-mix(in srgb,#B95722 22%,#071B42);--amber-line:color-mix(in srgb,#E8793A 40%,transparent);
     --in-b:#0D2650;--out-b:color-mix(in srgb,#C56230 24%,#071B42);--hover:#0D2650;--drop:color-mix(in srgb,#C56230 24%,#071B42);--sel:color-mix(in srgb,#C56230 16%,#071B42);
     --shadow:0 6px 24px rgba(0,0,0,.5);
@@ -33,7 +33,7 @@
     --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
     --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
     --eyebrow:#E8793A;
-    --txt-c:#9FB3D9;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#E8793A;--mail-c:#B9A7E8;
+    --txt-c:#9FB3D9;--call-c:#9FB3D9;--vm-c:#9FB3D9;--miss-c:#E8793A;--mail-c:#9FB3D9;--ok:#4ADE80;
     --amber:#E8793A;--amber-soft:color-mix(in srgb,#B95722 22%,#071B42);--amber-line:color-mix(in srgb,#E8793A 40%,transparent);
     --in-b:#0D2650;--out-b:color-mix(in srgb,#C56230 24%,#071B42);--hover:#0D2650;--drop:color-mix(in srgb,#C56230 24%,#071B42);--sel:color-mix(in srgb,#C56230 16%,#071B42);
     --shadow:0 6px 24px rgba(0,0,0,.5);
@@ -73,6 +73,10 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .left{flex:1 1 auto}
 .tour{position:absolute;top:58px;left:12px;right:12px;z-index:90;transition:top .2s,bottom .2s;}
 .tour.bottom{top:auto;bottom:12px}
+.tip{position:absolute;left:12px;right:12px;top:58px;z-index:86;background:var(--hd);color:#fff;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.4;display:flex;gap:10px;align-items:flex-start;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tip.bottom{top:auto;bottom:118px}
+.tip[hidden]{display:none}
+.tipx{flex:none;background:var(--orange);color:#fff;font-weight:800;font-size:11px;border-radius:999px;padding:4px 10px}
 .tour{background:var(--hd);color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .tour-h{display:flex;align-items:center;gap:8px;font-size:14px}
 .tour-n{background:var(--orange);color:#fff;font-weight:800;font-size:11px;border-radius:999px;padding:2px 8px;white-space:nowrap}
@@ -108,7 +112,12 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .rowact .btn{padding:4px 9px;font-size:11px}
 .frow.closed{opacity:.6}
 .fdiv{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:10px 0 2px}
-.pop .pbtns{display:flex;gap:6px;padding:6px 8px 4px;justify-content:flex-end}
+.pop .pbtns{display:flex;gap:6px;padding:6px 8px 4px;justify-content:flex-end;align-items:center}
+.pop .pbtns .grow{flex:1}
+.notetxt{display:block;width:calc(100% - 16px);margin:4px 8px 0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);resize:none;outline:0}
+.notetxt:focus{border-color:var(--orange)}
+#micbtn.on{border-color:var(--orange);color:var(--orange)}
+.rolelist{max-height:240px;overflow-y:auto}
 .srow .search{flex:1;min-width:0}
 .dbtn{display:inline-flex;align-items:center;gap:5px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink2);font-size:12px;font-weight:700;white-space:nowrap}
 .dbtn.on{border-color:var(--orange);background:var(--orange-soft);color:var(--amber)}
@@ -200,13 +209,13 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .pfix b{display:inline;font-size:inherit}
 .pfix code{display:block;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--eyebrow);margin-top:3px}
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;flex:none}
-.pill.ok{color:var(--vm-c);background:color-mix(in srgb,var(--vm-c) 12%,transparent)}
+.pill.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
 .pwarn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:var(--orange-soft);border:1px solid var(--orange-line);color:var(--eyebrow);font-size:12px;font-weight:700}
 .pwarn span{flex:1;min-width:0}
 .pwarn .btn{padding:5px 10px}
 .narrow .strip .lbl a{color:var(--eyebrow);font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0}
 .cnt{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums;display:inline-flex;gap:8px}
-.fchip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px 2px 5px;border-radius:999px;border:1px solid var(--orange-line);background:var(--orange-soft);color:var(--amber);white-space:nowrap}
+.fchip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px 2px 5px;border-radius:999px;border:1px solid color-mix(in srgb,#2B4169 28%,transparent);background:var(--sel);color:var(--ink2);white-space:nowrap}
 .fchip.none{border-style:dashed;color:var(--mute);background:transparent;border-color:var(--line)}
 .rside{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .when{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -238,12 +247,14 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .card .h .ts{margin-left:auto;font-weight:500;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
 .card .q{font-style:italic;color:var(--ink2);margin-top:4px;font-size:13px}
 .card .n{margin-top:5px;font-size:12px;color:var(--ink2)}
-.ifile{opacity:.35;transition:opacity .12s;align-self:center;padding:4px;border-radius:6px;color:var(--mute)}
+.iact{display:flex;flex-direction:column;gap:4px;align-self:center}
+.ifile{display:inline-flex;align-items:center;gap:3px;padding:3px 6px;border-radius:6px;color:var(--mute);border:1px dashed var(--line);font-size:10px;font-weight:700}
+.ifile .ic{width:12px;height:12px}
 .item:hover .ifile{opacity:1}
 .ifile:hover{color:var(--orange);background:var(--orange-soft)}
 .hash{display:flex;align-items:center;gap:5px;margin-top:6px;font-size:10px;color:var(--mute);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hash .ic{width:10px;height:10px;color:var(--vm-c)}
-.hash b{color:var(--vm-c);font-weight:700}
+.hash .ic{width:10px;height:10px;color:var(--mute)}
+.hash b{color:var(--ink2);font-weight:700}
 .k-lock{color:var(--mute);background:color-mix(in srgb,var(--mute) 12%,transparent)}
 .ifolders{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
 .ifolders span{font-size:10px;font-weight:700;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
@@ -294,7 +305,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .pop .po .fi{font-size:18px;width:24px;text-align:center}
 .pop .po .fn{flex:1;font-weight:600;font-size:13px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pop .po .ck{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff}
-.pop .po.in .ck{background:var(--vm-c);border-color:var(--vm-c)}
+.pop .po.in .ck{background:var(--ok);border-color:var(--ok)}
 .pop .ps{font-size:11px;color:var(--mute);padding:0 10px 6px}
 .pop .done{display:flex;justify-content:flex-end;gap:4px;padding:6px 8px 2px}
 .pop .newrow{display:flex;gap:6px;padding:6px 8px 4px;border-top:1px solid var(--line);margin-top:4px}
@@ -322,7 +333,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .xh .xt b{display:block;font-size:14px}
 .xh .xt span{display:block;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chk{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;border:1px solid var(--line);font-weight:700;font-size:12px;flex-wrap:wrap}
-.chk.ok{border-color:color-mix(in srgb,var(--vm-c) 40%,transparent);background:color-mix(in srgb,var(--vm-c) 8%,transparent);color:var(--vm-c)}
+.chk.ok{border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:color-mix(in srgb,var(--ok) 8%,transparent);color:var(--ok)}
 .chk.warn{border-color:var(--orange-line);background:var(--orange-soft);color:var(--amber)}
 .chk .d{margin-left:auto;font-weight:500;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
 .chk .fix{width:100%;display:flex;gap:6px;margin-top:4px}
@@ -345,7 +356,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .tiles div small{font-size:8px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
 .hashbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;line-height:1.45}
 .hashbox b{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--eyebrow);margin-bottom:2px}
-.hashbox .ok{color:var(--vm-c);font-weight:700}
+.hashbox .ok{color:var(--ok);font-weight:700}
 .hashbox .why{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11px;color:var(--ink2);margin-top:2px;word-break:normal}
 .segx{display:flex;gap:6px}
 .segx button{flex:1;padding:9px 8px;border-radius:10px;border:1.5px solid var(--line);font-size:12px;font-weight:700;color:var(--ink2);background:var(--card)}
@@ -380,6 +391,10 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .sc .n{font-variant-numeric:tabular-nums;color:var(--mute);font-weight:600}
 .narrow .row{grid-template-columns:36px 1fr auto;gap:10px;padding:11px 12px}
 .narrow .l1 .role{display:none}
+.rolepill{display:inline-flex;align-items:center;gap:2px;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);background:var(--card);white-space:nowrap;flex:none;line-height:1.4}
+.rolepill.none{border-style:dashed;color:var(--mute)}
+.rolepill:hover{border-color:var(--orange);color:var(--orange)}
+.l1 .rolepill{margin-left:2px}
 .narrow .bubble,.narrow .card{max-width:84%}
 .narrow .ifile{opacity:1}
 .narrow .thread{padding:4px 10px 12px}
@@ -447,6 +462,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 <div class="ov" id="sov"><div class="sheet" id="ssheet" role="dialog" aria-label="Settings"></div></div>
 <div class="ov" id="pov"><div class="sheet" id="psheet" role="dialog" aria-label="Permissions"></div></div>
 <div class="pop" id="pop" role="dialog" aria-label="Add to folder"></div>
+<div class="tip" id="tip" hidden role="note"><span id="tip-t"></span><button class="tipx" onclick="tipDone()">Got it ×</button></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
@@ -459,7 +475,7 @@ const ME = 'Lauren Cotner';
   const ch=DATA.contacts.find(c=>c.id==='c13'); if(ch&&!ch.items.some(i=>i.id==='c13_call_direct')){ const t=new Date(2026,2,12,10,28).getTime(); ch.items.push({id:'c13_call_direct',type:'call',dir:'in',missed:false,t,dur:'4:12',note:'Chris called me directly, off the group: can Paul’s rate lock extend if we write tomorrow? Told him yes, 15 days.',folders:[5]}); ch.items.sort((a,b)=>a.t-b.t); if(t>ch.last) ch.last=t; }
   if(!DATA.contacts.some(c=>c.id==='cpriv')){ const t=new Date(2026,2,19,8,12).getTime(); DATA.contacts.push({id:'cpriv',name:'Private number',role:'caller ID withheld',number:'no number',avatar:'?',color:'#94A3B8',spam:false,unknown:true,priv:true,items:[{id:'cpriv_c0',type:'call',dir:'in',missed:true,t,dur:'0:00',note:'',folders:[]}],last:t}); }
 })();
-(function loadState(){ try{ const s=JSON.parse(localStorage.getItem('cl-state')||'null'); if(!s||s.v!==2){ try{ localStorage.removeItem("cl-state"); }catch(e){} return; } if(Array.isArray(s.folders)&&s.folders.length) DATA.folders.splice(0,DATA.folders.length,...s.folders); DATA.contacts.forEach(c=>c.items.forEach(i=>{ if(s.items&&Array.isArray(s.items[i.id])) i.folders=s.items[i.id].slice(); })); Object.entries(s.labels||{}).forEach(([cid,l])=>{ const c=DATA.contacts.find(x=>x.id===cid); if(c){ c.name=l.name; c.role=l.role; c.unknown=false; c._labeled=true; } }); if(Array.isArray(s.exports)) DATA.exports=s.exports; if(Array.isArray(s.hidden)) DATA.hidden=s.hidden; if(Array.isArray(s.perms)) DATA.perms=s.perms; }catch(e){} })();
+(function loadState(){ try{ const s=JSON.parse(localStorage.getItem('cl-state')||'null'); if(!s||s.v!==2){ try{ localStorage.removeItem("cl-state"); }catch(e){} return; } if(Array.isArray(s.folders)&&s.folders.length) DATA.folders.splice(0,DATA.folders.length,...s.folders); DATA.contacts.forEach(c=>c.items.forEach(i=>{ if(s.items&&Array.isArray(s.items[i.id])) i.folders=s.items[i.id].slice(); })); Object.entries(s.labels||{}).forEach(([cid,l])=>{ const c=DATA.contacts.find(x=>x.id===cid); if(c){ c.name=l.name; c.role=l.role; c.unknown=false; c._labeled=true; } }); if(Array.isArray(s.exports)) DATA.exports=s.exports; if(Array.isArray(s.hidden)) DATA.hidden=s.hidden; if(s.notes) DATA.contacts.forEach(c=>c.items.forEach(i=>{ if(i.id in s.notes){ i.note=s.notes[i.id]; i._noted=true; } })); if(Array.isArray(s.tips)) DATA.tips=s.tips; if(Array.isArray(s.perms)) DATA.perms=s.perms; }catch(e){} })();
 DATA.contacts.sort((a,b)=>((a.spam?1:0)-(b.spam?1:0))||(b.last-a.last));
 const state = {
   contacts: DATA.contacts, folders: DATA.folders,
@@ -474,7 +490,7 @@ const state = {
     {k:'rcs',name:'RCS messages',why:'Notification access · captures RCS chats your messaging app shows',ok:false,fix:'Settings › Notifications › Notification access › CommLocker'},
     {k:'vm',name:'Voicemail audio',why:'Reads visual-voicemail recordings when the carrier exposes them',ok:true,fix:'Settings › Apps › CommLocker › Permissions › Files'},
   ],
-  pop: null, range:{from:null,to:null}, selMode:false, hidden:new Set(DATA.hidden||[])
+  pop: null, range:{from:null,to:null}, selMode:false, hidden:new Set(DATA.hidden||[]), tips:new Set(DATA.tips||[]), tlPick:false
 };
 state.folders.forEach(f=>{ if(!f.status) f.status='active'; });
 const activeFolders=()=>state.folders.filter(f=>f.status!=='closed');
@@ -495,7 +511,14 @@ const rangeOn = r => !!(r && (r.from||r.to));
 const inRange = (i,r) => (!r.from||i.t>=r.from)&&(!r.to||i.t<=r.to);
 const yr = t => new Date(t).getFullYear();
 function fmtRange(r,short){ if(!rangeOn(r)) return 'All dates'; const Y=yr(LATEST); const f=t=>fmtDay(t)+((!short||yr(t)!==Y)?', '+yr(t):''); return (r.from?f(r.from):'Start')+' – '+(r.to?f(r.to):'today'); }
+const PEOPLE_PAL=['#2B4169','#0F766E','#B45309','#6D28D9','#BE185D','#0369A1','#4D7C0F','#9A3412','#1D4ED8','#7C2D12','#0E7490','#A21CAF'];
+function colorOf(c){ if(!c) return '#94A3B8'; if(c.spam||c.unknown) return '#94A3B8'; if(c.group) return '#0EA5E9';
+  if(state.folder){ const seen=[]; state.contacts.forEach(x=>x.items.forEach(i=>{ if(i.folders.includes(state.folder)){ const who=x.group?(i.from||x.id):x.id; if(!seen.includes(who)) seen.push(who); } })); const k=seen.indexOf(c.id); if(k>=0) return PEOPLE_PAL[k%PEOPLE_PAL.length]; }
+  return PEOPLE_PAL[Math.max(0,state.contacts.indexOf(c))%PEOPLE_PAL.length]; }
 const senderOf = (i,c) => i.dir==='out' ? null : (c.group ? (contactById(i.from)||c) : c);
+const roleIn = (c,fid) => { const f=fid?folderById(fid):null; return (f&&f.roles&&f.roles[c.id])||c.role||''; };
+const ROLES=['Buyer','Seller','Buyer Client','Seller\'s Agent','Co-op Agent','Lender','Escrow Officer','Title','Inspector','Appraiser','Contractor','Transaction Coordinator','Referring Agent','Tenant','Landlord','Attorney','Potential Client','Personal','Other'];
+function rolePill(c,fid){ if(c.group||c.spam||c.unknown) return ''; const r=roleIn(c,fid); return `<button class="rolepill ${r?'':'none'}" title="${fid?'Role in this folder':'Usual role'}" onclick="event.stopPropagation();openRole(event,'${c.id}',${fid||'null'})">${esc(r||'set role')} ▾</button>`; }
 const numOf = c => c.priv ? 'caller ID withheld' : c.number;
 const partiesOf = list => { const s=new Set(); list.forEach(({i,c})=>{ if(c.group) c.members.forEach(m=>{ const x=contactById(m); if(x) s.add(x); }); else s.add(c); }); return [...s].sort((a,b)=>a.name.localeCompare(b.name)); };
 const itemsFor = c => { const base = state.folder ? c.items.filter(i=>i.folders.includes(state.folder)) : c.items; return rangeOn(state.range) ? base.filter(i=>inRange(i,state.range)) : base; };
@@ -525,11 +548,12 @@ function hashOf(i){ return 'sha256:'+fullHash(itemSeed(i)).slice(0,16)+'…'; }
 /* ---------- three-dot menu ---------- */
 function placePop(ev,pop){ const app=document.getElementById('app').getBoundingClientRect(); const r=ev.currentTarget.getBoundingClientRect(); const w=Math.min(280,app.width-24); pop.style.width=w+'px'; const h=pop.offsetHeight; let x=Math.min(r.left-app.left,app.width-w-12), y=r.bottom-app.top+6; if(y+h>app.height-12) y=Math.max(12,r.top-app.top-h-6); pop.style.left=Math.max(12,x)+'px'; pop.style.top=y+'px'; }
 function openMenu(ev,cid){
-  ev.stopPropagation(); const c=contactById(cid); state.pop={kind:'menu'};
+  ev.stopPropagation(); showTip('menu'); const c=contactById(cid); state.pop={kind:'menu'};
   const pop=document.getElementById('pop');
   pop.innerHTML=`<div class="pt">${esc(c.name)}</div>
     <button class="po" onclick="closePop();startFiling('${cid}')"><span class="fi"><svg class="ic"><use href="#i-folder"/></svg></span><span class="fn">Add to folder…<small>Select the texts, calls and voicemails, then one or more folders. No folder yet? Make one right there.</small></span></button>
     <button class="po" onclick="closePop();openExport({kind:'conv',id:'${cid}'})"><span class="fi"><svg class="ic"><use href="#i-pdf"/></svg></span><span class="fn">Export this conversation…<small>PDF with both hashes on every record, plus a ZIP of photos, videos and voicemails.</small></span></button>
+    ${c.group||c.spam?'':`<button class="po" onclick="closePop();setTimeout(()=>openRoleCenter('${cid}',state.folder),0)"><span class="fi"><svg class="ic"><use href="#i-check"/></svg></span><span class="fn">${roleIn(c,state.folder)?'Change role · '+esc(roleIn(c,state.folder)):'Set role…'}<small>${state.folder?'In this folder only.':'Usual role. Inside a folder you can pick a different one.'}</small></span></button>`}
     ${c.group||c.unknown?`<button class="po" onclick="closePop();setTimeout(()=>openRename('${cid}'),0)"><span class="fi"><svg class="ic"><use href="#i-edit"/></svg></span><span class="fn">${c.group?'Name this group…':'Name this number…'}<small>${c.group?'A name for the room, e.g. “CommLocker Corp”. Members keep their own names and roles.':'The carrier number stays on every record; the name is a label.'}</small></span></button>`:''}
     <button class="po" onclick="closePop();startSelect('${cid}')"><span class="fi"><svg class="ic"><use href="#i-check"/></svg></span><span class="fn">Export with other people…<small>Select more people. Each one gets its own PDF, ZIP and Export ID in one go. Nothing is merged.</small></span></button>
     <button class="po" onclick="closePop();toggleOpen('${cid}')"><span class="fi"><svg class="ic"><use href="#i-text"/></svg></span><span class="fn">${state.open.has(cid)?'Collapse':'Open'} conversation</span></button>`;
@@ -560,7 +584,7 @@ function rebuildExport(){
 }
 function openExport(sc){
   ex={sc,now:new Date(),pdf:true,zip:true,preview:false,range:{...state.range},pv:0};
-  rebuildExport(); renderExport(); document.getElementById('ov').classList.add('open');
+  rebuildExport(); renderExport(); document.getElementById('ov').classList.add('open'); showTip('export');
 }
 function dropFromBatch(id){ ex.sc={kind:'batch',ids:ex.sc.ids.filter(x=>x!==id)}; if(!ex.sc.ids.length){ closeExport(); endSelect(); return; } rebuildExport(); renderExport(); }
 function closeExport(){ document.getElementById('ov').classList.remove('open'); ex=null; }
@@ -627,7 +651,7 @@ function renderPreview(x){
     return `<p><b>${fmtDivider(i.t).replace(/^\w+, /,'')} ${fmtTime(i.t)}</b><br>${line} - ${esc(who)}<br>${i.type==='email'?`${i.dir==='out'?'To':'From'}: ${esc(i.dir==='out'?i.to:i.from)}<br><b>${esc(i.subject)}</b>`:`${esc(nm)} | ${i.dir==='out'?'To':'From'} carrier #: ${esc(num)}${c.priv?' · call log ref '+i.id:''}${i.dir==='out'?' · Device line: '+EXPORTER.line:''}`}<br>${esc(i.text||i.transcript||i.note||'')}<br><span class="mono">Ingestion record hash (SHA-256): ${h}<br>Current record hash (SHA-256): ${h}</span><br>Verification: <span class="m">MATCH</span></p>`; };
   return `<div class="preview">
     <div class="pvhead"><img class="wm" alt="CommLocker" src="data:image/png;base64,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"></div><div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#111C32;font-weight:700;margin-bottom:6px">Logged<span style="color:#B95722">.</span> Secure<span style="color:#B95722">.</span> Tamper-evident<span style="color:#B95722">.</span></div><h5>Tamper-evident communication record</h5>
-    <div class="row2"><span>Record:</span><span>${esc(title)}</span><span>Scope:</span><span>${sc.kind==='conv'?'Single conversation/thread':'Folder record'}${rangeOn(ex.range)?' · limited to '+fmtRange(ex.range):''}</span><span>Export ID:</span><span>${id}</span><span>Generated:</span><span>${fmtFull(now)}</span><span>Exporter:</span><span>${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span><span>Date range:</span><span>${first} – ${last}</span><span>Messages:</span><span>${k.text}</span><span>Calls:</span><span>${k.call}</span><span>Voicemails:</span><span>${k.vm}</span><span>Emails:</span><span>${k.email}</span><span>Attachments:</span><span>${files.length}</span><span>Participants:</span><span>${parties.length+1}</span>${parties.map(c=>`<span>Participant (party):</span><span>${esc(c.name)}${c.role&&!c.unknown?' · '+esc(c.role):''} · ${esc(numOf(c))}</span>`).join('')}${groups.map(g=>`<span>Group text:</span><span>“${esc(g.name)}” · ${g.members.map(m=>esc((contactById(m)||{}).name)).join(', ')}, ${EXPORTER.name}</span>`).join('')}</div>
+    <div class="row2"><span>Record:</span><span>${esc(title)}</span><span>Scope:</span><span>${sc.kind==='conv'?'Single conversation/thread':'Folder record'}${rangeOn(ex.range)?' · limited to '+fmtRange(ex.range):''}</span><span>Export ID:</span><span>${id}</span><span>Generated:</span><span>${fmtFull(now)}</span><span>Exporter:</span><span>${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span><span>Date range:</span><span>${first} – ${last}</span><span>Messages:</span><span>${k.text}</span><span>Calls:</span><span>${k.call}</span><span>Voicemails:</span><span>${k.vm}</span><span>Emails:</span><span>${k.email}</span><span>Attachments:</span><span>${files.length}</span><span>Participants:</span><span>${parties.length+1}</span>${parties.map(c=>`<span>Participant (party):</span><span>${esc(c.name)}${roleIn(c,sc.kind==='folder'?sc.id:null)&&!c.unknown?' · '+esc(roleIn(c,sc.kind==='folder'?sc.id:null)):''} · ${esc(numOf(c))}</span>`).join('')}${groups.map(g=>`<span>Group text:</span><span>“${esc(g.name)}” · ${g.members.map(m=>esc((contactById(m)||{}).name)).join(', ')}, ${EXPORTER.name}</span>`).join('')}</div>
     <hr><h5>Conversation timeline (first ${Math.min(2,n)} of ${n})</h5>${list.slice(0,2).map(entry).join('')}${n>2?`<p style="color:#666">… ${n-2} more records, each with both hashes and a MATCH line …</p>`:''}
     <hr><h5>Attachment index</h5>${files.length?files.map(f=>`<p class="mono">${esc(f.name)} · sha256:${fullHash(f.seed)}</p>`).join(''):'<p>No attachments in scope.</p>'}
     <hr><h5>Chain of custody</h5><p>This record was generated on-device by CommLocker from device-native communication data available to the app. Message content, call records, voicemail records, attachments and record hashes are processed locally. Hashes verify that included items are unaltered since first observation by CommLocker; this record makes no claim of completeness. Notes are labeled separately and do not alter original communication content.</p>
@@ -644,12 +668,14 @@ function payloadItems(p){
   if(p.kind==='item') return [contactById(p.cid).items.find(i=>i.id===p.id)];
   if(p.kind==='multi') return [...state.selected].flatMap(id=>contactById(id).items);
   if(p.kind==='items') return contactById(p.cid).items.filter(i=>state.picked.has(i.id));
+  if(p.kind==='sel') return state.contacts.flatMap(c=>c.items.filter(i=>state.picked.has(i.id)));
   return [];
 }
 function payloadName(p){
   if(p.kind==='conv') return contactById(p.id).name;
   if(p.kind==='item'){ const i=payloadItems(p)[0]; return (i.type==='text'?'message':i.type==='vm'?'voicemail':'call')+' from '+contactById(p.cid).name; }
   if(p.kind==='items'){ const n=payloadItems(p).length; return n+' item'+(n!==1?'s':'')+' from '+contactById(p.cid).name; }
+  if(p.kind==='sel'){ const n=payloadItems(p).length; return n+' selected item'+(n!==1?'s':''); }
   return state.selected.size+' conversations';
 }
 function fileTo(p,fid){
@@ -680,7 +706,7 @@ function togglePop(fid){ const p=state.pop; if(inFolder(p,fid)) unfileFrom(p,fid
 function openPopRefresh(){ const p=state.pop; const pop=document.getElementById('pop'); const af=activeFolders(); pop.querySelectorAll('.po').forEach((b,i)=>b.classList.toggle('in',inFolder(p,af[i].id))); }
 function popNew(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){el.focus({preventScroll:true});return;} const f=createFolder(n); fileTo(state.pop,f.id); closePop(); }
 function closePop(){ const p=state.pop; document.getElementById('pop').classList.remove('open'); state.pop=null; if(p&&p.kind==='multi'){ state.selected.clear(); render(); } }
-document.addEventListener('click',e=>{ if(!e.target.closest('#pop')) closePop(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('#pop')&&!e.target.closest('#tip')) closePop(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePop(); if(ex) closeExport(); if(document.getElementById('fov').classList.contains('open')) closeFolderSheet(); closeSettings(); if(document.getElementById('pov').classList.contains('open')) closePerms(); } });
 
 /* ---------- drag & drop ---------- */
@@ -724,7 +750,7 @@ function searchMatch(c,q){
 }
 function render(){
   document.getElementById('app').classList.add('narrow');
-  renderBanner(); renderChips(); renderRows(); renderStrip(); renderSelbar(); dropTargets();
+  renderBanner(); renderChips(); renderRows(); renderStrip(); renderSelbar(); dropTargets(); if(!state.folder&&!state.selMode) showTip('strip');
 }
 function renderSelbar(){
   const sb=document.getElementById('selbar'); sb.hidden=!state.selMode; if(!state.selMode) return;
@@ -740,9 +766,9 @@ function renderBanner(){
   const parts=[s.contacts+' '+(s.contacts===1?'person':'people'),s.texts?s.texts+' text'+(s.texts!==1?'s':''):'',s.calls?s.calls+' call'+(s.calls!==1?'s':''):'',s.vms?s.vms+' voicemail'+(s.vms!==1?'s':''):'',s.emails?s.emails+' email'+(s.emails!==1?'s':''):'',span].filter(Boolean);
   el.innerHTML=`<div class="fhead">
     <button class="btn back" onclick="openFolder(null)"><svg class="ic"><use href="#i-back"/></svg> All conversations</button>
-    <div class="fttl"><span class="fi">${f.icon}</span><b>${esc(f.name)}</b>${closed?`<span class="fst">Closed</span>`:''}<button class="more-btn" title="Rename, close or delete this folder" aria-label="Folder options" onclick="openFolderSheet(${f.id})">⋯</button></div>
+    <div class="fttl"><span class="fi">${f.icon}</span><b>${esc(f.name)}</b>${closed?`<span class="fst">Closed</span>`:''}<button class="btn primary" onclick="openExport({kind:'folder',id:${f.id}})"><svg class="ic"><use href="#i-pdf"/></svg> Export</button><button class="more-btn" title="Rename, close or delete this folder" aria-label="Folder options" onclick="openFolderSheet(${f.id})">⋯</button></div>
     <div class="fmeta">${parts.join(' · ')}${closed?' · closed '+fmtDay(f.closedAt)+', '+yr(f.closedAt):''}</div>
-    <div class="frowx"><div class="seg dark" role="group" aria-label="Folder view"><button aria-pressed="${state.view==='timeline'}" onclick="state.view='timeline';render()">Timeline</button><button aria-pressed="${state.view==='person'}" onclick="state.view='person';render()">By person</button></div><span class="grow"></span>${closed?`<button class="btn" onclick="reopenFolder(${f.id})">Reopen</button>`:''}<button class="btn primary" onclick="openExport({kind:'folder',id:${f.id}})"><svg class="ic"><use href="#i-pdf"/></svg> Export…</button></div>
+    <div class="frowx"><div class="seg dark" role="group" aria-label="Folder view"><button aria-pressed="${state.view==='timeline'}" onclick="state.view='timeline';render()">Timeline</button><button aria-pressed="${state.view==='person'}" onclick="state.view='person';render()">By person</button></div><span class="grow"></span>${closed?`<button class="btn" onclick="reopenFolder(${f.id})">Reopen</button>`:''}${state.view==='timeline'?`<button class="btn ${state.tlPick?'on':''}" onclick="tlSelect(${!state.tlPick})">${state.tlPick?'Cancel':'Select items'}</button>`:''}</div>
   </div>`;
 }
 function renderChips(){
@@ -776,9 +802,9 @@ function renderRows(){
     const q=state.q.trim().toLowerCase(); const sm0=q?searchMatch(c,q):null; const why=sm0&&sm0.rank===1?`<span class="fchip none">mentions “${esc(state.q.trim())}” in ${sm0.hits} item${sm0.hits!==1?'s':''}</span>`:'';
     const sm=state.selMode, sel=state.selected.has(c.id);
     return `<div class="row ${open?'open':''} ${c.spam?'dim':''} ${sm?'selmode':''}" data-cid="${c.id}" draggable="${!sm}" ondragstart="dragStart(event,{kind:'conv',id:'${c.id}'})" ondragend="dragEnd(event)" onclick="${sm?`toggleSel('${c.id}')`:`toggleOpen('${c.id}')`}">
-      ${sm?`<input type="checkbox" class="sel" ${sel?'checked':''} aria-label="Select ${esc(c.name)} for export" onclick="event.stopPropagation();toggleSel('${c.id}')">`:''}<div class="av" style="background:${c.color}">${esc(c.avatar)}</div>
+      ${sm?`<input type="checkbox" class="sel" ${sel?'checked':''} aria-label="Select ${esc(c.name)} for export" onclick="event.stopPropagation();toggleSel('${c.id}')">`:''}<div class="av" style="background:${colorOf(c)}">${esc(c.avatar)}</div>
       <div style="min-width:0">
-        <div class="l1"><b>${esc(c.name)}</b><span class="role">${esc(c.group?'group text · '+c.members.map(m=>(contactById(m)||{}).name).filter(Boolean).join(', ')+', you':[c.role,c.number].filter(Boolean).join(' · '))}</span></div>
+        <div class="l1"><b>${esc(c.name)}</b>${c.group?`<span class="role">${esc('group text · '+c.members.map(m=>(contactById(m)||{}).name).filter(Boolean).join(', ')+', you')}</span>`:(state.folder||roleIn(c,null)?rolePill(c,state.folder):'')}</div>
         <div class="l2"><span class="kind ${kindClass(last)}"><svg class="ic"><use href="#${kindIcon(last)}"/></svg>${kindLabel(last)}</span><span class="prev">${esc(summary(last))}</span></div>
         <div class="l3"><span class="cnt">${cnt}</span>${lock}${why}${chips}</div>${act}
       </div>
@@ -791,18 +817,18 @@ function itemHtml(i,c,pm,withName){
   const rest=state.folder&&!i.folders.includes(state.folder);
   const hline=`<div class="hash"><svg class="ic"><use href="#i-lock"/></svg><b>hashed at ingestion</b> ${fmtDay(i.t)} ${fmtTime(i.t)} · ${hashOf(i)}</div>`;
   const fchips=i.folders.length?`<div class="ifolders">${i.folders.map(folderById).filter(Boolean).map(f=>`<span>${f.icon} ${esc(cut25(f.name))}<button class="fx" title="Take this item out of ${esc(f.name)}" onclick="event.stopPropagation();unfileItem('${c.id}','${i.id}',${f.id})">×</button></span>`).join('')}</div>`:'';
-  const fileBtn=`<button class="ifile" title="Add this ${i.type==='text'?'message':i.type} to a folder" onclick="openPop(event,{kind:'item',cid:'${c.id}',id:'${i.id}'})"><svg class="ic"><use href="#i-folder"/></svg></button>`;
+  const fileBtn=`<span class="iact"><button class="ifile" title="Add this ${i.type==='text'?'message':i.type} to another folder" onclick="openPop(event,{kind:'item',cid:'${c.id}',id:'${i.id}'})"><svg class="ic"><use href="#i-folder"/></svg>${i.folders.length?'+':'folder'}</button><button class="ifile" title="${i.note?'Edit your note':'Add a note, typed or spoken'}" onclick="openNote(event,'${c.id}','${i.id}')"><svg class="ic"><use href="#i-edit"/></svg>${i.note?'':'note'}</button></span>`;
   const sd=senderOf(i,c);
-  const nm=withName?`<div class="who2"><span class="av" style="background:${i.dir==='out'?'var(--orange)':(sd||c).color}">${i.dir==='out'?'LC':esc((sd||c).avatar)}</span>${i.dir==='out'?'Lauren → '+(c.group?'group “'+esc(c.name)+'”':esc(c.name)+' · '+esc(numOf(c))):esc(sd.name)+(sd.role?' · '+esc(sd.role):'')+' · '+esc(numOf(sd))}${c.group?`<span class="chan">in group “${esc(c.name)}”</span>`:(i.type==='call'||i.type==='vm')?`<span class="chan">direct</span>`:''}</div>`:'';
+  const nm=withName?`<div class="who2"><span class="av" style="background:${i.dir==='out'?'var(--orange)':colorOf(sd||c)}">${i.dir==='out'?'LC':esc((sd||c).avatar)}</span>${i.dir==='out'?'Lauren → '+(c.group?'group “'+esc(c.name)+'”':esc(c.name)+' · '+esc(numOf(c))):esc(sd.name)+' '+rolePill(sd,state.folder)+' · '+esc(numOf(sd))}${c.group?`<span class="chan">in group “${esc(c.name)}”</span>`:(i.type==='call'||i.type==='vm')?`<span class="chan">direct</span>`:''}</div>`:'';
   let body;
   if(i.type==='text'){
-    body=`<div class="bubble"><div class="who">${(()=>{ const sd=senderOf(i,c); return sd?esc(sd.name+(c.group&&sd.role?' · '+sd.role:'')+(c.group?' · '+numOf(sd):'')):esc(i.sender); })()}</div><div class="t">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att" title="${esc(a.name)}">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.caption||a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}<div class="ts">${fmtTime(i.t)}</div>${hline}${fchips}</div>`;
+    body=`<div class="bubble"><div class="who">${(()=>{ const sd=senderOf(i,c); return sd?esc(sd.name+(c.group&&roleIn(sd,state.folder)?' · '+roleIn(sd,state.folder):'')+(c.group?' · '+numOf(sd):'')):esc(i.sender); })()}</div><div class="t">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att" title="${esc(a.name)}">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.caption||a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Your note</b>${esc(i.note)}</div>`:''}<div class="ts">${fmtTime(i.t)}</div>${hline}${fchips}</div>`;
   } else if(i.type==='email'){
-    body=`<div class="card mail"><div class="h"><svg class="ic"><use href="#i-mail"/></svg>${kindLabel(i)}<span class="ts">${fmtTime(i.t)}</span></div><div class="sub">${esc(i.subject)}</div><div class="meta">${i.dir==='out'?'To':'From'}: ${esc(i.dir==='out'?i.to:i.from)}</div><div class="n">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att" title="${esc(a.name)}">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
+    body=`<div class="card mail"><div class="h"><svg class="ic"><use href="#i-mail"/></svg>${kindLabel(i)}<span class="ts">${fmtTime(i.t)}</span></div><div class="sub">${esc(i.subject)}</div><div class="meta">${i.dir==='out'?'To':'From'}: ${esc(i.dir==='out'?i.to:i.from)}</div><div class="n">${esc(i.text)}</div>${(i.att||[]).map(a=>`<span class="att" title="${esc(a.name)}">${a.type==='pdf'?'📄':a.type==='video'?'🎬':'🖼'} ${esc(a.name)}</span>`).join('')}${i.note?`<div class="note"><b>Your note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
   } else if(i.type==='vm'){
-    body=`<div class="card vm"><div class="h"><svg class="ic"><use href="#i-vm"/></svg>${kindLabel(i)} · ${i.dur}<span class="ts">${fmtTime(i.t)}</span></div><div class="q">“${esc(i.transcript)}”</div>${i.note?`<div class="note"><b>Agent note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
+    body=`<div class="card vm"><div class="h"><svg class="ic"><use href="#i-vm"/></svg>${kindLabel(i)} · ${i.dur}<span class="ts">${fmtTime(i.t)}</span></div><div class="q">“${esc(i.transcript)}”</div>${i.note?`<div class="note"><b>Your note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
   } else {
-    body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="n">${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
+    body=`<div class="card ${i.missed?'miss':''}"><div class="h"><svg class="ic"><use href="#${kindIcon(i)}"/></svg>${kindLabel(i)}${i.dur&&i.dur!=='0:00'?' · '+i.dur:''}<span class="ts">${fmtTime(i.t)}</span></div>${i.note?`<div class="note"><b>Your note</b>${esc(i.note)}</div>`:''}${hline}${fchips}</div>`;
   }
   const cb=pm?`<input type="checkbox" class="pk" ${pk?'checked':''} onclick="event.stopPropagation();togglePick('${i.id}')" aria-label="Select this ${i.type}">`:'';
   const wrap=`<div class="item ${i.dir==='out'?'out':''} ${rest?'rest':''} ${pm?'pickable':''} ${pk?'picked':''}" draggable="true" ondragstart="event.stopPropagation();dragStart(event,${pm&&pk?`{kind:'items',cid:'${c.id}'}`:`{kind:'item',cid:'${c.id}',id:'${i.id}'}`})" ondragend="dragEnd(event)" onclick="event.stopPropagation();${pm?`togglePick('${i.id}')`:''}">${cb}${body}${pm?'':fileBtn}</div>`;
@@ -814,11 +840,14 @@ function renderTimeline(){
   all.sort((a,b)=>a.i.t-b.i.t);
   if(!all.length) return '<div class="empty">Nothing in this folder yet. Go back to Everything, open a conversation, select the messages, and add them to this folder.</div>';
   const people=[...new Set(all.map(x=>x.c))];
-  let html=`<div class="tlsum"><span>${all.length} items from</span>${people.map(c=>`<span class="fchip" style="border-color:${c.color}55;background:${c.color}14;color:${c.color}">${esc(c.name)}</span>`).join('')}</div><div class="tl">`;
+  let html=`<div class="tlsum"><span>${all.length} items from</span>${people.map(c=>`<span class="fchip" style="border-color:${colorOf(c)}66;background:${colorOf(c)}14;color:${colorOf(c)}">${esc(c.name)}</span>`).join('')}</div><div class="tl">`;
   let lastDay='';
-  all.forEach(({i,c})=>{ const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; } html+=itemHtml(i,c,false,true); });
+  all.forEach(({i,c})=>{ const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; } html+=itemHtml(i,c,state.tlPick,true); });
+  if(state.tlPick){ const n=[...state.picked].filter(id=>all.some(x=>x.i.id===id)).length; html+=`<div class="pickbar" onclick="event.stopPropagation()"><span style="white-space:nowrap">${n} of ${all.length} selected</span><span class="grow"></span><button class="btn primary" ${n?'':'disabled style="opacity:.5"'} onclick="openPop(event,{kind:'sel'})"><svg class="ic"><use href="#i-folder"/></svg> Add selected to folder…</button><button class="btn" ${n?'':'disabled style="opacity:.5"'} onclick="unfileSel()">Take out of this folder</button><button class="btn ghost" onclick="tlSelect(false)">Done</button></div>`; }
   return html+'</div>';
 }
+function tlSelect(on){ state.tlPick=on; if(!on) state.picked.clear(); render(); if(on) showTip('tlselect'); }
+function unfileSel(){ const fid=state.folder; const ids=[...state.picked]; let n=0; state.contacts.forEach(c=>c.items.forEach(i=>{ if(ids.includes(i.id)&&i.folders.includes(fid)){ removeFrom(i,fid); n++; } })); state.picked.clear(); saveState(); toast(n+' item'+(n!==1?'s':'')+' taken out of '+folderById(fid).name+' · still in Everything'); render(); }
 function renderThread(c){
   const show=state.showRest.has(c.id);
   const items=(state.folder&&show)?c.items:itemsFor(c);
@@ -905,6 +934,7 @@ function renderSettings(){
     ${(()=>{ const miss=state.perms.filter(x=>!x.ok).length; return `<button class="srow" onclick="openPerms()"><span class="si" ${miss?'style="background:var(--orange);color:#fff"':''}><svg class="ic"><use href="#${miss?'i-x':'i-check'}"/></svg></span><span class="st">Permissions</span><span class="sv" ${miss?'style="color:var(--eyebrow);font-weight:700"':''}>${miss?miss+' need'+(miss>1?'':'s')+' attention':'All granted'}</span><svg class="ic sc2"><use href="#i-fwd"/></svg></button>`; })()}
     ${row('i-edit','Contact aliases',state.contacts.filter(c=>c._labeled).length+' labeled',keep('Contact aliases'))}
     ${row('i-folder','Storage',state.folders.length+' folders',keep('Storage'))}
+    ${row('i-auto','Tips',state.tips.size?state.tips.size+' seen · show again':'showing','tipsReset()')}
     ${row('i-save','Backup & Restore','1 backup',keep('Backup & Restore'))}
     ${row('i-check','Subscription','Active',keep('Subscription'))}
     ${row('i-x','Diagnostics','restricted',keep('Diagnostics'))}
@@ -934,7 +964,7 @@ function togglePermDemo(){ const x=state.perms.find(p=>p.k==='rcs'); x.ok=false;
 function permBanner(){ const miss=state.perms.filter(x=>!x.ok); if(!miss.length||state.folder) return ''; const x=miss[0]; return `<div class="pwarn"><svg class="ic"><use href="#i-x"/></svg><span>${esc(x.name)} ${miss.length>1?'and '+(miss.length-1)+' more':''} not being captured</span><button class="btn primary" onclick="openPerms()">Fix</button></div>`; }
 
 /* ---------- persistence (this mockup only; the real app has its database) ---------- */
-function saveState(){ try{ const it={}; state.contacts.forEach(c=>c.items.forEach(i=>{ it[i.id]=i.folders; })); const lb={}; state.contacts.forEach(c=>{ if(c._labeled) lb[c.id]={name:c.name,role:c.role}; }); localStorage.setItem('cl-state',JSON.stringify({v:2,folders:state.folders,items:it,labels:lb,exports:state.exports,perms:state.perms,hidden:[...state.hidden]})); }catch(e){} }
+function saveState(){ try{ const it={}; state.contacts.forEach(c=>c.items.forEach(i=>{ it[i.id]=i.folders; })); const lb={}; state.contacts.forEach(c=>{ if(c._labeled) lb[c.id]={name:c.name,role:c.role}; }); const nt={}; state.contacts.forEach(c=>c.items.forEach(i=>{ if(i._noted) nt[i.id]=i.note; })); localStorage.setItem('cl-state',JSON.stringify({v:2,folders:state.folders,items:it,labels:lb,exports:state.exports,perms:state.perms,hidden:[...state.hidden],notes:nt,tips:[...state.tips]})); }catch(e){} }
 function resetDemo(){ try{ localStorage.removeItem('cl-state'); }catch(e){} location.reload(); }
 
 /* ---------- save / share after export ---------- */
@@ -943,7 +973,7 @@ function openSaveMenu(ev){ ev.stopPropagation(); if(!ex.pdf&&!ex.zip){ toast('Ch
   pop.innerHTML=`<div class="pt">${what} ready · save or share to</div>`+opts.map(([ic,l,sub])=>`<button class="po" onclick="doExport('${l}')"><span class="fi"><svg class="ic"><use href="#${ic}"/></svg></span><span class="fn">${l}<small>${sub}</small></span></button>`).join('');
   pop.classList.add('open'); placePop(ev,pop); }
 /* ---------- date range: one filter on item timestamp, used by the list, folders and export ---------- */
-function openDates(ev,target){ ev.stopPropagation(); const r=target==='ex'?ex.range:state.range; state.pop={kind:'dates',target}; const pop=document.getElementById('pop');
+function openDates(ev,target){ ev.stopPropagation(); showTip('dates'); const r=target==='ex'?ex.range:state.range; state.pop={kind:'dates',target}; const pop=document.getElementById('pop');
   const d2v=t=>{ if(!t) return ''; const d=new Date(t); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
   pop.innerHTML=`<div class="pt">${target==='ex'?'Export only these dates':'Show only these dates'}</div><div class="ps">Select the first day and the last day. Leave one empty for open-ended.</div>
     <div class="drow" style="border-top:0;margin-top:0"><label>From<input type="date" id="dfrom" value="${d2v(r.from)}"></label><label>To<input type="date" id="dto" value="${d2v(r.to)}"></label></div>
@@ -953,11 +983,29 @@ function applyDates(){ const f=document.getElementById('dfrom').value, t=documen
 function applyRange(r){ const target=state.pop&&state.pop.target; closePop(); if(target==='ex'){ ex.range=r; rebuildExport(); renderExport(); toast(rangeOn(r)?'Export limited to '+fmtRange(r):'Export covers all dates'); } else { state.range=r; state.open.clear(); render(); toast(rangeOn(r)?'Showing '+fmtRange(r)+' only':'Showing all dates'); } }
 function clearRange(){ state.range={from:null,to:null}; render(); }
 /* ---------- filter: one kind of record at a time ---------- */
-function openFilter(ev){ ev.stopPropagation(); state.pop={kind:'filter'}; const pop=document.getElementById('pop');
+function openFilter(ev){ ev.stopPropagation(); showTip('filter'); state.pop={kind:'filter'}; const pop=document.getElementById('pop');
   const all=state.contacts.filter(c=>!state.folder||itemsFor(c).length).filter(c=>state.folder||!state.hidden.has(c.id)); const items=all.flatMap(c=>itemsFor(c)); const k=counts(items);
   const opts=[['all','Everything',items.length+' items'],['text','Texts',k.text],['call','Calls',k.call],['vm','Voicemails',k.vm],['email','Emails',k.email]];
   pop.innerHTML=`<div class="pt">Show only</div>`+opts.map(([key,l,n])=>`<button class="po ${state.filter===key?'in':''}" onclick="state.filter='${key}';closePop();render()"><span class="fn">${l}<small>${n}</small></span><span class="ck"><svg class="ic" style="width:11px;height:11px"><use href="#i-check"/></svg></span></button>`).join('');
   pop.classList.add('open'); placePop(ev,pop); }
+/* ---------- notes: typed or spoken, stored beside the record, never inside the hash ---------- */
+function openNote(ev,cid,iid){ ev.stopPropagation(); const c=contactById(cid), i=c.items.find(x=>x.id===iid); state.pop={kind:'note'}; const pop=document.getElementById('pop');
+  pop.innerHTML=`<div class="pt">Your note · ${esc(kindLabel(i))} · ${fmtDay(i.t)} ${fmtTime(i.t)}</div><div class="ps">Saved next to the record and printed as “Your note”. The original and its hash do not change.</div>
+    <textarea id="notetxt" class="notetxt" rows="4" placeholder="Type, or tap Speak and talk">${esc(i.note||'')}</textarea>
+    <div class="pbtns"><button class="btn" id="micbtn" onclick="speakNote()"><svg class="ic"><use href="#i-vm"/></svg> Speak</button><span class="grow"></span><button class="btn ghost" onclick="closePop()">Cancel</button><button class="btn primary" onclick="saveNote('${cid}','${iid}')">Save</button></div>`;
+  pop.classList.add('open'); const app=document.getElementById('app').getBoundingClientRect(); const w=Math.min(320,app.width-24); pop.style.width=w+'px'; pop.style.left=Math.round((app.width-w)/2)+'px'; pop.style.top=Math.round(app.height*0.22)+'px'; setTimeout(()=>{ const t=document.getElementById('notetxt'); if(t) t.focus({preventScroll:true}); },50); showTip('note'); }
+let rec=null;
+function speakNote(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; const t=document.getElementById('notetxt'); if(!SR){ toast('On the phone this opens the microphone. Type here for now.'); return; } if(rec){ rec.stop(); rec=null; return; } rec=new SR(); rec.lang='en-US'; rec.interimResults=true; const base=t.value?t.value.trim()+' ':''; rec.onresult=e=>{ let s=''; for(const r of e.results) s+=r[0].transcript; t.value=base+s; }; rec.onend=()=>{ rec=null; const b=document.getElementById('micbtn'); if(b) b.classList.remove('on'); }; rec.start(); document.getElementById('micbtn').classList.add('on'); toast('Listening… tap Speak again to stop'); }
+function saveNote(cid,iid){ const c=contactById(cid), i=c.items.find(x=>x.id===iid); const v=document.getElementById('notetxt').value.trim(); i.note=v||null; i._noted=true; saveState(); closePop(); toast(v?'Note saved':'Note removed'); render(); if(ex){ rebuildExport(); renderExport(); } }
+/* ---------- role, per folder or usual ---------- */
+function openRole(ev,cid,fid){ const c=contactById(cid); state.pop={kind:'role'}; const pop=document.getElementById('pop'); const cur=roleIn(c,fid); const f=fid?folderById(fid):null;
+  const list=[...new Set(ROLES.concat(state.contacts.map(x=>x.role).filter(r=>r&&!/spam|not in contacts|named by you|caller id/i.test(r))))];
+  pop.innerHTML=`<div class="pt">${esc(c.name)} is the…</div><div class="ps">${f?`in <b>${esc(f.name)}</b> only. ${c.role?'Usual role stays '+esc(c.role)+'.':''}`:'Usual role, everywhere. Inside a folder you can pick a different one.'}</div>
+    <div class="rolelist">${list.map(r=>`<button class="po ${r===cur?'in':''}" onclick="setRole('${cid}',${fid||'null'},'${esc(r).replace(/'/g,"\\'")}')"><span class="fn">${esc(r)}</span><span class="ck"><svg class="ic" style="width:11px;height:11px"><use href="#i-check"/></svg></span></button>`).join('')}</div>
+    <div class="newrow"><input id="popnew" type="text" placeholder="Another role…" onkeydown="if(event.key==='Enter')setRole('${cid}',${fid||'null'},this.value.trim())"><button class="btn primary" onclick="setRole('${cid}',${fid||'null'},document.getElementById('popnew').value.trim())">Add</button></div>`;
+  pop.classList.add('open'); placePop(ev,pop); showTip('role'); }
+function openRoleCenter(cid,fid){ openRole({stopPropagation(){},currentTarget:document.getElementById('app')},cid,fid); const pop=document.getElementById('pop'); const app=document.getElementById('app').getBoundingClientRect(); const w=Math.min(300,app.width-24); pop.style.width=w+'px'; pop.style.left=Math.round((app.width-w)/2)+'px'; pop.style.top=Math.round(app.height*0.18)+'px'; }
+function setRole(cid,fid,r){ if(!r) return; const c=contactById(cid); if(fid){ const f=folderById(fid); f.roles=f.roles||{}; f.roles[cid]=r; } else { c.role=r; c._labeled=true; } saveState(); closePop(); toast(c.name+' · '+r+(fid?' in '+folderById(fid).name:'')); render(); if(ex){ rebuildExport(); renderExport(); } }
 /* ---------- name a group or a number ---------- */
 function openRename(cid){ const c=contactById(cid); state.pop={kind:'rename'}; const pop=document.getElementById('pop');
   pop.innerHTML=`<div class="pt">${c.group?'Name this group':'Name this number'}</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" value="${esc(c.group?c.name:'')}" placeholder="${c.group?'e.g. CommLocker Corp':'Who is '+esc(numOf(c))+'?'}" onkeydown="if(event.key==='Enter')saveRename('${cid}')"><button class="btn primary" onclick="saveRename('${cid}')">Save</button></div>`;
@@ -973,11 +1021,11 @@ function askClose(fid){ const f=folderById(fid); if(!f||f.status==='closed') ret
   pop.innerHTML=`<div class="pt">Exported · close this folder?</div><div class="ps"><b>${esc(f.name)}</b> is done when the deal is done. Closing takes it off the bottom row and stops new items going in. Nothing is deleted, the export stays in Settings › Exports, and you can reopen it any time from manage.</div><div class="pbtns"><button class="btn ghost" onclick="closePop()">Keep open</button><button class="btn primary" onclick="closeFolder(${fid})">Close folder</button></div>`;
   pop.classList.add('open'); const app=document.getElementById('app').getBoundingClientRect(); const w=Math.min(300,app.width-24); pop.style.width=w+'px'; pop.style.left=Math.round((app.width-w)/2)+'px'; pop.style.top=Math.round(app.height*0.3)+'px'; }
 /* ---------- select several people, export each separately ---------- */
-function startSelect(cid){ state.selMode=true; state.selected.clear(); state.selected.add(cid); state.open.clear(); state.pickMode.clear(); render(); toast('Select the other people, then Export separately.'); }
+function startSelect(cid){ showTip('select'); state.selMode=true; state.selected.clear(); state.selected.add(cid); state.open.clear(); state.pickMode.clear(); render(); toast('Select the other people, then Export separately.'); }
 function toggleSel(cid){ if(state.selected.has(cid)) state.selected.delete(cid); else state.selected.add(cid); render(); }
 function endSelect(){ state.selMode=false; state.selected.clear(); render(); }
-function openFolder(fid){ state.folder=(fid===null||state.folder===fid)?null:fid; state.view='timeline'; render(); const r=document.getElementById('rows'); if(r) r.scrollTop=0; }
-function startFiling(cid){ const c=contactById(cid); state.open.add(cid); state.pickMode.add(cid); itemsFor(c).forEach(i=>state.picked.add(i.id)); render(); const rows=document.getElementById('rows'); const r=rows.querySelector('.row.open'); if(r) rows.scrollTop=r.offsetTop-8; toast('Everything is selected. Deselect what should stay out, then Add selected to folder.'); }
+function openFolder(fid){ state.folder=(fid===null||state.folder===fid)?null:fid; state.view='timeline'; state.tlPick=false; state.picked.clear(); render(); if(state.folder) showTip('folder'); const r=document.getElementById('rows'); if(r) r.scrollTop=0; }
+function startFiling(cid){ showTip('filing'); const c=contactById(cid); state.open.add(cid); state.pickMode.add(cid); itemsFor(c).forEach(i=>state.picked.add(i.id)); render(); const rows=document.getElementById('rows'); const r=rows.querySelector('.row.open'); if(r) rows.scrollTop=r.offsetTop-8; toast('Everything is selected. Deselect what should stay out, then Add selected to folder.'); }
 function togglePickMode(cid){ if(state.pickMode.has(cid)){ state.pickMode.delete(cid); contactById(cid).items.forEach(i=>state.picked.delete(i.id)); } else state.pickMode.add(cid); render(); }
 function togglePick(iid){ if(state.picked.has(iid)) state.picked.delete(iid); else state.picked.add(iid); render(); }
 function pickAll(cid,on){ itemsFor(contactById(cid)).forEach(i=>on?state.picked.add(i.id):state.picked.delete(i.id)); render(); }
@@ -1000,17 +1048,36 @@ function scrollRow(cid){ const rows=document.getElementById('rows'); const r=row
 function tourReset(){ closePop(); if(ex) closeExport(); state.folder=null; state.pickMode.clear(); state.picked.clear(); state.open.clear(); state.filter='all'; state.q=''; state.range={from:null,to:null}; state.selMode=false; state.selected.clear(); state.view='timeline'; const q=document.getElementById('q'); if(q) q.value=''; render(); document.getElementById('rows').scrollTop=0; }
 const TOUR=[
  {t:'Your phone, in one list',d:'Every text, call, voicemail and email, newest first, one line per person. Each item was hashed the moment it came off the phone, before you touch anything. Nothing to set up.',go:()=>{ tourReset(); }},
- {t:'Tap ⋯ on a conversation',d:'Here, Paul Henderson. Two choices: Add to folder, or Export. That is the only menu in the app.',go:()=>{ tourReset(); const btn=document.querySelector('.row[data-cid="c12"] .more-btn'); if(btn){ scrollRow('c12'); openMenu(fakeEv(btn),'c12'); } }},
- {t:'Add to folder: everything starts selected',d:'Deselect what should stay out. We deselect two personal texts. Calls and voicemails sit in the same list, so they are selected the same way.',go:()=>{ tourReset(); startFiling('c12'); const c=contactById('c12'); c.items.filter(i=>i.type==='text').slice(0,2).forEach(i=>state.picked.delete(i.id)); render(); scrollRow('c12'); }},
- {t:'Add selected, then choose the folders',d:'One folder or several. No folder yet? Type a name in the box and it is created and the selection added in one go. We choose Alvarez Drive Listing.',go:()=>{ closePop(); if(!state.pickMode.has('c12')) startFiling('c12'); render(); scrollRow('c12'); const b=document.querySelector('.pickbar .btn.primary'); if(b){ openPop(fakeEv(b),{kind:'items',cid:'c12'}); if(!inFolder(state.pop,1)) fileTo(state.pop,1); openPopRefresh(); } }},
- {pos:'bottom',t:'Tap the folder at the bottom',d:'Active folders sit along the bottom, most recent first. Inside: everyone in the deal by date, calls and voicemails inline, the hash under every record. The ⋯ closes the folder when the deal is done.',go:()=>{ closePop(); state.pickMode.clear(); state.picked.clear(); state.folder=null; openFolder(1); }},
- {t:'Export…',d:'The checks run, every record shows ingestion hash = current hash (MATCH), and the export gets its own hash. Export gives you the PDF and a ZIP of photos, videos, voicemails and email attachments, then asks where: this phone, Drive, Dropbox, email, or any app.',go:()=>{ closePop(); openExport({kind:'folder',id:1}); }},
+ {t:'Tap ⋯ on a conversation',d:()=>'Here, '+contactById(tourCid()).name+'. Two choices: Add to folder, or Export. That is the only menu in the app.',go:()=>{ tourReset(); const cid=tourCid(); const btn=document.querySelector(`.row[data-cid="${cid}"] .more-btn`); if(btn){ scrollRow(cid); openMenu(fakeEv(btn),cid); } }},
+ {t:'Add to folder: everything starts selected',d:()=>'Deselect what should stay out. We deselect two of '+contactById(tourCid()).name.split(' ')[0]+'’s texts. Calls and voicemails sit in the same list, so they are selected the same way.',go:()=>{ tourReset(); const cid=tourCid(); startFiling(cid); const c=contactById(cid); c.items.filter(i=>i.type==='text').slice(0,2).forEach(i=>state.picked.delete(i.id)); render(); scrollRow(cid); }},
+ {t:'Add selected, then choose the folders',d:()=>'One folder or several. No folder yet? Type a name in the box and it is created and the selection added in one go. We choose '+folderById(tourFid()).name+'.',go:()=>{ closePop(); const cid=tourCid(), fid=tourFid(); if(!state.pickMode.has(cid)) startFiling(cid); render(); scrollRow(cid); const b=document.querySelector('.pickbar .btn.primary'); if(b){ openPop(fakeEv(b),{kind:'items',cid}); if(!inFolder(state.pop,fid)) fileTo(state.pop,fid); openPopRefresh(); } }},
+ {pos:'bottom',t:'Tap the folder at the bottom',d:'Active folders sit along the bottom, most recent first. Inside: everyone in the deal by date, calls and voicemails inline, the hash under every record. The ⋯ closes the folder when the deal is done.',go:()=>{ closePop(); state.pickMode.clear(); state.picked.clear(); state.folder=null; openFolder(tourFid()); }},
+ {t:'Export…',d:'The checks run, every record shows ingestion hash = current hash (MATCH), and the export gets its own hash. Export gives you the PDF and a ZIP of photos, videos, voicemails and email attachments, then asks where: this phone, Drive, Dropbox, email, or any app.',go:()=>{ closePop(); openExport({kind:'folder',id:tourFid()}); }},
  {pos:'bottom',t:'Permissions fix themselves',d:'Your RCS case. When a permission slips, the first line of the list says what is not being captured. Fix opens the exact Android screen and the app re-checks when you come back. Tap Fix now, or leave it and try later from Settings › Permissions.',go:()=>{ closePop(); if(ex) closeExport(); openFolder(null); const x=state.perms.find(p=>p.k==='rcs'); x.ok=false; saveState(); render(); document.getElementById('rows').scrollTop=0; }},
  {t:'That is the whole app',d:'One list. Folders along the bottom, with “manage” to rename or delete one. ⋯ to add to a folder or export. Your folders and what is in them are saved on this phone; “Reset sample data” under manage puts the demo back.',go:()=>{ closeExport(); openFolder(null); }},
 ];
 let tourIdx=-1;
+/* ---------- tips: what to do here, the first time only ---------- */
+const TIPS={
+  strip:['bottom','These are your folders, one per deal. Tap one to open it. “manage” renames, closes or deletes.'],
+  menu:['top','⋯ is the only menu. Add to folder to put this person’s texts and calls in a deal. Export to make the PDF.'],
+  filing:['top','Everything is selected. Untick anything personal, then tap Add selected to folder at the bottom.'],
+  folder:['top','This is the deal: everyone in it, by date. Tap a role pill to set someone’s role in this deal. Select lets you move items to another folder.'],
+  export:['top','Three checks, then Export. Every record prints both hashes and MATCH. You choose where it goes at the end.'],
+  dates:['top','Pick the first and last day. The list, the counts and any export follow the range. × clears it.'],
+  filter:['top','One kind at a time: texts, calls, voicemails or emails. Everything puts it back.'],
+  select:['bottom','Tick more people. Each one becomes their own PDF and ZIP, exported together.'],
+  role:['top','Roles are per deal. Maria can be the inspector here and your seller in another folder.'],
+  note:['top','Notes sit beside the record and print as “Your note”. They never change the original or its hash.'],
+  tlselect:['top','Tick items across everyone, then add them to another folder or take them out of this one.']
+};
+function showTip(k){ if(!TIPS[k]||state.tips.has(k)||tourIdx>=0) return; const [pos,text]=TIPS[k]; const t=document.getElementById('tip'); t.dataset.k=k; document.getElementById('tip-t').textContent=text; t.classList.toggle('bottom',pos==='bottom'); t.hidden=false; }
+function tipDone(){ const t=document.getElementById('tip'); if(t.dataset.k) state.tips.add(t.dataset.k); t.hidden=true; saveState(); }
+function tipsReset(){ state.tips.clear(); saveState(); toast('Tips will show again'); renderSettings(); }
 function tourStart(){ tourGo(0); }
-function tourGo(i){ tourIdx=Math.max(0,Math.min(TOUR.length-1,i)); const st=TOUR[tourIdx]; st.go(); const t=document.getElementById('tour'); t.hidden=false; t.classList.toggle('bottom',st.pos==='bottom'); requestAnimationFrame(()=>{ const pop=document.getElementById('pop'); if(pop.classList.contains('open')&&st.pos!=='bottom'){ const appTop=document.getElementById('app').getBoundingClientRect().top; const tb=t.getBoundingClientRect().bottom+8; if(pop.getBoundingClientRect().top<tb) pop.style.top=(tb-appTop)+'px'; } }); document.getElementById('tour-n').textContent='Step '+(tourIdx+1)+' of '+TOUR.length; document.getElementById('tour-t').textContent=st.t; document.getElementById('tour-d').textContent=st.d; document.getElementById('tour-back').disabled=tourIdx===0; document.getElementById('tour-back').style.opacity=tourIdx===0?'.4':'1'; document.getElementById('tour-next').textContent=tourIdx===TOUR.length-1?'Finish':'Next'; }
+function tourCid(){ const c=visibleContacts().find(x=>!x.spam&&!x.group&&!x.unknown&&x.items.length>=4)||state.contacts.find(x=>!x.spam&&!x.group); return c.id; }
+function tourFid(){ const f=activeFolders()[0]||state.folders[0]; return f.id; }
+function tourGo(i){ tourIdx=Math.max(0,Math.min(TOUR.length-1,i)); const st=TOUR[tourIdx]; document.getElementById('tip').hidden=true; st.go(); const t=document.getElementById('tour'); t.hidden=false; t.classList.toggle('bottom',st.pos==='bottom'); requestAnimationFrame(()=>{ const pop=document.getElementById('pop'); if(pop.classList.contains('open')&&st.pos!=='bottom'){ const appTop=document.getElementById('app').getBoundingClientRect().top; const tb=t.getBoundingClientRect().bottom+8; if(pop.getBoundingClientRect().top<tb) pop.style.top=(tb-appTop)+'px'; } }); document.getElementById('tour-n').textContent='Step '+(tourIdx+1)+' of '+TOUR.length; document.getElementById('tour-t').textContent=st.t; document.getElementById('tour-d').textContent=typeof st.d==='function'?st.d():st.d; document.getElementById('tour-back').disabled=tourIdx===0; document.getElementById('tour-back').style.opacity=tourIdx===0?'.4':'1'; document.getElementById('tour-next').textContent=tourIdx===TOUR.length-1?'Finish':'Next'; }
 function tourStep(d){ if(tourIdx===TOUR.length-1&&d>0){ tourExit(); return; } tourGo(tourIdx+d); }
 function tourExit(){ document.getElementById('tour').hidden=true; tourIdx=-1; closePop(); }
 render();
