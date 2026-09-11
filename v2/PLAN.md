@@ -74,6 +74,12 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - The Export page carries the same range and can change it, so a record can cover only the weeks that matter. The cover sheet says so.
 - ⋯ → Export with other people selects several people and exports each one as its own separate PDF and ZIP in one go. Nothing is merged.
 
+## Sleek folder view, filter behind a funnel, closing a deal
+
+- Inside a folder: a plain title, one line of facts ("3 people · 18 texts · 2 emails · Jan 15 – Mar 14"), Timeline / By person, Export. No count pills. The parties are named at the top of the timeline.
+- The type filter lives behind a funnel icon next to search: one kind at a time, with counts. The only chip left is "12 people not in a folder yet". Tap it and each person gets **Add to folder** or **Hide**; hidden people come back from a "hidden" chip.
+- The bottom row shows active folders, most recent first. When a deal is done, close the folder: it leaves the row, keeps everything, and reopens any time. Export offers to close right after it finishes.
+
 ## Folders along the bottom
 
 - **New folder is one field.** Tap + New folder, type a name, Create. Or type the name inside the folder list and it is created and the selection added in the same move.

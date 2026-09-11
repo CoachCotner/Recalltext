@@ -60,7 +60,12 @@ data class Attachment(val id: String, val kind: String /* image|video|pdf|audio|
 
 data class Contact(val id: String, val displayName: String, val userLabel: String?, val carrierNumber: String, val role: String?, val isUnknown: Boolean, val isSpam: Boolean)
 
-data class Folder(val id: String, val name: String, val icon: String, val category: String?, val note: String?)
+data class Folder(val id: String, val name: String, val icon: String, val category: String?, val note: String?, val status: FolderStatus = ACTIVE, val closedAt: Long? = null, val createdAt: Long)
+
+enum class FolderStatus { ACTIVE, CLOSED }
+
+// per-device, not hashed: contact ids the user chose to hide from the Everything list
+val hiddenContactIds: Set<String>
 ```
 
 Rules:
@@ -68,18 +73,21 @@ Rules:
 - `ingestionHash` and `canonicalBytes` are written once and never updated. `note`, `folderIds`, `userLabel` live outside the hashed bytes.
 - Filing = add a folder id to `Item.folderIds`. Removing from a folder = remove it. Nothing else changes.
 - A conversation's "folders" chips are the union of its items' `folderIds`.
-- "Not in a folder yet" = a contact whose items all have empty `folderIds`.
+- "Not in a folder yet" = a contact whose items all have empty `folderIds`, excluding spam and hidden contacts.
+- A hidden contact is left out of the Everything list and its counts. Hiding changes nothing else: items, hashes and any folder membership stay; the contact still appears inside a folder if it has items there. "N people hidden" on the list is the way back.
+- A closed folder keeps everything: items, membership, exports. It leaves the bottom row, is not offered in the Add-to-folder popover, and shows a **Closed** tag and a **Reopen** button when opened. Reopening clears `closedAt`. Close and reopen never touch an item or a hash.
 
 ## 3. Screens and behavior
 
 ### 3.1 Everything (home)
 
 - Header: CommLocker wordmark only, no mark: COMM orange, L white, O orange, CKER white, ™ (the tagline appears on the printed cover sheet, not in the header), a round theme button that cycles System → Light → Dark on each tap (persisted, toast names the new theme), **Show me** tour button (optional in production).
-- Title "Everything on this phone · N people · M items", search field, filter chips that carry their unit so nothing is ambiguous: "117 items", "99 texts", "10 calls", "2 voicemails", "6 emails", "12 people not in a folder yet". The type chips count items and sum to the total. "People not in a folder yet" counts contacts (spam excluded) with nothing in any folder.
+- Title "Everything on this phone · N people · M items", then one row: search field, a **calendar** button (3.9) and a **funnel** button. Both are icon-only until something is chosen, then they turn orange and show the choice ("Mar 1 – Mar 31", "Texts"). The funnel opens a popover: **Everything · 117 items**, **Texts · 99**, **Calls · 10**, **Voicemails · 2**, **Emails · 6**, one at a time, with a check on the current one. No row of count pills.
+- Under that row, one chip: "12 people not in a folder yet" (contacts with nothing in any folder, spam and hidden excluded). Tapping it filters the list to those people and every row grows two buttons: **Add to folder** (the same flow as ⋯ → Add to folder) and **Hide**. Hide is for personal contacts, stores, doctors: the person leaves the Everything list and the count. A second chip, "N people hidden", appears only when someone is hidden; tapping it lists them with an **Unhide** button each. Hidden ids persist per device.
 - Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail / Email) and preview, counts by type, lock chip "N hashed", folder chips or "no folder yet", a **⋯** button. Spam rows dimmed.
 - Every folder chip, on a row and on an item, carries an **×**. On a row it takes that whole conversation out of the folder; on an item it takes only that item out. Toast confirms. Nothing is deleted; the label is removed.
 - Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Select messages**.
-- Bottom: a **two-row** block of folder pills. Pills size to their text, left-justified, wrapping; a folder name is capped at **35 characters** with an ellipsis on the pill (the full name is in the tooltip and everywhere else). Order: **All**, the open folder first, then folders in creation order, then **+ New folder**. As many pills as fit in two rows are shown; the rest collapse into **All N folders ▸**, which opens the Folders sheet. The open folder is never hidden. Larger system fonts grow the pills, not the row count. The label row has a **manage** link. Tap a pill → open that folder. Tap the open pill again → back.
+- Bottom: a **two-row** block of folder pills labeled "Active folders · N · most recent first · manage". Pills size to their text, left-justified, wrapping; a folder name is capped at **35 characters** with an ellipsis on the pill (the full name is in the tooltip and everywhere else). Only **active** folders appear, ordered by the timestamp of the newest item in each folder (creation time when empty), the open folder first. There is no "All" pill; the way back is the **All conversations** button at the top of a folder. Then **+ New folder**. As many pills as fit in two rows are shown; the rest collapse into **All N folders ▸**, which opens the Folders sheet. The open folder is never hidden. Larger system fonts grow the pills, not the row count. The label row has a **manage** link. Tap a pill → open that folder. Tap the open pill again → back.
 - Folder chips on rows and items follow the same 35-character cap.
 - The list is sorted by each person's most recent item, newest first; spam sinks to the bottom. Inside a conversation and inside a folder timeline, items run oldest to newest with date dividers, the way a record reads.
 
@@ -97,10 +105,10 @@ Rules:
 
 ### 3.4 Folder view (timeline)
 
-- Top: orange **Back to all conversations**, banner with icon, name, "C contacts · T texts · K calls · V voicemails", **Export…**. Segmented control: **Timeline · everyone, by date** (default) / **By person**.
+- Top, plain typography and no boxed banner: a small **‹ All conversations** link; the folder icon and name as the title with **⋯** at the right (rename, close, delete via the Folders sheet); one muted line "3 people · 18 texts · 2 emails · Jan 15 – Mar 14" (only non-zero types, plus the date span of what is in the folder; "· closed Sep 11, 2026" when closed, with a **Closed** tag by the name); then a row with the **Timeline / By person** segmented control on the left and **Export…** on the right (**Reopen** beside it when closed). The "In this folder · N people · M items" title row and the count pills do not appear in a folder; the timeline's "20 items from Ace Johnson, Maria Torres, David Kim" line carries the parties.
 - Timeline: every item with that folder id, all contacts, sorted by timestamp, date dividers, each item prefixed with avatar + "Name · role" (or "Lauren → Name" for outbound).
 - By person: the Everything rows filtered to contacts with items in the folder; each thread shows only that folder's items plus "n more in this conversation not in this folder · show faded".
-- Filter chips and search apply within the folder.
+- Search, the calendar and the funnel apply within the folder.
 
 ### 3.5 Export page (one screen, no scroll at 360 × 780)
 
@@ -159,7 +167,15 @@ Not a merged file. The same single export, run once per person, delivered togeth
 - Implementation: `ExportJob(scope, range)` is what already exists. Batch = `ids.map { ExportJob(Scope.Conversation(it), range) }` run sequentially inside one `WorkManager` job with one progress notification. Each job writes `<ExportId>.pdf` (and `.zip` when it has attachments) into the same output folder `Downloads/CommLocker/<yyyy-MM-dd>/`; the destination step shares them with `ACTION_SEND_MULTIPLE` (Drive, Dropbox, Email, More…) or leaves them on the device. Each file gets its own row in Settings › Exports with its own ID, hash and date range.
 - Nothing about hashing changes: per-record hashes are the stored ones, the export hash is per file, and no file contains two people's records.
 
-### 3.11 Search
+### 3.11 Closing a folder (the deal is done)
+
+- A folder is **Active** or **Closed**. Closing is the end of the deal, not the end of the record: every item, hash, membership and export stays exactly as it was; the folder simply leaves the bottom row, stops being offered when adding items, and is grouped under **Closed** in the Folders sheet.
+- Where: ⋯ on the folder (Folders sheet) → **Close**; and right after a folder export, a popover "Exported · close this folder?" with **Keep open** / **Close folder**. Never close automatically: an export is often a mid-deal snapshot (a dispute, a lender request).
+- Reopen: the **Reopen** button in the closed folder's header or in the Folders sheet. Use it for corrections. A deal that comes back later (the same property sold again) gets a **new** folder, so each transaction has its own complete record and its own export history.
+- Settings › Exports keeps every export with its folder name, so a closed folder's record is always findable.
+- Implementation: `Folder.status` and `closedAt`; the strip query is `WHERE status = ACTIVE ORDER BY lastItemAt DESC`; the Add-to-folder popover lists ACTIVE only; nothing in the hashing or export code changes.
+
+### 3.12 Search
 
 Search matches the contact name, number and role first (listed first), then whole words inside message text, voicemail transcripts, email subjects and call notes. "ace" finds Ace Johnson and the one person whose text mentions "Ace"; it no longer finds "place". A row that is listed only because of a message match shows why: "mentions “ace” in 1 item". The count line reads "N people match “ace”". Room: `MATCH` on an FTS4 table over `body`, joined to contacts; name matches with `LIKE '%q%'`.
 
@@ -264,6 +280,11 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Date range: selecting Mar 1 – Mar 31 changes the rows, the chip counts and the count line together; clearing with × restores all; a contact with nothing in the range disappears from the list.
 - [ ] Date-limited export: the PDF contains only records inside the range, prints "limited to <from> – <to>" on the cover sheet, and its export hash differs from the all-dates export of the same person.
 - [ ] Batch export of two people produces two PDFs (and a ZIP for each person with attachments), each with its own Export ID and export hash, delivered together to the chosen destination; Settings › Exports lists them as two rows.
+- [ ] Funnel: choosing Texts turns the funnel orange with the label "Texts" and the list, count line and folder timeline show texts only; Everything resets it.
+- [ ] "12 people not in a folder yet" → each row shows Add to folder and Hide; Hide removes the person from the list and the count, "1 person hidden" appears, Unhide restores; hashes and folder membership unchanged.
+- [ ] Folder header shows only non-zero types and the date span; no count pills inside a folder.
+- [ ] Bottom row lists active folders most recent first, no "All" pill; closing a folder removes it from the row and from the Add-to-folder popover; Reopen restores it; items and hashes untouched throughout.
+- [ ] After a folder export the close prompt appears; Keep open changes nothing.
 - [ ] Search "ace" lists Ace Johnson first and a message-only match with a "mentions" tag; "place" does not match "ace".
 - [ ] Revoking RCS notification access shows the banner on the list and "1 needs attention" in Settings; Fix opens the notification-access screen; returning to the app clears both without a restart.
 
