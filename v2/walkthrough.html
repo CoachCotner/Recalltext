@@ -3,16 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RecallText Phone Walkthrough</title>
+<title>CommLocker Phone Walkthrough</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
-:root{--bg:#F5F6FA;--paper:#FFFFFF;--line:#E1E6EF;--ink:#111827;--ink2:#3B4657;--mute:#6B7480;--navy:#1A2F5A;--orange:#F97316;--orange-soft:#FFF1E6;--orange-line:#F7C79E;--good:#16A34A;--good-soft:#EAF8EE}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C182E;--paper:#14233F;--line:#25375A;--ink:#EEF2F8;--ink2:#C3CCDB;--mute:#8E9BB0;--navy:#DCE6FF;--orange-soft:#3A2410;--orange-line:#7A4A1F;--good:#4ADE80;--good-soft:#14301F}}
-:root[data-theme="dark"]{--bg:#0C182E;--paper:#14233F;--line:#25375A;--ink:#EEF2F8;--ink2:#C3CCDB;--mute:#8E9BB0;--navy:#DCE6FF;--orange-soft:#3A2410;--orange-line:#7A4A1F;--good:#4ADE80;--good-soft:#14301F}
+:root{
+  --bg:#F4F1EC;--paper:#FFFFFF;--line:color-mix(in srgb,#2B4169 22%,transparent);--ink:#111C32;--ink2:#2A3650;--mute:#515D71;
+  --navy:#071B42;--orange:#C56230;--orange-soft:color-mix(in srgb,#C56230 10%,#FFFFFF);--orange-line:color-mix(in srgb,#C56230 45%,transparent);--eyebrow:#B95722;
+  --txt-c:#2B4169;--call-c:#0F766E;--vm-c:#16A34A;--miss-c:#B95722;--good-soft:color-mix(in srgb,#16A34A 10%,#FFFFFF);--bad-soft:color-mix(in srgb,#B95722 10%,#FFFFFF);--good:#16A34A;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#01173C;--paper:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
+    --navy:#EDEDED;--orange:#C56230;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);--eyebrow:#E8793A;
+    --txt-c:#9FB3D9;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#E8793A;--good-soft:color-mix(in srgb,#16A34A 18%,#071B42);--bad-soft:color-mix(in srgb,#B95722 22%,#071B42);--good:#4ADE80;
+  }
+}
+:root[data-theme="dark"]{
+    --bg:#01173C;--paper:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
+    --navy:#EDEDED;--orange:#C56230;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);--eyebrow:#E8793A;
+    --txt-c:#9FB3D9;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#E8793A;--good-soft:color-mix(in srgb,#16A34A 18%,#071B42);--bad-soft:color-mix(in srgb,#B95722 22%,#071B42);--good:#4ADE80;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;padding:0 16px;padding-block:40px 80px;-webkit-font-smoothing:antialiased}
 .wrap{max-width:900px;margin:0 auto}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--eyebrow);margin-bottom:10px}
 h1{font-size:32px;font-weight:800;line-height:1.15;letter-spacing:-.5px;color:var(--navy);text-wrap:balance;max-width:22ch}
 .lede{font-size:17px;color:var(--ink2);max-width:60ch;margin-top:14px}
 a{color:var(--orange);font-weight:600}
@@ -24,10 +38,10 @@ a{color:var(--orange);font-weight:600}
 .tally span{font-size:12px;color:var(--mute)}
 .step{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:start;padding:28px 0;border-bottom:1px solid var(--line)}
 .step:last-of-type{border-bottom:0}
-.phone{width:100%;max-width:300px;border-radius:26px;border:6px solid #1c2233;box-shadow:0 14px 40px rgba(16,28,56,.22);display:block;background:#000}
+.phone{width:100%;max-width:300px;border-radius:26px;border:6px solid #01173C;box-shadow:0 14px 40px rgba(16,28,56,.22);display:block;background:#000}
 .n{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:13px;margin-bottom:8px}
-:root[data-theme="dark"] .n{color:#0C182E}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .n{color:#0C182E}}
+:root[data-theme="dark"] .n{color:#071B42}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .n{color:#071B42}}
 .step h2{font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--navy);text-wrap:balance}
 .tap{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--orange);background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:999px;padding:3px 10px;margin:8px 0 10px}
 .step p{max-width:52ch;color:var(--ink2)}
@@ -48,9 +62,9 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">RecallText · phone app · how it works</div>
+  <div class="eyebrow">CommLocker · phone app · how it works</div>
   <h1>Seven screens. Four taps to file, one to open, one to export.</h1>
-  <p class="lede">This is the whole app on a portrait phone at a 9:19.5 aspect ratio (720 × 1560 class screens), using the real sample data. Every screen below is a live capture of the mockup at that size, and every one of them, the export page included, fits without scrolling. The same walk-through runs inside the mockup itself: open it and tap <b>Show me how</b>.</p>
+  <p class="lede">This is the whole app on a portrait phone at a 9:19.5 aspect ratio (720 × 1560 class screens), using the real sample data. Every screen below is a live capture of the mockup at that size, and every one of them, the export page included, fits without scrolling. The same walk-through runs inside the mockup itself: open it and tap <b>Show me</b>.</p>
   <a class="cta" href="https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8">▶ Open the mockup on your phone</a>
 
   <div class="tally">
@@ -65,7 +79,7 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
     <div><span class="n">1</span><h2>Your phone, in one list</h2><span class="tap">No taps yet</span>
       <p>Every text, call and voicemail on the phone, newest first, one line per person. Each line shows the latest item, how many texts, calls and voicemails there are, and which folders it is already in.</p>
       <p>The lock chip, for example “22 hashed”, means every item was hashed the moment it came off the phone. That happens before you do anything.</p>
-      <div class="why">Filters along the top: All, Texts, Calls, Voicemails, Not filed yet. “Not filed yet” is your to-do list. Folders sit along the bottom, always visible, nothing to scroll sideways.</div>
+      <div class="why">Filters along the top: All, Texts, Calls, Voicemails, Not filed yet. “Not filed yet” is your to-do list. Folders sit along the bottom, always visible, nothing to scroll sideways. The round button in the header switches the theme: System, Light, Dark, one tap each.</div>
     </div>
   </div>
 

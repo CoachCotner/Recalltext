@@ -3,37 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RecallText Filing Desk</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<title>CommLocker Filing Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Michroma&display=swap">
 <style>
 :root{
-  --bg:#EEF1F6;--card:#FFFFFF;--line:#E1E6EF;--ink:#111827;--ink2:#3B4657;--mute:#6B7480;
-  --hd:#1A2F5A;--hd-ink:#FFFFFF;--hd-dim:rgba(255,255,255,.62);--hd-field:rgba(255,255,255,.12);
-  --orange:#F97316;--orange-ink:#FFFFFF;--orange-soft:#FFF1E6;--orange-line:#F7C79E;
-  --txt-c:#2563EB;--call-c:#0F766E;--vm-c:#16A34A;--miss-c:#DC4B26;
-  --amber:#B45309;--amber-soft:#FFF7E0;--amber-line:#F5D98A;
-  --in-b:#EEF1F7;--out-b:#FFF1E0;--hover:#F5F7FB;--drop:#FFF1E6;--sel:#FFF7EF;
-  --shadow:0 6px 24px rgba(16,28,56,.14);
+  --bg:#F4F1EC;--card:#FFFFFF;--line:color-mix(in srgb,#2B4169 22%,transparent);--ink:#111C32;--ink2:#2A3650;--mute:#515D71;
+  --hd:#071B42;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.7);--hd-field:rgba(237,237,237,.14);
+  --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 10%,#FFFFFF);--orange-line:color-mix(in srgb,#C56230 45%,transparent);
+  --eyebrow:#B95722;
+  --txt-c:#2B4169;--call-c:#0F766E;--vm-c:#16A34A;--miss-c:#B95722;
+  --amber:#B95722;--amber-soft:color-mix(in srgb,#B95722 9%,#FFFFFF);--amber-line:color-mix(in srgb,#B95722 35%,transparent);
+  --in-b:#F4F1EC;--out-b:color-mix(in srgb,#C56230 12%,#FFFFFF);--hover:#F4F1EC;--drop:color-mix(in srgb,#C56230 14%,#FFFFFF);--sel:color-mix(in srgb,#C56230 8%,#FFFFFF);
+  --shadow:0 6px 24px rgba(7,27,66,.16);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0C182E;--card:#14233F;--line:#25375A;--ink:#EEF2F8;--ink2:#C3CCDB;--mute:#8E9BB0;
-    --hd:#0A1428;--hd-ink:#FFFFFF;--hd-dim:rgba(255,255,255,.6);--hd-field:rgba(255,255,255,.1);
-    --orange-soft:#3A2410;--orange-line:#7A4A1F;
-    --txt-c:#7FA6FF;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#F0785A;
-    --amber:#F5B14B;--amber-soft:#2E2510;--amber-line:#5C4A1A;
-    --in-b:#1B2C4C;--out-b:#3A2A18;--hover:#182A49;--drop:#3A2410;--sel:#2A2016;
-    --shadow:0 6px 24px rgba(0,0,0,.45);
+    --bg:#01173C;--card:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
+    --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
+    --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
+    --eyebrow:#E8793A;
+    --txt-c:#9FB3D9;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#E8793A;
+    --amber:#E8793A;--amber-soft:color-mix(in srgb,#B95722 22%,#071B42);--amber-line:color-mix(in srgb,#E8793A 40%,transparent);
+    --in-b:#0D2650;--out-b:color-mix(in srgb,#C56230 24%,#071B42);--hover:#0D2650;--drop:color-mix(in srgb,#C56230 24%,#071B42);--sel:color-mix(in srgb,#C56230 16%,#071B42);
+    --shadow:0 6px 24px rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0C182E;--card:#14233F;--line:#25375A;--ink:#EEF2F8;--ink2:#C3CCDB;--mute:#8E9BB0;
-  --hd:#0A1428;--hd-ink:#FFFFFF;--hd-dim:rgba(255,255,255,.6);--hd-field:rgba(255,255,255,.1);
-  --orange-soft:#3A2410;--orange-line:#7A4A1F;
-  --txt-c:#7FA6FF;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#F0785A;
-  --amber:#F5B14B;--amber-soft:#2E2510;--amber-line:#5C4A1A;
-  --in-b:#1B2C4C;--out-b:#3A2A18;--hover:#182A49;--drop:#3A2410;--sel:#2A2016;
-  --shadow:0 6px 24px rgba(0,0,0,.45);
+    --bg:#01173C;--card:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
+    --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
+    --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
+    --eyebrow:#E8793A;
+    --txt-c:#9FB3D9;--call-c:#3FC1B2;--vm-c:#4ADE80;--miss-c:#E8793A;
+    --amber:#E8793A;--amber-soft:color-mix(in srgb,#B95722 22%,#071B42);--amber-line:color-mix(in srgb,#E8793A 40%,transparent);
+    --in-b:#0D2650;--out-b:color-mix(in srgb,#C56230 24%,#071B42);--hover:#0D2650;--drop:color-mix(in srgb,#C56230 24%,#071B42);--sel:color-mix(in srgb,#C56230 16%,#071B42);
+    --shadow:0 6px 24px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -45,8 +48,12 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 
 /* ---------- top bar ---------- */
 .top{height:50px;background:var(--hd);color:var(--hd-ink);display:flex;align-items:center;gap:12px;padding:0 14px}
-.brand{font-weight:800;font-size:19px;color:var(--orange);letter-spacing:-.3px;white-space:nowrap}
-.brand small{display:block;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--hd-dim);margin-top:-3px}
+.brand{display:flex;align-items:center;gap:8px;white-space:nowrap;flex:none}
+.brand .mark{width:28px;height:28px;flex:none}
+.wm{font-family:'Michroma','Plus Jakarta Sans',sans-serif;font-size:13.5px;letter-spacing:.01em;color:#B95722;line-height:1}
+.wm span{color:#EDEDED}
+.tg{font-size:6.5px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;color:#EDEDED;margin-top:4px;font-weight:700}
+.tg i{color:#B95722;font-style:normal}
 .tag{font-size:12px;color:var(--hd-dim);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .seg{display:flex;background:var(--hd-field);border-radius:8px;padding:3px;gap:2px;flex:none}
 .seg button{padding:5px 11px;border-radius:6px;font-size:12px;font-weight:700;color:var(--hd-dim)}
@@ -58,7 +65,12 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 @media (max-width:480px){#app{max-width:none;max-height:none;border:0;border-radius:0}}
 .top{flex:none}
 .top .grow{flex:1}
-.tourbtn{background:var(--orange);color:#fff;border-radius:999px;padding:7px 14px;font-weight:800;font-size:12px;white-space:nowrap}
+.tourbtn{background:var(--orange);}
+.tourbtn:hover{background:var(--orange-hover)}
+.tourbtn{color:#fff;border-radius:999px;padding:7px 12px;font-weight:800;font-size:12px;white-space:nowrap;flex:none}
+.thm{width:32px;height:32px;border-radius:50%;background:var(--hd-field);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.thm .ic{width:16px;height:16px}
+.thm:hover{background:rgba(255,255,255,.22)}
 .shell{flex:1;min-height:0;display:flex;flex-direction:column;min-width:0}
 .pane{background:var(--card);display:flex;flex-direction:column;min-height:0;min-width:0}
 .left{flex:1 1 auto}
@@ -82,7 +94,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .search input::placeholder{color:var(--mute)}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:center;gap:5px;background:var(--card)}
-.chip[aria-pressed="true"]{background:var(--hd);color:#fff;border-color:var(--hd)}
+.chip[aria-pressed="true"]{background:#071B42;color:#EDEDED;border-color:#071B42}
 .chip .n{font-variant-numeric:tabular-nums;opacity:.7;font-weight:600}
 .scroll{flex:1;overflow-y:auto;min-height:0;overscroll-behavior:contain;position:relative}
 
@@ -96,7 +108,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .btn{padding:7px 12px;border-radius:9px;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink2);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .btn:hover{border-color:var(--orange);color:var(--orange)}
 .btn.primary{background:var(--orange);color:var(--orange-ink);border-color:var(--orange)}
-.btn.primary:hover{filter:brightness(.95);color:var(--orange-ink)}
+.btn.primary:hover{background:var(--orange-hover);border-color:var(--orange-hover);color:var(--orange-ink)}
 .btn.ghost{border-color:transparent}
 
 .seg.dark{background:color-mix(in srgb,var(--line) 60%,transparent);align-self:flex-start}
@@ -214,7 +226,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 /* ---------- popover / toast ---------- */
 .pop{position:fixed;z-index:50;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);width:280px;max-width:calc(100vw - 24px);padding:6px;display:none}
 .pop.open{display:block}
-.pop .pt{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:8px 10px 4px}
+.pop .pt{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--eyebrow);padding:8px 10px 4px}
 .pop .po{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:8px;text-align:left}
 .pop .po:hover{background:var(--hover)}
 .pop .po .fi{font-size:18px;width:24px;text-align:center}
@@ -256,7 +268,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .tiles div{border:1px solid var(--line);border-radius:9px;padding:5px 8px;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;line-height:1.15}
 .tiles div small{font-size:9px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
 .hashbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;line-height:1.45}
-.hashbox b{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}
+.hashbox b{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--eyebrow);margin-bottom:2px}
 .hashbox .ok{color:var(--vm-c);font-weight:700}
 .hashbox .why{display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11px;color:var(--ink2);margin-top:2px;word-break:normal}
 .segx{display:flex;gap:6px}
@@ -268,9 +280,9 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .xbig{width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:12px}
 .xsmall{width:100%;justify-content:center}
 .pvscroll{flex:1;min-height:0;overflow-y:auto;padding-top:10px}
-.preview{border:1px solid #cfd5df;border-radius:8px;padding:14px;background:#fff;color:#111;font-size:11px;line-height:1.5;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
-.preview h5{font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px;color:#1A2F5A}
-.preview .brand{font-size:15px;font-weight:800;color:#1A2F5A}.preview .brand em{color:#F97316;font-style:normal}
+.preview{border:1px solid #2B4169;border-radius:8px;padding:14px;background:#fff;color:#111C32;font-size:11px;line-height:1.5;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.preview h5{font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px;color:#071B42}
+.preview .brand{margin-bottom:2px}
 .preview .row2{display:grid;grid-template-columns:auto 1fr;gap:1px 10px}
 .preview .row2 span:nth-child(odd){color:#555}
 .preview .mono{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;word-break:break-all;color:#333}
@@ -311,14 +323,18 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
   <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17A8.5 8.5 0 0 0 12 3.5z" fill="currentColor"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
 </svg>
 
 <div id="app">
   <header class="top">
-    <div class="brand">RecallText<small>Filing desk</small></div>
+    <div class="brand"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M31 6H14a8 8 0 0 0-8 8v12a8 8 0 0 0 8 8h17" stroke="#B95722" stroke-width="7" fill="none" stroke-linecap="round"/><rect x="26" y="17" width="9" height="6" rx="1.5" fill="#B95722"/><path d="M16 19v-3.5a4 4 0 0 1 8 0V19" stroke="#2B2F36" stroke-width="3" fill="none"/><rect x="12.5" y="18" width="15" height="12.5" rx="3" fill="#2B2F36"/><circle cx="20" cy="23" r="1.9" fill="#B95722"/><rect x="19.1" y="23" width="1.8" height="4" fill="#B95722"/></svg><div class="wm">COMM<span>LOCKER</span></div></div>
     <span class="grow"></span>
-    <button class="tourbtn" onclick="tourStart()">▶ Show me how</button>
+    <button class="thm" id="thm" onclick="cycleTheme()" title="Theme: system, light or dark" aria-label="Switch theme"></button>
+    <button class="tourbtn" onclick="tourStart()">▶ Show me</button>
   </header>
 
   <div class="shell" id="shell">
@@ -407,7 +423,7 @@ function scopeItems(sc){ const out=[]; if(sc.kind==='conv'){ const c=contactById
 function attachmentsOf(list){ const files=[]; list.forEach(({i,c})=>{ (i.att||[]).forEach(a=>files.push({name:a.name,kind:a.type,from:c.name,seed:a.name+i.ts})); if(i.type==='vm'){ const d=new Date(i.t); const stamp=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0'); files.push({name:'voicemail-'+stamp+'.m4a',kind:'audio',from:c.name,seed:'a'+i.ts}); files.push({name:'voicemail-'+stamp+'-transcript.txt',kind:'text',from:c.name,seed:'t'+i.ts}); } }); return files; }
 function openExport(sc){
   const list=scopeItems(sc); const title=sc.kind==='conv'?contactById(sc.id).name:folderById(sc.id).name;
-  const now=new Date(); const id='RT-'+(sc.kind==='conv'?'CONV':'FOLDER')+'-'+fullHash(title+list.length).slice(0,8).toUpperCase();
+  const now=new Date(); const id='CL-'+(sc.kind==='conv'?'CONV':'FOLDER')+'-'+fullHash(title+list.length).slice(0,8).toUpperCase();
   const exportHash=fullHash(list.map(x=>fullHash(itemSeed(x.i))).join('')+id);
   ex={sc,list,title,id,now,exportHash,pdf:true,zip:true,preview:false,files:attachmentsOf(list)};
   renderExport(); document.getElementById('ov').classList.add('open');
@@ -450,11 +466,11 @@ function renderPreview(){
   const entry=({i,c})=>{ const h=fullHash(itemSeed(i)); const who=i.dir==='out'?'This device':c.name; const line=i.type==='text'?'SMS':i.type==='vm'?'Voicemail':'Call log';
     return `<p><b>${fmtDivider(i.t).replace(/^\w+, /,'')} ${fmtTime(i.t)}</b><br>${line} - ${esc(who)}<br>${esc(c.name)} | ${i.dir==='out'?'To':'From'} carrier #: ${esc(c.number)}${i.dir==='out'?' · Device line: '+EXPORTER.line:''}<br>${esc(i.text||i.transcript||i.note||'')}<br><span class="mono">Ingestion record hash (SHA-256): ${h}<br>Current record hash (SHA-256): ${h}</span><br>Verification: <span class="m">MATCH</span></p>`; };
   return `<div class="preview">
-    <div class="brand">Recall<em>Text</em></div><h5>Tamper-evident communication record</h5>
+    <div class="brand" style="font-family:'Michroma',sans-serif;font-size:13px;letter-spacing:.01em;color:#B95722">COMM<em style="color:#071B42;font-style:normal">LOCKER</em></div><div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#111C32;font-weight:700;margin-bottom:6px">Logged<span style="color:#B95722">.</span> Secure<span style="color:#B95722">.</span> Tamper-evident<span style="color:#B95722">.</span></div><h5>Tamper-evident communication record</h5>
     <div class="row2"><span>File:</span><span>${esc(title)}</span><span>Scope:</span><span>${sc.kind==='conv'?'Single conversation/thread':'Folder record'}</span><span>Export ID:</span><span>${id}</span><span>Generated:</span><span>${fmtFull(now)}</span><span>Exporter:</span><span>${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span><span>Date range:</span><span>${first} – ${last}</span><span>Messages:</span><span>${k.text}</span><span>Calls:</span><span>${k.call}</span><span>Voicemails:</span><span>${k.vm}</span><span>Attachments:</span><span>${files.length}</span><span>Participants:</span><span>${parties.length+1}</span>${parties.map(c=>`<span>Participant (party):</span><span>${esc(c.name)} · ${esc(c.number)}</span>`).join('')}</div>
     <hr><h5>Conversation timeline (first ${Math.min(2,n)} of ${n})</h5>${list.slice(0,2).map(entry).join('')}${n>2?`<p style="color:#666">… ${n-2} more records, each with both hashes and a MATCH line …</p>`:''}
     <hr><h5>Attachment index</h5>${files.length?files.map(f=>`<p class="mono">${esc(f.name)} · sha256:${fullHash(f.seed)}</p>`).join(''):'<p>No attachments in scope.</p>'}
-    <hr><h5>Chain of custody</h5><p>This record was generated on-device by RecallText from device-native communication data available to the app. Message content, call records, voicemail records, attachments and record hashes are processed locally. Hashes verify that included items are unaltered since first observation by RecallText; this record makes no claim of completeness. Notes are labeled separately and do not alter original communication content.</p>
+    <hr><h5>Chain of custody</h5><p>This record was generated on-device by CommLocker from device-native communication data available to the app. Message content, call records, voicemail records, attachments and record hashes are processed locally. Hashes verify that included items are unaltered since first observation by CommLocker; this record makes no claim of completeness. Notes are labeled separately and do not alter original communication content.</p>
     <p class="mono"><b>Export Hash:</b> ${exportHash}</p></div>`;
 }
 
@@ -648,6 +664,13 @@ function togglePick(iid){ if(state.picked.has(iid)) state.picked.delete(iid); el
 function pickAll(cid,on){ itemsFor(contactById(cid)).forEach(i=>on?state.picked.add(i.id):state.picked.delete(i.id)); render(); }
 function toggleOpen(id){ if(state.open.has(id)) state.open.delete(id); else state.open.add(id); render(); }
 function toggleRest(id){ if(state.showRest.has(id)) state.showRest.delete(id); else state.showRest.add(id); render(); }
+/* ---------- theme: system / light / dark ---------- */
+const THEMES=[['system','i-auto','System'],['light','i-sun','Light'],['dark','i-moon','Dark']];
+let themeIdx=0;
+function applyTheme(i,quiet){ themeIdx=i; const [t,icon,label]=THEMES[i]; const r=document.documentElement; if(t==='system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme',t); const b=document.getElementById('thm'); b.innerHTML=`<svg class="ic"><use href="#${icon}"/></svg>`; b.title='Theme: '+label+' (tap to change)'; try{ localStorage.setItem('cl-theme',t); }catch(e){} if(!quiet) toast('Theme: '+label); }
+function cycleTheme(){ applyTheme((themeIdx+1)%THEMES.length); }
+(()=>{ let saved=null; try{ saved=localStorage.getItem('cl-theme'); }catch(e){} const i=Math.max(0,THEMES.findIndex(x=>x[0]===saved)); applyTheme(i,true); })();
+
 /* ---------- guided tour ---------- */
 const fakeEv = el => ({ stopPropagation(){}, currentTarget: el });
 function scrollRow(cid){ const rows=document.getElementById('rows'); const r=rows.querySelector(`.row[data-cid="${cid}"]`); if(r) rows.scrollTop=r.offsetTop-8; }

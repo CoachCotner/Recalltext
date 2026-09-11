@@ -1,11 +1,11 @@
-# RecallText Filing Desk — redesign plan
+# CommLocker Filing Desk — redesign plan
 
 **One screen. What's on your phone, and where it goes.**
 
 Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to file or export.
 
 - Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`v2/HANDOFF.md`](./HANDOFF.md)
-- Clickable mockup, sized for a 9:19.5 portrait phone: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me how** for a guided walk-through)
+- Clickable mockup, sized for a 9:19.5 portrait phone: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
 - Seven-screen walkthrough with captures: [`v2/walkthrough.html`](./walkthrough.html) · live: https://claude.ai/code/artifact/24840a15-2166-44f8-af48-f918ab4f34ba
 - Before/after drawing: [`v2/before-after.svg`](./before-after.svg)
 
@@ -20,13 +20,13 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 
 ```mermaid
 flowchart LR
-  P[Your phone<br/>text · call · voicemail] --> I[RecallText pulls it in]
+  P[Your phone<br/>text · call · voicemail] --> I[CommLocker pulls it in]
   I --> H[SHA-256 hash + timestamp<br/>stamped at ingestion]
   H --> E[Appears in Everything<br/>already certified]
   E --> F[You file it to one<br/>or more folders<br/>a label, nothing changes]
   F --> X[Export PDF<br/>carries the original hash]
-  classDef key fill:#FFF1E6,stroke:#F97316,color:#7C2D12
-  classDef step fill:#FFFFFF,stroke:#1A2F5A,color:#111827
+  classDef key fill:#F4F1EC,stroke:#C56230,color:#B95722
+  classDef step fill:#FFFFFF,stroke:#071B42,color:#111C32
   class H key
   class P,I,E,F,X step
 ```
@@ -90,10 +90,10 @@ flowchart TD
   J --> K[7 · Remove the old steps<br/>All Texts tab · Add Call Log form · Add Voicemail form<br/>Add Conversations · File This Message picker]
   K --> L[8 · Live phone data<br/>call log and voicemail feed into the stream automatically<br/>replaces the simulated forms for good]
   L --> M([Done: one screen, one move])
-  classDef now fill:#E1E6EF,stroke:#1A2F5A,color:#111827
-  classDef step fill:#FFFFFF,stroke:#1A2F5A,color:#111827
-  classDef key fill:#FFF1E6,stroke:#F97316,color:#7C2D12
-  classDef done fill:#F97316,stroke:#F97316,color:#FFFFFF
+  classDef now fill:#F4F1EC,stroke:#071B42,color:#111C32
+  classDef step fill:#FFFFFF,stroke:#071B42,color:#111C32
+  classDef key fill:#F4F1EC,stroke:#C56230,color:#B95722
+  classDef done fill:#C56230,stroke:#C56230,color:#EDEDED
   class A now
   class B,C,D,F,J,K,L step
   class E key

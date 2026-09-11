@@ -1,8 +1,8 @@
-# RecallText v2 — developer handoff
+# CommLocker v2 — developer handoff
 
 For the Kotlin/Android build. This is the spec behind the clickable mockup in `v2/index.html`. The mockup is the reference for layout and copy; this file is the reference for behavior, data and acceptance. Where the two disagree, this file wins.
 
-- Mockup (live): https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 — tap **Show me how** for the seven-step tour
+- Mockup (live): https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 — tap **Show me** for the seven-step tour
 - Walkthrough with captures: `v2/walkthrough.html`
 - Target: portrait phone, 9:19.5 aspect (720 × 1560 class). Every screen, including Export, fits one screen height without scrolling at 360 × 780 dp. Lists scroll; pages do not.
 
@@ -52,7 +52,7 @@ Rules:
 
 ### 3.1 Everything (home)
 
-- Header: brand, **Show me how** (optional in production).
+- Header: CommLocker mark and wordmark (orange COMM, white LOCKER; the tagline appears on the printed cover sheet, not in the header), a round theme button that cycles System → Light → Dark on each tap (persisted, toast names the new theme), **Show me** tour button (optional in production).
 - Title "Everything · N conversations · M items", search field, filter chips: All, Texts, Calls, Voicemails, Not filed yet (each with a count).
 - Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail) and preview, counts by type, lock chip "N hashed", folder chips or "not filed", a **⋯** button. Spam rows dimmed.
 - Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Pick messages**.
@@ -92,7 +92,7 @@ Top to bottom, in this order:
 
 **Preview cover sheet** is its own page (Back returns to Export). It renders the first page of the PDF and the first two timeline entries exactly as they print, then the attachment index and chain of custody with the export hash.
 
-Export ID format: `RT-<CONV|FOLDER>-<8 hex>` in the mockup; keep the production format `RT-YYYYMMDD-XXXXXXXX` if you prefer, it is not user-facing logic.
+Export ID format: `CL-<CONV|FOLDER>-<8 hex>` in the mockup; keep the production format `RT-YYYYMMDD-XXXXXXXX` if you prefer, it is not user-facing logic.
 
 ### 3.6 New folder
 
@@ -149,7 +149,29 @@ One ZIP per export, next to the PDF, containing every attachment in scope: image
 
 Cover / Export Summary → Conversation Timeline (both hashes per record) → Attachment Index → Chain of Custody with Export Hash. This is the current generator's structure; keep it, just add the "Current SHA-256" line where it is missing and the MISMATCH handling.
 
-## 5. Acceptance checklist
+## 5. Palette and type (locked)
+
+Logo palette: Navy `#071B42`, Burnt orange `#B95722`, Secondary burnt orange `#C56230`, Beige `#F4F1EC`, Soft white `#EDEDED`. Website palette is managed separately; the app uses the mapping below and nothing else.
+
+| Token | Light | Dark | Used for |
+|---|---|---|---|
+| ground | `#F4F1EC` | `#01173C` | screen background |
+| card | `#FFFFFF` | `#071B42` | rows, sheets, popovers |
+| header | `#071B42` | `#01173C` | top bar, tour card, selected filter chip |
+| text | `#111C32` | `#EDEDED` | body text |
+| muted | `#515D71` | `#EDEDED` @ 58% | secondary text, timestamps |
+| divider | `#2B4169` @ 22% | `#2B4169` | borders and lines |
+| button | `#C56230` | `#C56230` | primary buttons, selected folder, "on" states |
+| button hover/pressed | `#E8793A` | `#E8793A` | |
+| eyebrow | `#B95722` | `#E8793A` | small uppercase labels, agent-note strip, "no answer" |
+| success | `#16A34A` | `#4ADE80` | verified rows, MATCH, voicemail cards |
+| wordmark | COMM `#B95722` · LOCKER `#EDEDED` on the header; LOCKER `#071B42` on paper (cover sheet) | | |
+
+Two status colors sit outside the palette on purpose, because they must not read as brand: texts `#2B4169` (navy, in palette) and calls `#0F766E` (teal). Swap the teal if you have a house choice; keep it distinct from orange and green.
+
+Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Body 14 sp, row title 14 sp bold, chips 11–12 sp bold, hashes 10 sp monospace.
+
+## 6. Acceptance checklist
 
 - [ ] At 360 × 780 dp the Everything list, an open folder, the pick bar and the Export page each fit the screen; only lists scroll.
 - [ ] Folder chips: all visible in a fixed 3-column block; no horizontal scrolling.
@@ -163,7 +185,8 @@ Cover / Export Summary → Conversation Timeline (both hashes per record) → At
 - [ ] The export hash printed in the PDF equals the value recomputed from the PDF's timeline hashes + Export ID + generated time.
 - [ ] ZIP contains every attachment in scope with names and SHA-256 matching the attachment index.
 - [ ] Filing, unfiling, renaming a contact and adding a note never change any ingestion hash.
+- [ ] Theme button cycles System, Light, Dark; the choice survives an app restart; every screen is readable in both themes.
 
-## 6. Out of scope for this pass
+## 7. Out of scope for this pass
 
 Multi-select across rows, drag and drop, category templates on folder creation, the incoming-call capture demo. All can come later without touching the data model above.
