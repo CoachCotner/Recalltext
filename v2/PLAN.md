@@ -77,6 +77,7 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - **Rename or delete a folder** from "manage" in the folder block or the ⋯ in an open folder's header. Delete removes only the label; every item stays in Everything with its hash.
 - **Many folders stay out of the way.** The bottom block is always two rows: All, four folders (the open one always shown), and either + New folder or "All N folders". Fifteen folders cost no list space.
 - **Emails are records too.** Texts, calls, voicemails and emails sit in one list; an email shows subject, from/to and body, its attachments go into the export ZIP, and it is hashed like everything else. Sources: the phone's mail accounts, or an .eml shared to the app.
+- **Settings, Exports, Backup, Permissions stay as they are** behind a gear in the header; the bottom navigation bar goes, because it cost list space on a phone.
 - **Export then asks where.** This phone, Google Drive, Dropbox, email, or any app on the phone; PDF and ZIP go together.
 - **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail filed there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
 - **Always visible.** The folder chips sit in a fixed block along the bottom, all of them, nothing to scroll sideways.

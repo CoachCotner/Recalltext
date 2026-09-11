@@ -6,6 +6,24 @@ For the Kotlin/Android build. This is the spec behind the clickable mockup in `v
 - Walkthrough with captures: `v2/walkthrough.html`
 - Target: portrait phone, 9:19.5 aspect (720 × 1560 class). Every screen, including Export, fits one screen height without scrolling at 360 × 780 dp. Lists scroll; pages do not.
 
+## 0. What the current build (0.1.29, Android) already has, and what happens to it
+
+From the screenshots of the shipped app:
+
+| Today | In the redesign |
+|---|---|
+| Header with the COMMLOCKER wordmark, **+ New** | Same wordmark (the header asset, unchanged), theme button, Settings gear, tour |
+| **My Files / All Texts** tabs, "Find records…" | One list, "Everything on this phone", with unit-labeled filter chips |
+| File card ⋯: Edit details, Manage parties, Export, Close file, Delete | Folder ⋯ (in the folder header and the Folders sheet): Rename, Export, Delete. "Close file" becomes an optional archive flag later; "Manage parties" is the × on chips plus labeling in the export checks |
+| **Add to File** sheet: Texts / Voicemail / Email / Call pickers, each its own screen | Gone. Everything is already in the list; ⋯ → Add to folder picks from it |
+| **Add Voicemail to File** with "Add a voicemail by hand" | Gone. Voicemails sit in the list. Keep the **Refresh from device** action in Settings › Storage |
+| Bottom nav: Files, Search, Exports, Settings | No bottom bar (it cost list space). Search is the field at the top; Exports and Settings are behind the gear |
+| **Exports** tab: Generated Communication Records with date, MB, pages, `CL-YYYYMMDD-XXXXXXXX`, share | Same list under Settings › Exports; the mockup uses your ID format |
+| Settings: Exporter Identity, Appearance, Permissions, Contact Aliases, Storage, Backup & Restore, Subscription, Diagnostics, About | All kept as they are, reached from the gear. Appearance gains System / Light / Dark as one-tap chips |
+| Permissions: READ_SMS, READ_CONTACTS, READ_CALL_LOG, PHONE LINE, RCS notification access, Import Email (.eml / .mbox), Import Call Logs Now | Unchanged. .eml/.mbox import is how emails enter the list |
+
+Two facts from the screenshots that change assumptions elsewhere in this file: the app is **Android** (App info screen), and the device voicemail rows say **"No provider transcript exposed"**, so a voicemail item must render with audio and an optional user note when no transcript exists. The export sheet's "voicemail recordings" count covers that case.
+
 ## 1. What changes, in one paragraph
 
 One screen replaces Home tabs, the transaction detail screen, Add Call Log, Add Voicemail, Add Conversations and the File-this-message picker. The screen is a list of every conversation on the phone (texts, calls, voicemails and emails together, one row per contact, newest first) with a fixed block of folder chips along the bottom. Each row has a ⋯ menu with two actions: **Add to folder…** and **Export this conversation…**. Tapping a folder chip shows that folder as a date-ordered timeline across all contacts, with **Export…** in its header. Hashing happens at ingestion and is never touched by filing.
@@ -97,7 +115,7 @@ Top to bottom, in this order:
 
 **Preview cover sheet** is its own page (Back returns to Export). It renders the first page of the PDF and the first two timeline entries exactly as they print, then the attachment index and chain of custody with the export hash.
 
-Export ID format: `CL-<CONV|FOLDER>-<8 hex>` in the mockup; keep the production format `RT-YYYYMMDD-XXXXXXXX` if you prefer, it is not user-facing logic.
+Export ID format: `CL-YYYYMMDD-XXXXXXXX`, the same as the current build's Exports list.
 
 ### 3.6 Folders sheet (manage)
 
