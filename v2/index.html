@@ -58,8 +58,8 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .seg button[aria-pressed="true"]{background:var(--orange);color:var(--orange-ink)}
 
 /* ---------- shell ---------- */
-#app{width:100%;max-width:100%;min-width:0;height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;background:var(--bg);position:relative;top:0;left:0;overflow:hidden}
-@media (min-width:481px){#app{max-width:360px;max-height:780px;margin:0 auto;border:1px solid var(--line);border-radius:22px;box-shadow:0 0 60px rgba(0,0,0,.18)}}
+#app{position:fixed;top:0;left:0;width:100%;height:100%;max-width:100%;min-width:0;margin:0;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;z-index:1}
+@media (min-width:481px){#app{width:360px;max-height:780px;border:1px solid var(--line);border-radius:0 0 22px 0;box-shadow:0 0 60px rgba(0,0,0,.18)}}
 .top{flex:none}
 .top .grow{flex:0 0 2px}
 .tourbtn{background:var(--orange);}
@@ -491,7 +491,7 @@ function openExport(sc){
 function closeExport(){ document.getElementById('ov').classList.remove('open'); ex=null; }
 function exOpt(k){ ex[k]=!ex[k]; renderExport(); }
 function exPreview(){ ex.preview=!ex.preview; renderExport(); }
-function labelParty(cid){ const inp=document.getElementById('lbl-'+cid); const v=inp&&inp.value.trim(); if(!v){inp.focus();return;} const c=contactById(cid); c.name=v; c.unknown=false; c.role='Labeled by you · carrier number kept'; c._labeled=true; saveState(); toast('Labeled '+c.number+' as '+v); if(ex) ex.title=ex.sc.kind==='conv'?contactById(ex.sc.id).name:ex.title; renderExport(); render(); }
+function labelParty(cid){ const inp=document.getElementById('lbl-'+cid); const v=inp&&inp.value.trim(); if(!v){inp.focus({preventScroll:true});return;} const c=contactById(cid); c.name=v; c.unknown=false; c.role='Labeled by you · carrier number kept'; c._labeled=true; saveState(); toast('Labeled '+c.number+' as '+v); if(ex) ex.title=ex.sc.kind==='conv'?contactById(ex.sc.id).name:ex.title; renderExport(); render(); }
 function doExport(dest){ closePop(); const what=[ex.pdf?'PDF record':'',ex.zip&&ex.files.length?'ZIP ('+ex.files.length+' files)':''].filter(Boolean).join(' + '); const pages=6+Math.ceil(ex.list.length/3); const mb=(0.4+pages*0.12+ex.files.length*0.9).toFixed(1); state.exports.unshift({id:ex.id,title:ex.title,when:ex.now.getTime(),pages,mb,zip:ex.zip&&ex.files.length?ex.files.length:0,dest,hash:ex.exportHash}); saveState(); toast(what+' → '+dest+' · hash '+ex.exportHash.slice(0,10)+'…'); closeExport(); }
 function fmtFull(d){ return d.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
 function renderExport(){
@@ -578,7 +578,7 @@ function openPop(ev,p){
 }
 function togglePop(fid){ const p=state.pop; if(inFolder(p,fid)) unfileFrom(p,fid); else fileTo(p,fid); openPopRefresh(); }
 function openPopRefresh(){ const p=state.pop; const pop=document.getElementById('pop'); pop.querySelectorAll('.po').forEach((b,i)=>b.classList.toggle('in',inFolder(p,state.folders[i].id))); }
-function popNew(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){el.focus();return;} const f=createFolder(n); fileTo(state.pop,f.id); closePop(); }
+function popNew(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){el.focus({preventScroll:true});return;} const f=createFolder(n); fileTo(state.pop,f.id); closePop(); }
 function closePop(){ const p=state.pop; document.getElementById('pop').classList.remove('open'); state.pop=null; if(p&&p.kind==='multi'){ state.selected.clear(); render(); } }
 document.addEventListener('click',e=>{ if(!e.target.closest('#pop')) closePop(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePop(); if(ex) closeExport(); if(document.getElementById('fov').classList.contains('open')) closeFolderSheet(); closeSettings(); if(document.getElementById('pov').classList.contains('open')) closePerms(); } });
@@ -733,8 +733,8 @@ function fitStrip(){
   let k=0; while(!allFit()&&k<hideOrder.length){ hideOrder[k].hidden=true; k++; }
   if(folders.some(c=>c.hidden)||add.hidden){ more.hidden=false; more.querySelector('.t').textContent='All '+state.folders.length+' folders ▸'; while(!allFit()&&k<hideOrder.length){ hideOrder[k].hidden=true; k++; } }
 }
-function stripNew(ev){ ev.stopPropagation(); state.pop={kind:'newfolder'}; const pop=document.getElementById('pop'); pop.innerHTML=`<div class="pt">New folder</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" placeholder="Name it, e.g. 1234 Main St" onkeydown="if(event.key==='Enter')stripNewCreate()"><button class="btn primary" onclick="stripNewCreate()">Create</button></div>`; pop.classList.add('open'); placePop(ev,pop); setTimeout(()=>{ const i=document.getElementById('popnew'); if(i) i.focus(); },50); }
-function stripNewCreate(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){ el.focus(); return; } const f=createFolder(n); closePop(); toast('Folder created: '+f.name); openFolder(f.id); }
+function stripNew(ev){ ev.stopPropagation(); state.pop={kind:'newfolder'}; const pop=document.getElementById('pop'); pop.innerHTML=`<div class="pt">New folder</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" placeholder="Name it, e.g. 1234 Main St" onkeydown="if(event.key==='Enter')stripNewCreate()"><button class="btn primary" onclick="stripNewCreate()">Create</button></div>`; pop.classList.add('open'); placePop(ev,pop); setTimeout(()=>{ const i=document.getElementById('popnew'); if(i) i.focus({preventScroll:true}); },50); }
+function stripNewCreate(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){ el.focus({preventScroll:true}); return; } const f=createFolder(n); closePop(); toast('Folder created: '+f.name); openFolder(f.id); }
 /* ---------- take out of a folder ---------- */
 function unfileConv(cid,fid){ const c=contactById(cid), f=folderById(fid); c.items.forEach(i=>removeFrom(i,fid)); saveState(); toast('Took '+c.name+' out of '+f.name); render(); }
 function unfileItem(cid,iid,fid){ const c=contactById(cid), f=folderById(fid); const i=c.items.find(x=>x.id===iid); if(i) removeFrom(i,fid); saveState(); toast('Took 1 item out of '+f.name); render(); }
@@ -743,10 +743,10 @@ function unfileItem(cid,iid,fid){ const c=contactById(cid), f=folderById(fid); c
 let fsEdit=null;
 function openFolderSheet(focus){ fsEdit=focus?{id:focus,mode:'menu'}:null; renderFolderSheet(); document.getElementById('fov').classList.add('open'); }
 function closeFolderSheet(){ fsEdit=null; document.getElementById('fov').classList.remove('open'); render(); }
-function fsMenu(id,mode){ fsEdit=(fsEdit&&fsEdit.id===id&&fsEdit.mode===mode)?null:{id,mode}; renderFolderSheet(); if(mode==='rename'){ const i=document.getElementById('fs-rename'); if(i){ i.focus(); i.select(); } } }
-function renameFolder(id){ const i=document.getElementById('fs-rename'); const n=i&&i.value.trim(); if(!n){ i.focus(); return; } folderById(id).name=n; fsEdit=null; saveState(); toast('Renamed to '+n); renderFolderSheet(); render(); }
+function fsMenu(id,mode){ fsEdit=(fsEdit&&fsEdit.id===id&&fsEdit.mode===mode)?null:{id,mode}; renderFolderSheet(); if(mode==='rename'){ const i=document.getElementById('fs-rename'); if(i){ i.focus({preventScroll:true}); i.select(); } } }
+function renameFolder(id){ const i=document.getElementById('fs-rename'); const n=i&&i.value.trim(); if(!n){ i.focus({preventScroll:true}); return; } folderById(id).name=n; fsEdit=null; saveState(); toast('Renamed to '+n); renderFolderSheet(); render(); }
 function deleteFolder(id){ const f=folderById(id); if(!f) return; let n=0; state.contacts.forEach(c=>c.items.forEach(i=>{ if(i.folders.includes(id)){ removeFrom(i,id); n++; } })); const k=state.folders.findIndex(x=>x.id===id); if(k>=0) state.folders.splice(k,1); if(state.folder===id) state.folder=null; fsEdit=null; saveState(); toast('Deleted '+f.name+' · '+n+' item'+(n!==1?'s':'')+' stay in Everything'); renderFolderSheet(); render(); }
-function fsNew(){ const i=document.getElementById('fs-new'); const n=i&&i.value.trim(); if(!n){ i.focus(); return; } const f=createFolder(n); i.value=''; toast('Folder created: '+f.name); renderFolderSheet(); render(); }
+function fsNew(){ const i=document.getElementById('fs-new'); const n=i&&i.value.trim(); if(!n){ i.focus({preventScroll:true}); return; } const f=createFolder(n); i.value=''; toast('Folder created: '+f.name); renderFolderSheet(); render(); }
 function renderFolderSheet(){
   const N=state.folders.length;
   document.getElementById('fsheet').innerHTML=`<div class="xh"><button class="btn ghost" onclick="closeFolderSheet()"><svg class="ic"><use href="#i-back"/></svg> Back</button><div class="xt"><b>Folders</b><span>${N} folder${N!==1?'s':''} · open, rename or delete</span></div></div>
@@ -821,6 +821,10 @@ function togglePick(iid){ if(state.picked.has(iid)) state.picked.delete(iid); el
 function pickAll(cid,on){ itemsFor(contactById(cid)).forEach(i=>on?state.picked.add(i.id):state.picked.delete(i.id)); render(); }
 function toggleOpen(id){ if(state.open.has(id)) state.open.delete(id); else state.open.add(id); render(); }
 function toggleRest(id){ if(state.showRest.has(id)) state.showRest.delete(id); else state.showRest.add(id); render(); }
+/* ---------- keep the document pinned; only inner lists scroll ---------- */
+function pinDoc(){ if(window.scrollX||window.scrollY) window.scrollTo(0,0); const d=document.documentElement; if(d.scrollLeft||d.scrollTop){ d.scrollLeft=0; d.scrollTop=0; } if(document.body.scrollLeft||document.body.scrollTop){ document.body.scrollLeft=0; document.body.scrollTop=0; } }
+window.addEventListener('scroll',pinDoc,{passive:true}); window.addEventListener('resize',pinDoc); window.addEventListener('load',pinDoc); setInterval(pinDoc,800);
+
 /* ---------- theme: system / light / dark ---------- */
 const THEMES=[['system','i-auto','System'],['light','i-sun','Light'],['dark','i-moon','Dark']];
 let themeIdx=0;
