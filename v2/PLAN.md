@@ -12,7 +12,7 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 ## In plain words
 
 - **A row** is one line in the left list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
-- **Dragging a row** means press on that line, move it onto a folder on the right, let go. Same motion as moving a file into a folder on a computer. On a phone you don't drag: tap **File**, then tap a folder.
+- **Filing a conversation** starts with the **File…** button on its row. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders, Done. On a computer you can also drag the row onto a folder, which files all of it in one motion.
 - **Filing** is a label, not a copy. It says "these records belong to the 1010 Catalina deal." The message, call log or voicemail is not changed, moved or duplicated. One item can carry several labels.
 - **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Filing happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
 
@@ -34,7 +34,7 @@ flowchart LR
 | You want to… | Today | Redesign |
 |---|---|---|
 | See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything filed there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
-| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **1 drag, or 2 taps.** Drag the row onto the folder, or File → tap the folder. Whole conversation at once, or one message. |
+| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **3 taps.** File… on the row (everything ticked) → File picked → tap the folder. Untick anything that should stay out first. On a computer, dragging the row onto a folder files all of it in one motion. |
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
 | Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. File it like anything else. |
 | Start a new deal folder | **6 taps + 3 fields.** ＋ New Transaction → name → category → note → Create → Add Conversations → select → Add. | **1 field.** Type a name, press Enter. Or drop a conversation on "New folder" and name it. |
@@ -55,8 +55,9 @@ flowchart LR
 
 - **New folder is one field.** Name, Enter. It also accepts a drop: drop a conversation on it and it asks for a name.
 - **Each folder card** shows icon, name, category, contact and item counts split by type, plus Open timeline and Export PDF.
+- **Getting back out of a folder** is the orange "Back to all conversations" button at the top of the list, or tapping the same folder again.
 - **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail filed there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
-- **On a phone** the pane becomes a strip of folder chips along the bottom. Chips take a drop, filter the list, and File → tap a chip does the same thing.
+- **On a phone** the pane becomes a fixed block of folder chips along the bottom, all visible, nothing to scroll sideways. Tap a chip to open that folder's timeline.
 
 ## Flowchart of the changes
 
