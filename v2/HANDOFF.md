@@ -144,8 +144,8 @@ Implementation: re-check on every `onResume`. Deep links: runtime permissions �
 
 One filter, stored once, applied everywhere: `DateRange(from: Long?, to: Long?)` in the list ViewModel, compared against the item's ingestion timestamp. Everything that reads items (the Everything list, the filter-chip counts, an open folder, the timeline, pick mode) goes through the same query, so the counts always agree with the rows.
 
-- Control: a **calendar button** at the right end of the search field reads "All dates"; when a range is active it turns orange, reads "Mar 11 – Apr 10" (year only when it differs from the current year), and an **×** next to it clears the range.
-- Tapping it opens a popover with four presets, each with its item count (**All dates**, **Last 30 days**, **Last 90 days**, **This year**), and **From / To** fields with **Apply**. In Kotlin use `MaterialDatePicker.Builder.dateRangePicker()` for the custom range; the presets are one-line arithmetic. "From" after "To" is refused inline.
+- Control: a **calendar button** at the right end of the search field reads "Dates"; when a range is active it turns orange, reads "Mar 11 – Apr 10" (year only when it differs from the current year), and an **×** next to it clears the range.
+- Tapping it opens the date picker: **From** and **To**, **Apply**, and **All dates** to clear. No presets; keep it to two taps. In Kotlin use `MaterialDatePicker.Builder.dateRangePicker()`, the standard Android calendar where the user taps the first day and the last day. One side left empty means open-ended. "From" after "To" is refused inline.
 - Room: `WHERE (:from IS NULL OR ts >= :from) AND (:to IS NULL OR ts <= :to)`, with `to` set to 23:59:59.999 of the chosen day. Index `ts`.
 - A contact with no items inside the range drops out of the list; the count line reads "N people · M items" for the range. Search matches only inside the range too.
 - Export starts from the range active on the list, and can change it on the Export page without leaving it (3.5, step 3). The cover sheet prints "Scope: … · limited to <from> – <to>" and the "Date range" line shows the first and last record actually included. The export hash covers only the included records, so a date-limited export has its own hash and its own Export ID.
@@ -261,7 +261,7 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Export destination menu offers this phone, Google Drive, Dropbox, Email, More; PDF and ZIP arrive together at the destination.
 - [ ] An imported .eml appears as an Email item with subject, from, to, body and attachments, hashed at import.
 - [ ] Folder pills size to their text, capped at 35 characters; the bottom block never exceeds two rows; the open folder is always visible; the rest collapse into "All N folders".
-- [ ] Date range: choosing "Last 30 days" changes the rows, the chip counts and the count line together; clearing with × restores all; a contact with nothing in the range disappears from the list.
+- [ ] Date range: picking Mar 1 – Mar 31 changes the rows, the chip counts and the count line together; clearing with × restores all; a contact with nothing in the range disappears from the list.
 - [ ] Date-limited export: the PDF contains only records inside the range, prints "limited to <from> – <to>" on the cover sheet, and its export hash differs from the all-dates export of the same person.
 - [ ] Batch export of two people produces two PDFs (and a ZIP for each person with attachments), each with its own Export ID and export hash, delivered together to the chosen destination; Settings › Exports lists them as two rows.
 - [ ] Search "ace" lists Ace Johnson first and a message-only match with a "mentions" tag; "place" does not match "ace".

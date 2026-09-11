@@ -70,7 +70,7 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 
 ## Dates and several people at once
 
-- A calendar button next to search limits the whole screen to a date range (presets or From/To). Every count follows it.
+- A calendar button next to search limits the whole screen to a date range: tap the first day and the last day. Every count follows it.
 - The Export page carries the same range and can change it, so a record can cover only the weeks that matter. The cover sheet says so.
 - ⋯ → Export with other people ticks several people and exports each one as its own separate PDF and ZIP in one go. Nothing is merged.
 

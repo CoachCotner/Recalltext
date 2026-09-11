@@ -277,7 +277,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .pop .po .ck{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff}
 .pop .po.in .ck{background:var(--vm-c);border-color:var(--vm-c)}
 .pop .ps{font-size:11px;color:var(--mute);padding:0 10px 6px}
-.pop .done{display:flex;justify-content:flex-end;padding:6px 8px 2px}
+.pop .done{display:flex;justify-content:flex-end;gap:4px;padding:6px 8px 2px}
 .pop .newrow{display:flex;gap:6px;padding:6px 8px 4px;border-top:1px solid var(--line);margin-top:4px}
 .pop .newrow input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:0;min-width:0}
 .pop .newrow input:focus{border-color:var(--orange)}
@@ -409,7 +409,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
       <div class="ph">
         <div id="fbanner"></div>
         <div class="ph-row"><h2 id="lt">Everything on this phone</h2><span class="count" id="lc"></span></div>
-        <div class="srow"><label class="search"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search names, numbers, what was said" oninput="state.q=this.value;render()"></label><button class="dbtn" id="dbtn" onclick="openDates(event,'main')" title="Show only a date range" aria-label="Date range"><svg class="ic"><use href="#i-cal"/></svg><span id="dbtn-t">All dates</span></button><button class="dclr" id="dclr" hidden onclick="clearRange()" title="Show all dates" aria-label="Clear date range">×</button></div>
+        <div class="srow"><label class="search"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search names, numbers, what was said" oninput="state.q=this.value;render()"></label><button class="dbtn" id="dbtn" onclick="openDates(event,'main')" title="Show only a date range" aria-label="Date range"><svg class="ic"><use href="#i-cal"/></svg><span id="dbtn-t">Dates</span></button><button class="dclr" id="dclr" hidden onclick="clearRange()" title="Show all dates" aria-label="Clear date range">×</button></div>
         <div class="chips" id="chips"></div>
       </div>
       <div class="scroll" id="rows"></div>
@@ -552,7 +552,7 @@ function renderExport(){
     document.getElementById('sheet').innerHTML=head('Cover sheet',(batch?esc(x.title)+' · ':'')+'as it prints · first page','exPreview()')+(batch?`<div class="pvtabs">${batch.map((b,i)=>`<button class="chip" aria-pressed="${i===ex.pv}" onclick="ex.pv=${i};renderExport()">${esc(b.title)}</button>`).join('')}</div>`:'')+`<div class="pvscroll">${renderPreview(x)}</div>`;
     return;
   }
-  const dates=`<button class="xscope ${rangeOn(ex.range)?'on':''}" onclick="openDates(event,'ex')" title="Limit this export to a date range"><svg class="ic"><use href="#i-cal"/></svg><span><b>${fmtRange(ex.range,true)}</b> ▾ · ${n} of ${ex.all.length} record${ex.all.length!==1?'s':''}</span>${batch?'':`<span class="xid">${id}</span>`}</button>`;
+  const dates=`<button class="xscope ${rangeOn(ex.range)?'on':''}" onclick="openDates(event,'ex')" title="Limit this export to a date range"><svg class="ic"><use href="#i-cal"/></svg><span><b>${rangeOn(ex.range)?fmtRange(ex.range,true):'All dates'}</b> ▾ · ${n} of ${ex.all.length} record${ex.all.length!=1?'s':''}</span>${batch?'':`<span class="xid">${id}</span>`}</button>`;
   if(batch){
     const zips=ex.zip?batch.filter(b=>b.files.length).length:0;
     document.getElementById('sheet').innerHTML=head('Export separately',batch.length+' people · '+batch.length+' PDFs, one each','closeExport()')+`
@@ -713,7 +713,7 @@ function renderChips(){
   if(!state.folder){ const np=all.filter(c=>!c.spam&&!convFolders(c).length).length; defs.push(['unfiled',pl(np,'person','people')+' not filed yet']); }
   document.getElementById('chips').innerHTML=defs.map(([k,l])=>`<button class="chip" aria-pressed="${state.filter===k}" onclick="state.filter='${k}';render()">${l}</button>`).join('');
   const q=state.q.trim(); document.getElementById('lc').textContent=q?pl(visibleContacts().length,'person','people')+' match “'+q+'”':pl(all.length,'person','people')+' · '+pl(items.length,'item','items');
-  const on=rangeOn(state.range); const db=document.getElementById('dbtn'); db.classList.toggle('on',on); document.getElementById('dbtn-t').textContent=on?fmtRange(state.range,true):'All dates'; document.getElementById('dclr').hidden=!on;
+  const on=rangeOn(state.range); const db=document.getElementById('dbtn'); db.classList.toggle('on',on); document.getElementById('dbtn-t').textContent=on?fmtRange(state.range,true):'Dates'; document.getElementById('dclr').hidden=!on;
 }
 function renderRows(){
   const el=document.getElementById('rows');
@@ -894,18 +894,13 @@ function openSaveMenu(ev){ ev.stopPropagation(); if(!ex.pdf&&!ex.zip){ toast('Ch
   pop.innerHTML=`<div class="pt">${what} ready · save or share to</div>`+opts.map(([ic,l,sub])=>`<button class="po" onclick="doExport('${l}')"><span class="fi"><svg class="ic"><use href="#${ic}"/></svg></span><span class="fn">${l}<small>${sub}</small></span></button>`).join('');
   pop.classList.add('open'); placePop(ev,pop); }
 /* ---------- date range: one filter on item timestamp, used by the list, folders and export ---------- */
-function presetRange(k){ const day=86400000; const end=new Date(LATEST); end.setHours(23,59,59,999); const to=end.getTime(); if(k==='30') return {from:to-30*day,to}; if(k==='90') return {from:to-90*day,to}; if(k==='year') return {from:new Date(yr(LATEST),0,1).getTime(),to}; return {from:null,to:null}; }
-function countIn(r,target){ const src=target==='ex'?ex.all.map(x=>x.i):state.contacts.flatMap(c=>state.folder?c.items.filter(i=>i.folders.includes(state.folder)):c.items); return src.filter(i=>inRange(i,r)).length; }
 function openDates(ev,target){ ev.stopPropagation(); const r=target==='ex'?ex.range:state.range; state.pop={kind:'dates',target}; const pop=document.getElementById('pop');
   const d2v=t=>{ if(!t) return ''; const d=new Date(t); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
-  const same=k=>{ const p=presetRange(k); return p.from===r.from&&p.to===r.to; };
-  pop.innerHTML=`<div class="pt">${target==='ex'?'Export only these dates':'Show only these dates'}</div>`+
-    [['all','All dates'],['30','Last 30 days'],['90','Last 90 days'],['year','This year']].map(([k,l])=>`<button class="po ${same(k)?'in':''}" onclick="setRange('${k}')"><span class="fn">${l}<small>${countIn(presetRange(k),target)} items</small></span><span class="ck"><svg class="ic" style="width:11px;height:11px"><use href="#i-check"/></svg></span></button>`).join('')+
-    `<div class="drow"><label>From<input type="date" id="dfrom" value="${d2v(r.from)}"></label><label>To<input type="date" id="dto" value="${d2v(r.to)}"></label></div>
-    <div class="done"><button class="btn ghost" onclick="closePop()">Cancel</button><button class="btn primary" onclick="applyDates()">Apply</button></div>`;
+  pop.innerHTML=`<div class="pt">${target==='ex'?'Export only these dates':'Show only these dates'}</div><div class="ps">Pick the first day and the last day. Leave one empty for open-ended.</div>
+    <div class="drow" style="border-top:0;margin-top:0"><label>From<input type="date" id="dfrom" value="${d2v(r.from)}"></label><label>To<input type="date" id="dto" value="${d2v(r.to)}"></label></div>
+    <div class="done">${rangeOn(r)?`<button class="btn ghost" onclick="applyRange({from:null,to:null})">All dates</button>`:''}<button class="btn ghost" onclick="closePop()">Cancel</button><button class="btn primary" onclick="applyDates()">Apply</button></div>`;
   pop.classList.add('open'); placePop(ev,pop); }
-function setRange(k){ applyRange(presetRange(k)); }
-function applyDates(){ const f=document.getElementById('dfrom').value, t=document.getElementById('dto').value; const p=s=>{ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }; const r={from:f?p(f).getTime():null,to:null}; if(t){ const d=p(t); d.setHours(23,59,59,999); r.to=d.getTime(); } if(r.from&&r.to&&r.from>r.to){ toast('“From” is after “To”'); return; } applyRange(r); }
+function applyDates(){ const f=document.getElementById('dfrom').value, t=document.getElementById('dto').value; if(!f&&!t){ toast('Pick at least one date'); return; } const p=s=>{ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }; const r={from:f?p(f).getTime():null,to:null}; if(t){ const d=p(t); d.setHours(23,59,59,999); r.to=d.getTime(); } if(r.from&&r.to&&r.from>r.to){ toast('“From” is after “To”'); return; } applyRange(r); }
 function applyRange(r){ const target=state.pop&&state.pop.target; closePop(); if(target==='ex'){ ex.range=r; rebuildExport(); renderExport(); toast(rangeOn(r)?'Export limited to '+fmtRange(r):'Export covers all dates'); } else { state.range=r; state.open.clear(); render(); toast(rangeOn(r)?'Showing '+fmtRange(r)+' only':'Showing all dates'); } }
 function clearRange(){ state.range={from:null,to:null}; render(); }
 /* ---------- select several people, export each separately ---------- */
