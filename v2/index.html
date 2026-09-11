@@ -17,7 +17,7 @@
   --shadow:0 6px 24px rgba(7,27,66,.16);
 }
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
+  #app:not([data-theme="light"]){
     --bg:#01173C;--card:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
     --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
     --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
@@ -28,7 +28,7 @@
     --shadow:0 6px 24px rgba(0,0,0,.5);
   }
 }
-:root[data-theme="dark"]{
+#app[data-theme="dark"]{
     --bg:#01173C;--card:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
     --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
     --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
@@ -990,7 +990,7 @@ window.addEventListener('scroll',pinDoc,{passive:true}); window.addEventListener
 /* ---------- theme: system / light / dark ---------- */
 const THEMES=[['system','i-auto','System'],['light','i-sun','Light'],['dark','i-moon','Dark']];
 let themeIdx=0;
-function applyTheme(i,quiet){ themeIdx=i; const [t,icon,label]=THEMES[i]; const r=document.documentElement; if(t==='system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme',t); const b=document.getElementById('thm'); b.innerHTML=`<svg class="ic"><use href="#${icon}"/></svg>`; b.title='Theme: '+label+' (tap to change)'; try{ localStorage.setItem('cl-theme',t); }catch(e){} if(!quiet) toast('Theme: '+label); }
+function applyTheme(i,quiet){ themeIdx=i; const [t,icon,label]=THEMES[i]; const r=document.getElementById('app'); if(t==='system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme',t); const b=document.getElementById('thm'); b.innerHTML=`<svg class="ic"><use href="#${icon}"/></svg>`; b.title='Theme: '+label+' (tap to change)'; try{ localStorage.setItem('cl-theme',t); }catch(e){} if(!quiet) toast('Theme: '+label); }
 function cycleTheme(){ applyTheme((themeIdx+1)%THEMES.length); }
 (()=>{ let saved=null; try{ saved=localStorage.getItem('cl-theme'); }catch(e){} const i=Math.max(0,THEMES.findIndex(x=>x[0]===saved)); applyTheme(i,true); })();
 
