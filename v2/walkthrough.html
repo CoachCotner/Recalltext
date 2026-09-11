@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CommLocker Phone Walkthrough</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
@@ -59,17 +54,15 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
 @media (max-width:680px){.step{grid-template-columns:1fr;gap:14px}.phone{max-width:260px}.stick{position:static}.tally{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}}
 </style>
 
-</head>
-<body>
 <div class="wrap">
   <div class="eyebrow">CommLocker · phone app · how it works</div>
-  <h1>Seven screens. Four taps to file, one to open, one to export.</h1>
+  <h1>Seven screens. Four taps to add to a folder, one to open, one to export.</h1>
   <p class="lede">This is the whole app on a portrait phone at a 9:19.5 aspect ratio (720 × 1560 class screens), using the real sample data. Every screen below is a live capture of the mockup at that size, and every one of them, the export page included, fits without scrolling. The same walk-through runs inside the mockup itself: open it and tap <b>Show me</b>.</p>
   <a class="cta" href="https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8">▶ Open the mockup on your phone</a>
 
   <div class="tally">
     <div><b>1</b><span>screen. No tabs, no detail page.</span></div>
-    <div><b>4</b><span>taps to file a conversation, choosing what goes in.</span></div>
+    <div><b>4</b><span>taps to add a conversation to a folder, choosing what goes in.</span></div>
     <div><b>1</b><span>tap to open a folder’s timeline.</span></div>
     <div><b>1</b><span>tap to export PDF + ZIP with both hashes.</span></div>
   </div>
@@ -79,7 +72,7 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
     <div><span class="n">1</span><h2>Your phone, in one list</h2><span class="tap">No taps yet</span>
       <p>Every text, call and voicemail on the phone, newest first, one line per person. Each line shows the latest item, how many texts, calls and voicemails there are, and which folders it is already in.</p>
       <p>The lock chip, for example “22 hashed”, means every item was hashed the moment it came off the phone. That happens before you do anything.</p>
-      <div class="why">Filters along the top: All, Texts, Calls, Voicemails, Not filed yet. “Not filed yet” is your to-do list. Folders sit along the bottom, always visible, nothing to scroll sideways. The round button in the header switches the theme: System, Light, Dark, one tap each.</div>
+      <div class="why">Filters along the top: All, Texts, Calls, Voicemails, Not in a folder yet. “Not in a folder yet” is your to-do list. Folders sit along the bottom, always visible, nothing to scroll sideways. The round button in the header switches the theme: System, Light, Dark, one tap each.</div>
     </div>
   </div>
 
@@ -92,27 +85,27 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
   </div>
 
   <div class="step">
-    <div class="stick"><img class="phone" src="shots/step-3.png" alt="Pick mode with everything ticked except two personal texts"></div>
+    <div class="stick"><img class="phone" src="shots/step-3.png" alt="Select mode with everything selected except two personal texts"></div>
     <div><span class="n">3</span><h2>Choose what goes in</h2><span class="tap">Tap 2 · Add to folder…</span>
-      <p>The conversation opens with every text, call and voicemail already ticked. You only untick what should stay out. Here two personal texts are unticked; the calls and the voicemail stay in.</p>
-      <p>The bar at the bottom keeps count, “20 of 22 picked”. <b>All</b> and <b>None</b> are one tap each.</p>
-      <div class="why">Nothing has been filed yet. The originals are never edited or copied; a folder is a label on records that already exist.</div>
+      <p>The conversation opens with every text, call and voicemail already selected. You only deselect what should stay out. Here two personal texts are deselected; the calls and the voicemail stay in.</p>
+      <p>The bar at the bottom keeps count, “20 of 22 selected”. <b>All</b> and <b>None</b> are one tap each.</p>
+      <div class="why">Nothing is in a folder yet. The originals are never edited or copied; a folder is a label on records that already exist.</div>
     </div>
   </div>
 
   <div class="step">
     <div class="stick"><img class="phone" src="shots/step-4.png" alt="Folder list with check marks and a new folder box"></div>
-    <div><span class="n">4</span><h2>Tick the folder, or make one</h2><span class="tap">Tap 3 · File picked · Tap 4 · the folder</span>
-      <p>The folder list opens with check marks. Tick one folder or several; the list stays open so the same items can go into two deals. Tap <b>Done</b> when finished.</p>
-      <p>No folder fits? Type a name in the box and tap <b>Create &amp; file</b>. The folder is made and the picked items are filed in the same move.</p>
-      <div class="why">That is the whole filing job: ⋯, Add to folder, File picked, tap the folder. Four taps, and you saw every item before it went in.</div>
+    <div><span class="n">4</span><h2>Select the folder, or make one</h2><span class="tap">Tap 3 · Add selected · Tap 4 · the folder</span>
+      <p>The folder list opens with check marks. Select one folder or several; the list stays open so the same items can go into two deals. Tap <b>Done</b> when finished.</p>
+      <p>No folder fits? Type a name in the box and tap <b>Create &amp; add</b>. The folder is made and the selected items are added in the same move.</p>
+      <div class="why">That is the whole job: ⋯, Add to folder, Add selected, tap the folder. Four taps, and you saw every item before it went in.</div>
     </div>
   </div>
 
   <div class="step">
     <div class="stick"><img class="phone" src="shots/step-5.png" alt="Alvarez Drive Listing folder open as a timeline"></div>
     <div><span class="n">5</span><h2>Open the folder: the transaction timeline</h2><span class="tap">Tap 1 · the folder chip at the bottom</span>
-      <p>Everything filed to Alvarez Drive Listing, from every person, in date order. Texts, calls and voicemails are in one stream, each with who it was with and the hash under it. This is the record you export.</p>
+      <p>Everything added to Alvarez Drive Listing, from every person, in date order. Texts, calls and voicemails are in one stream, each with who it was with and the hash under it. This is the record you export.</p>
       <p><b>By person</b> shows the same items grouped by contact. The orange <b>Back to all conversations</b> button at the top takes you out, or tap the folder chip again.</p>
     </div>
   </div>
@@ -129,7 +122,7 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
   <div class="step">
     <div class="stick"><img class="phone" src="shots/step-7.png" alt="Back on the Everything list"></div>
     <div><span class="n">7</span><h2>That is the whole app</h2><span class="tap">Back to the list</span>
-      <p>One list. Folders along the bottom. ⋯ to file or export. There is no separate transaction screen, no add-call form, no add-voicemail form, no tab for texts.</p>
+      <p>One list. Folders along the bottom. ⋯ to add to a folder or export. There is no separate transaction screen, no add-call form, no add-voicemail form, no tab for texts.</p>
     </div>
   </div>
 
@@ -138,13 +131,10 @@ td.g{background:var(--good-soft);color:var(--good);font-weight:700}
     <thead><tr><th>You want to…</th><th>Current app</th><th>This</th></tr></thead>
     <tbody>
       <tr><td>See a deal’s texts, calls and voicemails together</td><td><b>3 taps + scroll</b>, calls in a separate block</td><td class="g">1 tap on the folder</td></tr>
-      <tr><td>File a conversation, choosing what goes in</td><td><b>4 taps per message</b></td><td class="g">4 taps for the whole conversation</td></tr>
+      <tr><td>Add a conversation to a folder, choosing what goes in</td><td><b>4 taps per message</b></td><td class="g">4 taps for the whole conversation</td></tr>
       <tr><td>Record a call or voicemail</td><td><b>3 taps + 6 or 7 fields</b></td><td class="g">0, it is already in the list</td></tr>
       <tr><td>Start a new folder</td><td><b>6 taps + 3 fields</b></td><td class="g">Type a name, tap Create</td></tr>
       <tr><td>Export with hashes, plus attachments</td><td><b>4 taps</b>, PDF only</td><td class="g">1 tap, PDF + ZIP</td></tr>
     </tbody>
   </table></div>
 </div>
-
-</body>
-</html>

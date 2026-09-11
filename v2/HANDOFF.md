@@ -15,7 +15,7 @@ From the screenshots of the shipped app:
 | Header with the COMMLOCKER wordmark, **+ New** | Same wordmark (the header asset, unchanged), theme button, Settings gear, tour |
 | **My Files / All Texts** tabs, "Find records…" | One list, "Everything on this phone", with unit-labeled filter chips |
 | File card ⋯: Edit details, Manage parties, Export, Close file, Delete | Folder ⋯ (in the folder header and the Folders sheet): Rename, Export, Delete. "Close file" becomes an optional archive flag later; "Manage parties" is the × on chips plus labeling in the export checks |
-| **Add to File** sheet: Texts / Voicemail / Email / Call pickers, each its own screen | Gone. Everything is already in the list; ⋯ → Add to folder picks from it |
+| **Add to File** sheet: Texts / Voicemail / Email / Call pickers, each its own screen | Gone. Everything is already in the list; ⋯ → Add to folder selects from it |
 | **Add Voicemail to File** with "Add a voicemail by hand" | Gone. Voicemails sit in the list. Keep the **Refresh from device** action in Settings › Storage |
 | Bottom nav: Files, Search, Exports, Settings | No bottom bar (it cost list space). Search is the field at the top; Exports and Settings are behind the gear |
 | **Exports** tab: Generated Communication Records with date, MB, pages, `CL-YYYYMMDD-XXXXXXXX`, share | Same list under Settings › Exports; the mockup uses your ID format |
@@ -53,7 +53,7 @@ data class Item(
     val note: String?,              // agent note, shown as agent-added, excluded from the record hash
     val ingestionHash: String,      // SHA-256 hex over canonicalBytes, computed once at ingestion
     val canonicalBytes: ByteArray,  // the exact bytes that were hashed, stored verbatim
-    val folderIds: Set<String>      // labels; empty = "not filed yet"
+    val folderIds: Set<String>      // labels; empty = "not in a folder yet"
 )
 
 data class Attachment(val id: String, val kind: String /* image|video|pdf|audio|text */, val fileName: String, val caption: String?, val sha256: String, val bytesRef: String)
@@ -66,40 +66,40 @@ data class Folder(val id: String, val name: String, val icon: String, val catego
 Rules:
 
 - `ingestionHash` and `canonicalBytes` are written once and never updated. `note`, `folderIds`, `userLabel` live outside the hashed bytes.
-- Filing = add a folder id to `Item.folderIds`. Unfiling = remove it. Nothing else changes.
+- Filing = add a folder id to `Item.folderIds`. Removing from a folder = remove it. Nothing else changes.
 - A conversation's "folders" chips are the union of its items' `folderIds`.
-- "Not filed yet" = a contact whose items all have empty `folderIds`.
+- "Not in a folder yet" = a contact whose items all have empty `folderIds`.
 
 ## 3. Screens and behavior
 
 ### 3.1 Everything (home)
 
 - Header: CommLocker wordmark only, no mark: COMM orange, L white, O orange, CKER white, ™ (the tagline appears on the printed cover sheet, not in the header), a round theme button that cycles System → Light → Dark on each tap (persisted, toast names the new theme), **Show me** tour button (optional in production).
-- Title "Everything on this phone · N people · M items", search field, filter chips that carry their unit so nothing is ambiguous: "117 items", "99 texts", "10 calls", "2 voicemails", "6 emails", "12 people not filed yet". The type chips count items and sum to the total. "People not filed yet" counts contacts (spam excluded) with nothing in any folder.
-- Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail / Email) and preview, counts by type, lock chip "N hashed", folder chips or "not filed", a **⋯** button. Spam rows dimmed.
+- Title "Everything on this phone · N people · M items", search field, filter chips that carry their unit so nothing is ambiguous: "117 items", "99 texts", "10 calls", "2 voicemails", "6 emails", "12 people not in a folder yet". The type chips count items and sum to the total. "People not in a folder yet" counts contacts (spam excluded) with nothing in any folder.
+- Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail / Email) and preview, counts by type, lock chip "N hashed", folder chips or "no folder yet", a **⋯** button. Spam rows dimmed.
 - Every folder chip, on a row and on an item, carries an **×**. On a row it takes that whole conversation out of the folder; on an item it takes only that item out. Toast confirms. Nothing is deleted; the label is removed.
-- Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Pick messages**.
+- Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Select messages**.
 - Bottom: a **two-row** block of folder pills. Pills size to their text, left-justified, wrapping; a folder name is capped at **35 characters** with an ellipsis on the pill (the full name is in the tooltip and everywhere else). Order: **All**, the open folder first, then folders in creation order, then **+ New folder**. As many pills as fit in two rows are shown; the rest collapse into **All N folders ▸**, which opens the Folders sheet. The open folder is never hidden. Larger system fonts grow the pills, not the row count. The label row has a **manage** link. Tap a pill → open that folder. Tap the open pill again → back.
 - Folder chips on rows and items follow the same 35-character cap.
 - The list is sorted by each person's most recent item, newest first; spam sinks to the bottom. Inside a conversation and inside a folder timeline, items run oldest to newest with date dividers, the way a record reads.
 
 ### 3.2 ⋯ menu
 
-- **Add to folder…** → opens the conversation in pick mode with every item ticked, scrolls the row to the top, toast "Everything is ticked. Untick what should stay out, then File picked."
+- **Add to folder…** → opens the conversation in select mode with every item selected, scrolls the row to the top, toast "Everything is selected. Deselect what should stay out, then Add selected."
 - **Export this conversation…** → Export page (3.5) with scope = this conversation.
 - **Open / Collapse conversation**.
 
-### 3.3 Pick mode (inside a conversation)
+### 3.3 Select mode (inside a conversation)
 
-- Checkbox on every item; tap anywhere on the item to toggle. **All** / **None** in the thread header. **Cancel picking** exits and clears.
-- Sticky bar at the bottom of the thread: "K of N picked", **File picked to folder(s)…**, **Done**.
-- **File picked** opens the folder popover: title "File K items from <name> to", subtitle "Tap as many folders as you like. Tap again to remove.", one row per folder with a check mark showing whether *all* picked items are already in it, a **New folder name** field with **Create & file**, and **Done**. Tapping a folder files or unfiles the picked set immediately (toast) and leaves the popover open.
+- Checkbox on every item; tap anywhere on the item to toggle. **All** / **None** in the thread header. **Cancel** exits and clears.
+- Sticky bar at the bottom of the thread: "K of N selected", **Add selected to folder(s)…**, **Done**.
+- **Add selected** opens the folder popover: title "File K items from <name> to", subtitle "Tap as many folders as you like. Tap again to remove.", one row per folder with a check mark showing whether *all* selected items are already in it, a **New folder name** field with **Create & add**, and **Done**. Tapping a folder files or unadds the selected set immediately (toast) and leaves the popover open.
 
 ### 3.4 Folder view (timeline)
 
 - Top: orange **Back to all conversations**, banner with icon, name, "C contacts · T texts · K calls · V voicemails", **Export…**. Segmented control: **Timeline · everyone, by date** (default) / **By person**.
 - Timeline: every item with that folder id, all contacts, sorted by timestamp, date dividers, each item prefixed with avatar + "Name · role" (or "Lauren → Name" for outbound).
-- By person: the Everything rows filtered to contacts with items in the folder; each thread shows only that folder's items plus "n more in this conversation not filed here · show faded".
+- By person: the Everything rows filtered to contacts with items in the folder; each thread shows only that folder's items plus "n more in this conversation not in this folder · show faded".
 - Filter chips and search apply within the folder.
 
 ### 3.5 Export page (one screen, no scroll at 360 × 780)
@@ -126,7 +126,7 @@ Opened from **manage** in the folder block, from **All N folders ▸**, or from 
 - Top: **New folder name** + Create.
 - One row per folder: icon, name, "C contacts · N items", **Open**, **⋯**. The ⋯ expands an inline action row: **Rename** (inline field, Save, Cancel), **Export…**, **Delete**.
 - **Delete** asks inline: "Delete “X”? Its N items stay in Everything and in any other folder. Only this label goes." then **Delete folder** / Cancel. Deleting removes the folder id from every item and never touches an item, a hash or an attachment. Temporary folders made for a one-off export are deleted this way.
-- Footer: note that folders and filing are stored on the device, and **Reset sample data** (mockup only).
+- Footer: note that folders and their contents are stored on the device, and **Reset sample data** (mockup only).
 
 ### 3.7 Permissions that fix themselves
 
@@ -137,12 +137,12 @@ Implementation: re-check on every `onResume`. Deep links: runtime permissions �
 ### 3.8 New folder
 
 - From the bottom block: **+ New folder** → small popover with a name field and **Create**. Creates and opens the folder.
-- From the filing popover: name field + **Create & file** creates the folder and files the picked set in one action.
+- From the folder popover: name field + **Create & add** creates the folder and adds the selected set in one action.
 - Category, icon and notes are optional edits later; not required to create.
 
 ### 3.9 Date range (list, folders and export)
 
-One filter, stored once, applied everywhere: `DateRange(from: Long?, to: Long?)` in the list ViewModel, compared against the item's ingestion timestamp. Everything that reads items (the Everything list, the filter-chip counts, an open folder, the timeline, pick mode) goes through the same query, so the counts always agree with the rows.
+One filter, stored once, applied everywhere: `DateRange(from: Long?, to: Long?)` in the list ViewModel, compared against the item's ingestion timestamp. Everything that reads items (the Everything list, the filter-chip counts, an open folder, the timeline, select mode) goes through the same query, so the counts always agree with the rows.
 
 - Control: a **calendar button** at the right end of the search field reads "Dates"; when a range is active it turns orange, reads "Mar 11 – Apr 10" (year only when it differs from the current year), and an **×** next to it clears the range.
 - Tapping it opens the date picker: **From** and **To**, **Apply**, and **All dates** to clear. No presets; keep it to two taps. In Kotlin use `MaterialDatePicker.Builder.dateRangePicker()`, the standard Android calendar where the user taps the first day and the last day. One side left empty means open-ended. "From" after "To" is refused inline.
@@ -154,7 +154,7 @@ One filter, stored once, applied everywhere: `DateRange(from: Long?, to: Long?)`
 
 Not a merged file. The same single export, run once per person, delivered together.
 
-- Entry: ⋯ → **Export with other people…** puts the list in tick mode: a checkbox appears at the left of every row, the ⋯ buttons hide, tapping a row ticks it. A bar above the folder block reads "N people ticked · Cancel · **Export N separately**".
+- Entry: ⋯ → **Export with other people…** puts the list in select mode: a checkbox appears at the left of every row, the ⋯ buttons hide, tapping a row selects it. A bar above the folder block reads "N people selected · Cancel · **Export N separately**".
 - The Export page header reads "Export separately · N people · N PDFs, one each". Readiness rows are the union (records verified, parties labeled, exporter set). The date-range row applies to every person at once. Then one card per person: name, "k of n records · f files · own PDF + ZIP", its own Export ID and export hash, and an × to leave that person out. Segmented **PDF records** / **+ ZIPs · F files**, then **Export N PDFs + Z ZIPs** and **Preview cover sheets** (tabs across the top switch between people).
 - Implementation: `ExportJob(scope, range)` is what already exists. Batch = `ids.map { ExportJob(Scope.Conversation(it), range) }` run sequentially inside one `WorkManager` job with one progress notification. Each job writes `<ExportId>.pdf` (and `.zip` when it has attachments) into the same output folder `Downloads/CommLocker/<yyyy-MM-dd>/`; the destination step shares them with `ACTION_SEND_MULTIPLE` (Drive, Dropbox, Email, More…) or leaves them on the device. Each file gets its own row in Settings › Exports with its own ID, hash and date range.
 - Nothing about hashing changes: per-record hashes are the stored ones, the export hash is per file, and no file contains two people's records.
@@ -240,20 +240,20 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 
 ## 6. Acceptance checklist
 
-- [ ] At 360 × 780 dp the Everything list, an open folder, the pick bar and the Export page each fit the screen; only lists scroll.
+- [ ] At 360 × 780 dp the Everything list, an open folder, the select bar and the Export page each fit the screen; only lists scroll.
 - [ ] Folder chips: all visible in a fixed 3-column block; no horizontal scrolling.
-- [ ] ⋯ → Add to folder opens with 100% of items ticked; the count reads "N of N picked".
-- [ ] Unticking two items and filing puts N-2 items in the folder; the two remain "not filed" (or in their other folders).
-- [ ] The folder popover stays open after a tap; the same picked set can be filed to two folders in a row; Done closes it.
-- [ ] Typing a new folder name in the popover creates the folder and files the set in one action.
+- [ ] ⋯ → Add to folder opens with 100% of items selected; the count reads "N of N selected".
+- [ ] Deselecting two items and adding puts N-2 items in the folder; the two remain "no folder yet" (or in their other folders).
+- [ ] The folder popover stays open after a tap; the same selected set can be added to two folders in a row; Done closes it.
+- [ ] Typing a new folder name in the popover creates the folder and adds the set in one action.
 - [ ] Tapping a folder chip opens the timeline with items from all contacts in date order; tapping it again returns to Everything; the orange Back button does the same.
 - [ ] Export readiness: an unknown number blocks with an inline name field; saving the name keeps the carrier number and unblocks.
 - [ ] Every record in the PDF prints ingestion hash, current hash and MATCH. A deliberately altered stored byte string produces MISMATCH, turns the readiness row red and disables Export.
 - [ ] The export hash printed in the PDF equals the value recomputed from the PDF's timeline hashes + Export ID + generated time.
 - [ ] ZIP contains every attachment in scope with names and SHA-256 matching the attachment index.
-- [ ] Filing, unfiling, renaming a contact and adding a note never change any ingestion hash.
+- [ ] Adding to or removing from a folder, renaming a contact and adding a note never change any ingestion hash.
 - [ ] Theme button cycles System, Light, Dark; the choice survives an app restart; every screen is readable in both themes.
-- [ ] Filter chips sum: texts + calls + voicemails + emails = items. "People not filed yet" equals the number of non-spam contacts with no item in any folder.
+- [ ] Filter chips sum: texts + calls + voicemails + emails = items. "People not in a folder yet" equals the number of non-spam contacts with no item in any folder.
 - [ ] × on a row's folder chip removes every item of that contact from that folder; × on an item's chip removes only that item.
 - [ ] Folders sheet: create, rename, delete; deleting a folder with N items leaves all N items in Everything with their hashes unchanged.
 - [ ] With 15 folders the bottom block is still two rows and the list keeps its height; the open folder is always visible in the block.
@@ -261,7 +261,7 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Export destination menu offers this phone, Google Drive, Dropbox, Email, More; PDF and ZIP arrive together at the destination.
 - [ ] An imported .eml appears as an Email item with subject, from, to, body and attachments, hashed at import.
 - [ ] Folder pills size to their text, capped at 35 characters; the bottom block never exceeds two rows; the open folder is always visible; the rest collapse into "All N folders".
-- [ ] Date range: picking Mar 1 – Mar 31 changes the rows, the chip counts and the count line together; clearing with × restores all; a contact with nothing in the range disappears from the list.
+- [ ] Date range: selecting Mar 1 – Mar 31 changes the rows, the chip counts and the count line together; clearing with × restores all; a contact with nothing in the range disappears from the list.
 - [ ] Date-limited export: the PDF contains only records inside the range, prints "limited to <from> – <to>" on the cover sheet, and its export hash differs from the all-dates export of the same person.
 - [ ] Batch export of two people produces two PDFs (and a ZIP for each person with attachments), each with its own Export ID and export hash, delivered together to the chosen destination; Settings › Exports lists them as two rows.
 - [ ] Search "ace" lists Ace Johnson first and a message-only match with a "mentions" tag; "place" does not match "ace".

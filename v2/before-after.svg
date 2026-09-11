@@ -53,11 +53,11 @@
   <text x="228" y="222" fill="currentColor" stroke="none" font-size="10">scroll, tap</text>
   <path d="M208 76 C 262 76 262 301 288 301" marker-end="url(#ah)"/>
   <text x="228" y="130" fill="currentColor" stroke="none" font-size="10">tap, expand,</text>
-  <text x="228" y="142" fill="currentColor" stroke="none" font-size="10">tap 📁, pick</text>
+  <text x="228" y="142" fill="currentColor" stroke="none" font-size="10">tap 📁, select</text>
 
   <!-- Today caption -->
   <text x="20" y="378" fill="currentColor" stroke="none" font-size="11" font-weight="700">To see one deal’s texts + calls + voicemails: 3 taps and a scroll, still in two blocks.</text>
-  <text x="20" y="394" fill="currentColor" stroke="none" font-size="11">To file a text: 4 taps. To log a call: a 7-field form.</text>
+  <text x="20" y="394" fill="currentColor" stroke="none" font-size="11">To add a text to a folder: 4 taps. To log a call: a 7-field form.</text>
 
   <!-- divider -->
   <line x1="470" y1="30" x2="470" y2="410" stroke-dasharray="2 5" opacity=".5"/>
@@ -101,7 +101,7 @@
   <text x="542" y="271" fill="currentColor" stroke="none" font-size="9" opacity=".7">Escrow · 2 texts · 2 calls · 1 voicemail</text>
   <circle cx="526" cy="298" r="10" fill="#94A3B8" stroke="none"/>
   <text x="542" y="294" fill="currentColor" stroke="none" font-size="11" font-weight="700">(323) 555-1212</text>
-  <text x="542" y="307" fill="currentColor" stroke="none" font-size="9" opacity=".7">not in contacts · not filed</text>
+  <text x="542" y="307" fill="currentColor" stroke="none" font-size="9" opacity=".7">not in contacts · not in a folder</text>
   <text x="512" y="338" fill="currentColor" stroke="none" font-size="9" opacity=".6">one list, newest first · filter: Texts / Calls / Voicemails / Not filed</text>
 
   <!-- Folders pane -->
@@ -127,9 +127,9 @@
   <!-- the one move -->
   <path d="M690 298 C 760 298 760 122 806 122" stroke="#C56230" stroke-width="2.4" marker-end="url(#ah-o)"/>
   <text x="742" y="290" fill="#C56230" stroke="none" font-size="10" font-weight="800" text-anchor="middle">drag</text>
-  <text x="742" y="302" fill="#C56230" stroke="none" font-size="9" font-weight="700" text-anchor="middle">or File → tap</text>
+  <text x="742" y="302" fill="#C56230" stroke="none" font-size="9" font-weight="700" text-anchor="middle">or Add → tap</text>
 
   <!-- Redesign caption -->
-  <text x="500" y="378" fill="currentColor" stroke="none" font-size="11" font-weight="700">To see one deal: tap its folder. Everything filed there, in date order, calls and voicemails inline.</text>
-  <text x="500" y="394" fill="currentColor" stroke="none" font-size="11">To file anything: drag it, or tap File then a folder. Calls and voicemails arrive from the phone log, no form.</text>
+  <text x="500" y="378" fill="currentColor" stroke="none" font-size="11" font-weight="700">To see one deal: tap its folder. Everything added there, in date order, calls and voicemails inline.</text>
+  <text x="500" y="394" fill="currentColor" stroke="none" font-size="11">To add anything to a folder: tap Add to folder, select, then the folder. Calls and voicemails arrive from the phone log, no form.</text>
 </svg>

@@ -1,8 +1,8 @@
-# CommLocker Filing Desk — redesign plan
+# CommLocker folders — redesign plan
 
 **One screen. What's on your phone, and where it goes.**
 
-Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to file or export.
+Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to add to a folder or export.
 
 - Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`v2/HANDOFF.md`](./HANDOFF.md)
 - Clickable mockup, sized for a 9:19.5 portrait phone: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
@@ -14,16 +14,16 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 ## In plain words
 
 - **A row** is one line in the list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
-- **Filing a conversation** starts with the **⋯** on its row, then **Add to folder…**. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders or type a new folder name, Done.
+- **Filing a conversation** starts with the **⋯** on its row, then **Add to folder…**. The conversation opens with every text, call and voicemail selected. Deselect what should stay out, tap **Add selected**, select one or more folders or type a new folder name, Done.
 - **Filing** is a label, not a copy. It says "these records belong to the 1010 Catalina deal." The message, call log or voicemail is not changed, moved or duplicated. One item can carry several labels.
-- **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Filing happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
+- **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Adding to folders happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
 
 ```mermaid
 flowchart LR
   P[Your phone<br/>text · call · voicemail] --> I[CommLocker pulls it in]
   I --> H[SHA-256 hash + timestamp<br/>stamped at ingestion]
   H --> E[Appears in Everything<br/>already certified]
-  E --> F[You file it to one<br/>or more folders<br/>a label, nothing changes]
+  E --> F[You add it to one<br/>or more folders<br/>a label, nothing changes]
   F --> X[Export PDF<br/>carries the original hash]
   classDef key fill:#F4F1EC,stroke:#C56230,color:#B95722
   classDef step fill:#FFFFFF,stroke:#071B42,color:#111C32
@@ -35,23 +35,23 @@ flowchart LR
 
 | You want to… | Today | Redesign |
 |---|---|---|
-| See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything filed there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
-| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **4 taps.** ⋯ → Add to folder… (everything ticked) → File picked → tap the folder. Untick anything that should stay out first. |
+| See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything added there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
+| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → select the record. Repeat per message. | **4 taps.** ⋯ → Add to folder… (everything selected) → Add selected → tap the folder. Deselect anything that should stay out first. |
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
-| Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. File it like anything else. |
+| Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. Add it like anything else. |
 | Start a new deal folder | **6 taps + 3 fields.** ＋ New Transaction → name → category → note → Create → Add Conversations → select → Add. | **1 field.** Type a name, press Enter. Or drop a conversation on "New folder" and name it. |
-| File only part of a conversation | **4 taps per message.** Expand the contact, tap 📁 on one message, pick the record, close. Repeat. | **Tick, then file once.** Open the conversation, tap Pick messages, tick any mix of texts, calls and voicemails, then File picked. All or None in one tap. |
-| Put the same messages in two or more deals | **Per message.** Tag each message separately. | **Tick more folders.** The folder list stays open with check marks; tap as many as apply, then Done. Chips on each item show where it lives. |
+| File only part of a conversation | **4 taps per message.** Expand the contact, tap 📁 on one message, select the record, close. Repeat. | **Select, then add once.** Open the conversation, tap Select messages, select any mix of texts, calls and voicemails, then Add selected. All or None in one tap. |
+| Put the same messages in two or more deals | **Per message.** Tag each message separately. | **Select more folders.** The folder list stays open with check marks; tap as many as apply, then Done. Chips on each item show where it lives. |
 | Export a certified record | Transaction → Export → Preview → Download. PDF only. | **⋯ → Export.** From any conversation or any folder. Readiness checks, then one tap for the PDF and a ZIP of every photo, video and voicemail recording. |
 
 ## What the left pane shows
 
-- **One row per person or number.** Name, role, number, the latest item with a type chip (Text / Call / Voicemail), counts, and the folders it is filed in. Unknown numbers and spam are in the same list, spam dimmed.
-- **Filters instead of tabs, with their units.** "117 items · 99 texts · 10 calls · 2 voicemails · 6 emails · 12 people not filed yet". Type chips count items and add up to the total; the last chip counts people with nothing in any folder.
+- **One row per person or number.** Name, role, number, the latest item with a type chip (Text / Call / Voicemail), counts, and the folders it is in. Unknown numbers and spam are in the same list, spam dimmed.
+- **Filters instead of tabs, with their units.** "117 items · 99 texts · 10 calls · 2 voicemails · 6 emails · 12 people not in a folder yet". Type chips count items and add up to the total; the last chip counts people with nothing in any folder.
 - **Tap a row to open the thread in place.** Texts as bubbles, calls and voicemails as cards, all on one timeline with date dividers. Each item has its own small File button.
-- **Pick messages.** Inside any open conversation, tap Pick messages and checkboxes appear on every text, call and voicemail. Tick what belongs to the deal (or All, then untick the personal ones). A bar at the bottom files the picked set to one or more folders in a single move. Unpicked items stay out of the folder.
-- **Inside a folder** the list narrows to what is filed there. Items from the same conversation that are not in the folder hide behind "n more, show faded".
-- **The ⋯ menu on every conversation** has two jobs: **Add to folder…** opens the conversation with everything ticked so you choose what goes in, then pick one or more folders or type a new folder name right there. **Export this conversation…** opens the export sheet.
+- **Select messages.** Inside any open conversation, tap Select messages and checkboxes appear on every text, call and voicemail. Select what belongs to the deal (or All, then deselect the personal ones). A bar at the bottom adds the selected set to one or more folders in a single move. Unpicked items stay out of the folder.
+- **Inside a folder** the list narrows to what is in it. Items from the same conversation that are not in the folder hide behind "n more, show faded".
+- **The ⋯ menu on every conversation** has two jobs: **Add to folder…** opens the conversation with everything selected so you choose what goes in, then select one or more folders or type a new folder name right there. **Export this conversation…** opens the export sheet.
 
 ## One thing in the current export to fix first
 
@@ -72,11 +72,11 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 
 - A calendar button next to search limits the whole screen to a date range: tap the first day and the last day. Every count follows it.
 - The Export page carries the same range and can change it, so a record can cover only the weeks that matter. The cover sheet says so.
-- ⋯ → Export with other people ticks several people and exports each one as its own separate PDF and ZIP in one go. Nothing is merged.
+- ⋯ → Export with other people selects several people and exports each one as its own separate PDF and ZIP in one go. Nothing is merged.
 
 ## Folders along the bottom
 
-- **New folder is one field.** Tap + New folder, type a name, Create. Or type the name inside the filing list and it is created and filed in the same move.
+- **New folder is one field.** Tap + New folder, type a name, Create. Or type the name inside the folder list and it is created and the selection added in the same move.
 - **Each folder chip** shows its icon, name and item count. Tap to open its timeline; tap again to go back.
 - **Getting back out of a folder** is the orange "Back to all conversations" button at the top of the list, or tapping the same folder again.
 - **Taking someone out of a folder** is the × on the folder chip: on the row it removes the whole conversation from that folder, on an item just that item.
@@ -86,7 +86,7 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - **Emails are records too.** Texts, calls, voicemails and emails sit in one list; an email shows subject, from/to and body, its attachments go into the export ZIP, and it is hashed like everything else. Sources: the phone's mail accounts, or an .eml shared to the app.
 - **Settings, Exports, Backup, Permissions stay as they are** behind a gear in the header; the bottom navigation bar goes, because it cost list space on a phone.
 - **Export then asks where.** This phone, Google Drive, Dropbox, email, or any app on the phone; PDF and ZIP go together.
-- **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail filed there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
+- **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail added there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
 - **Always visible.** The folder chips sit in a fixed block along the bottom, all of them, nothing to scroll sideways.
 
 ## Flowchart of the changes
@@ -97,7 +97,7 @@ flowchart TD
   B[1 · Unify the data<br/>one item list per contact:<br/>texts + calls + voicemails + emails, each with a date and folder tags]
   B --> C[2 · One-screen shell<br/>the list, folders along the bottom<br/>replaces Home tabs and the detail screen]
   C --> D[3 · Thread in place<br/>tap a row, see all three types in date order<br/>calls and voicemails inline]
-  D --> E[4 · Filing in one move<br/>⋯ → Add to folder · everything ticked · untick · File picked<br/>multi-folder check marks · new folder in the same box]
+  D --> E[4 · Add to folder in one move<br/>⋯ → Add to folder · everything selected · deselect · Add selected<br/>multi-folder check marks · new folder in the same box]
   E --> F[5 · New folder = one field<br/>name → Enter · drop onto New folder<br/>category optional later]
   F --> J[6 · Export sheet<br/>readiness checks · matching hash per record · export hash<br/>PDF plus ZIP of photos, videos and voicemails]
   J --> K[7 · Remove the old steps<br/>All Texts tab · Add Call Log form · Add Voicemail form<br/>Add Conversations · File This Message picker]
@@ -120,7 +120,7 @@ The app is one file, `index.html`, with sample data and screens in the same scri
 1. **Unify the data (1 day).** Texts live in `ALL_CONVS`, calls and voicemails inside each transaction's `extra` list, and the All Texts tab has a third list (`ALL_TEXTS`). Merge into one list of contacts, each with items of type text / call / voicemail, a real timestamp, and a list of folder ids. Match calls and voicemails to contacts by phone number.
 2. **One-screen shell (1 day).** Keep the 430px phone frame. One column: header, search and filter chips, the list, and a fixed block of folder chips along the bottom. Replaces `#screen-home`, `#screen-detail`, `.bnav`, `.fab`.
 3. **Thread in place (1.5 days).** Reuse the bubble renderer and the call/voicemail cards, rendered from one sorted item list with date dividers, inside the row. Keep notes, attachments, Identify and Beginning of Record on each item. Refactors `renderDetailByDate` + `renderExtraItem` into `renderThread(contact)`; deletes `renderDetailByParty`, `renderFullConv`.
-4. **Filing in one move (1.5 days).** The ⋯ menu opens the conversation with everything ticked; File picked opens the folder list with check marks and a new-folder box. Filing adds a folder id to the item and never edits the original. Replaces `openTagPicker`, `openSimpleTagPicker`, `openExtraTagPicker`, `openTextFilePicker`, `openAddConvs`.
+4. **Add to folder in one move (1.5 days).** The ⋯ menu opens the conversation with everything selected; Add selected opens the folder list with check marks and a new-folder box. Adding to a folder adds a folder id to the item and never edits the original. Replaces `openTagPicker`, `openSimpleTagPicker`, `openExtraTagPicker`, `openTextFilePicker`, `openAddConvs`.
 5. **New folder is one field (0.5 day).** Name + Enter; drop on New folder creates and files. Category, icon and notes become an optional edit using the existing category grid.
 6. **Reconnect export (0.5 day).** Export PDF on a folder builds the input `generatePDF` expects from the items tagged to that folder. Hashes, Beginning of Record and notes unchanged.
 7. **Remove the old steps (0.5 day).** Delete `m-call`, `m-vm`, `m-add-convs`, `m-tag`, `switchHomeTab`, `renderAllTexts`, `addCall`, `addVM`. Keep Identify Caller, the annotation sheet and the incoming-call demo.
@@ -142,6 +142,6 @@ The app is one file, `index.html`, with sample data and screens in the same scri
 
 ## Three things to decide
 
-1. **What should dragging a whole row do?** The mockup files every item in that conversation. The alternative is to open it in Pick mode with everything ticked so you can untick before filing. One extra tap, fewer personal messages in deal records. I lean toward the second for contacts who are also friends.
-2. **Should "Not filed yet" nag?** A count badge on the filter is quiet. A daily reminder is not. Left quiet.
+1. **What should dragging a whole row do?** The mockup files every item in that conversation. The alternative is to open it in Select mode with everything selected so you can deselect before adding. One extra tap, fewer personal messages in deal records. I lean toward the second for contacts who are also friends.
+2. **Should "Not in a folder yet" nag?** A count badge on the filter is quiet. A daily reminder is not. Left quiet.
 3. **Where does the pitch site go?** If the two-pane version replaces recalltext.io, the incoming-call demo needs a new home, probably a button in the top bar.
