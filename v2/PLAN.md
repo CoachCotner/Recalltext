@@ -47,7 +47,7 @@ flowchart LR
 ## What the left pane shows
 
 - **One row per person or number.** Name, role, number, the latest item with a type chip (Text / Call / Voicemail), counts, and the folders it is filed in. Unknown numbers and spam are in the same list, spam dimmed.
-- **Filters instead of tabs.** All · Texts · Calls · Voicemails · Not filed yet. "Not filed yet" is the to-do list.
+- **Filters instead of tabs, with their units.** "117 items · 99 texts · 10 calls · 2 voicemails · 6 emails · 12 people not filed yet". Type chips count items and add up to the total; the last chip counts people with nothing in any folder.
 - **Tap a row to open the thread in place.** Texts as bubbles, calls and voicemails as cards, all on one timeline with date dividers. Each item has its own small File button.
 - **Pick messages.** Inside any open conversation, tap Pick messages and checkboxes appear on every text, call and voicemail. Tick what belongs to the deal (or All, then untick the personal ones). A bar at the bottom files the picked set to one or more folders in a single move. Unpicked items stay out of the folder.
 - **Inside a folder** the list narrows to what is filed there. Items from the same conversation that are not in the folder hide behind "n more, show faded".
@@ -73,6 +73,11 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 - **New folder is one field.** Tap + New folder, type a name, Create. Or type the name inside the filing list and it is created and filed in the same move.
 - **Each folder chip** shows its icon, name and item count. Tap to open its timeline; tap again to go back.
 - **Getting back out of a folder** is the orange "Back to all conversations" button at the top of the list, or tapping the same folder again.
+- **Taking someone out of a folder** is the × on the folder chip: on the row it removes the whole conversation from that folder, on an item just that item.
+- **Rename or delete a folder** from "manage" in the folder block or the ⋯ in an open folder's header. Delete removes only the label; every item stays in Everything with its hash.
+- **Many folders stay out of the way.** The bottom block is always two rows: All, four folders (the open one always shown), and either + New folder or "All N folders". Fifteen folders cost no list space.
+- **Emails are records too.** Texts, calls, voicemails and emails sit in one list; an email shows subject, from/to and body, its attachments go into the export ZIP, and it is hashed like everything else. Sources: the phone's mail accounts, or an .eml shared to the app.
+- **Export then asks where.** This phone, Google Drive, Dropbox, email, or any app on the phone; PDF and ZIP go together.
 - **Opening a folder shows the transaction as a timeline.** Every text, call and voicemail filed there, from every person, in one date-ordered stream with the sender named on each item. That is the record you export. Switch to By person to group by contact.
 - **Always visible.** The folder chips sit in a fixed block along the bottom, all of them, nothing to scroll sideways.
 
@@ -81,7 +86,7 @@ The export sheet mirrors the Review & Export screen and the PDF the current buil
 ```mermaid
 flowchart TD
   A([Today: index.html<br/>2 tabs · detail screen · 4 forms]) --> B
-  B[1 · Unify the data<br/>one item list per contact:<br/>texts + calls + voicemails, each with a date and folder tags]
+  B[1 · Unify the data<br/>one item list per contact:<br/>texts + calls + voicemails + emails, each with a date and folder tags]
   B --> C[2 · One-screen shell<br/>the list, folders along the bottom<br/>replaces Home tabs and the detail screen]
   C --> D[3 · Thread in place<br/>tap a row, see all three types in date order<br/>calls and voicemails inline]
   D --> E[4 · Filing in one move<br/>⋯ → Add to folder · everything ticked · untick · File picked<br/>multi-folder check marks · new folder in the same box]

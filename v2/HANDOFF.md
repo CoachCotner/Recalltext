@@ -8,14 +8,14 @@ For the Kotlin/Android build. This is the spec behind the clickable mockup in `v
 
 ## 1. What changes, in one paragraph
 
-One screen replaces Home tabs, the transaction detail screen, Add Call Log, Add Voicemail, Add Conversations and the File-this-message picker. The screen is a list of every conversation on the phone (texts, calls and voicemails together, one row per contact, newest first) with a fixed block of folder chips along the bottom. Each row has a ⋯ menu with two actions: **Add to folder…** and **Export this conversation…**. Tapping a folder chip shows that folder as a date-ordered timeline across all contacts, with **Export…** in its header. Hashing happens at ingestion and is never touched by filing.
+One screen replaces Home tabs, the transaction detail screen, Add Call Log, Add Voicemail, Add Conversations and the File-this-message picker. The screen is a list of every conversation on the phone (texts, calls, voicemails and emails together, one row per contact, newest first) with a fixed block of folder chips along the bottom. Each row has a ⋯ menu with two actions: **Add to folder…** and **Export this conversation…**. Tapping a folder chip shows that folder as a date-ordered timeline across all contacts, with **Export…** in its header. Hashing happens at ingestion and is never touched by filing.
 
 ## 2. Data model
 
 Keep whatever the ingestion layer already stores. The change is that texts, calls and voicemails become one item type with folder tags, and folders become labels rather than containers.
 
 ```kotlin
-enum class ItemType { TEXT, CALL, VOICEMAIL }
+enum class ItemType { TEXT, CALL, VOICEMAIL, EMAIL }
 enum class Direction { IN, OUT }
 
 data class Item(
@@ -24,7 +24,11 @@ data class Item(
     val type: ItemType,
     val direction: Direction,
     val timestamp: Instant,         // carrier/device timestamp, never edited
-    val body: String?,              // text body, or voicemail transcript
+    val body: String?,              // text body, voicemail transcript, or email body (plain text)
+    val subject: String?,           // email only
+    val fromAddress: String?,       // email only
+    val toAddresses: List<String>?, // email only
+    val messageId: String?,         // email only, RFC 5322 Message-ID, part of the canonical bytes
     val durationSec: Int?,          // calls, voicemails
     val missed: Boolean,            // calls
     val attachments: List<Attachment>,
@@ -53,10 +57,11 @@ Rules:
 ### 3.1 Everything (home)
 
 - Header: CommLocker wordmark only, no mark: COMM orange, L white, O orange, CKER white, ™ (the tagline appears on the printed cover sheet, not in the header), a round theme button that cycles System → Light → Dark on each tap (persisted, toast names the new theme), **Show me** tour button (optional in production).
-- Title "Everything · N conversations · M items", search field, filter chips: All, Texts, Calls, Voicemails, Not filed yet (each with a count).
-- Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail) and preview, counts by type, lock chip "N hashed", folder chips or "not filed", a **⋯** button. Spam rows dimmed.
+- Title "Everything on this phone · N people · M items", search field, filter chips that carry their unit so nothing is ambiguous: "117 items", "99 texts", "10 calls", "2 voicemails", "6 emails", "12 people not filed yet". The type chips count items and sum to the total. "People not filed yet" counts contacts (spam excluded) with nothing in any folder.
+- Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail / Email) and preview, counts by type, lock chip "N hashed", folder chips or "not filed", a **⋯** button. Spam rows dimmed.
+- Every folder chip, on a row and on an item, carries an **×**. On a row it takes that whole conversation out of the folder; on an item it takes only that item out. Toast confirms. Nothing is deleted; the label is removed.
 - Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Pick messages**.
-- Bottom: fixed 3-column grid of folder chips: **All**, one chip per folder (icon · name · item count, name truncates), **+ New folder**. Never scrolls sideways. Tap a chip → open that folder. Tap the open chip again → back to Everything.
+- Bottom: fixed 3-column, **two-row** block: **All**, up to four folder chips (the open folder is always one of them), then **+ New folder** when there are four or fewer folders, or **All N folders ▸** when there are more. The block never grows past two rows, so fifteen folders cost no list space; larger system fonts grow the chips, not the row count. The label row has a **manage** link. Tap a chip → open that folder. Tap the open chip again → back.
 
 ### 3.2 ⋯ menu
 
@@ -88,13 +93,22 @@ Top to bottom, in this order:
 5. **Matching hash · every record** box: "N of N: ingestion hash = current hash → MATCH" and one line of explanation. If any record does not match, this box turns red, says how many, and the Export button is disabled until the user acknowledges (see 4.3).
 6. **Export hash** box: 64-hex value, "Over every record hash + Export ID, <timestamp>".
 7. Segmented toggles: **PDF record** / **+ ZIP · F files** (ZIP disabled when F = 0). One line under it: "P photos · V videos · D documents · A voicemail recordings · T transcripts, each with its own SHA-256 in the attachment index".
-8. Spacer, then a full-width **Export PDF + ZIP** button and a **Preview cover sheet** button.
+8. Spacer, then a full-width **Export PDF + ZIP** button and a **Preview cover sheet** button. **Export** opens a destination menu inside the frame: **Save on this phone** (Downloads › CommLocker › <Export ID>), **Google Drive**, **Dropbox**, **Email it**, **More…** (the Android share sheet). PDF and ZIP travel together to the chosen destination.
 
 **Preview cover sheet** is its own page (Back returns to Export). It renders the first page of the PDF and the first two timeline entries exactly as they print, then the attachment index and chain of custody with the export hash.
 
 Export ID format: `CL-<CONV|FOLDER>-<8 hex>` in the mockup; keep the production format `RT-YYYYMMDD-XXXXXXXX` if you prefer, it is not user-facing logic.
 
-### 3.6 New folder
+### 3.6 Folders sheet (manage)
+
+Opened from **manage** in the folder block, from **All N folders ▸**, or from the ⋯ in an open folder's header. Full-screen page with Back.
+
+- Top: **New folder name** + Create.
+- One row per folder: icon, name, "C contacts · N items", **Open**, **⋯**. The ⋯ expands an inline action row: **Rename** (inline field, Save, Cancel), **Export…**, **Delete**.
+- **Delete** asks inline: "Delete “X”? Its N items stay in Everything and in any other folder. Only this label goes." then **Delete folder** / Cancel. Deleting removes the folder id from every item and never touches an item, a hash or an attachment. Temporary folders made for a one-off export are deleted this way.
+- Footer: note that folders and filing are stored on the device, and **Reset sample data** (mockup only).
+
+### 3.7 New folder
 
 - From the bottom block: **+ New folder** → small popover with a name field and **Create**. Creates and opens the folder.
 - From the filing popover: name field + **Create & file** creates the folder and files the picked set in one action.
@@ -141,11 +155,15 @@ The current hash is recomputed over the **stored bytes**, not over a re-serializ
 
 `sha256( concat(ingestionHash_1 … ingestionHash_N in timeline order) + "|" + exportId + "|" + generatedAtUtc )`. Print it in the chain-of-custody section and in the PDF metadata. Recomputing it from the PDF's own timeline must reproduce it.
 
-### 4.5 ZIP
+### 4.5 Email as a record
+
+Emails are items like texts and calls. Sources, in order of preference: the device's mail accounts through the Gmail API or IMAP with the user's consent, and **.eml import** for one-offs (share an .eml to CommLocker). Store subject, from, to, date, plain-text body, Message-ID and attachments. Canonical bytes add three lines: `subject=`, `from=`, `message_id=`. The row and thread show an envelope chip, subject, from/to and the body; attachments go to the ZIP like any other. The PDF prints "Email" as the record type with From/To and Subject above the body, then both hashes.
+
+### 4.6 ZIP
 
 One ZIP per export, next to the PDF, containing every attachment in scope: images, videos, documents, voicemail audio, voicemail transcript `.txt`. File names as in the attachment index; each entry's SHA-256 is listed in the index and in the ZIP's own manifest (`manifest.json`: file name, kind, sha256, source item id, timestamp). Voicemail audio comes from the visual-voicemail store where the device exposes it; if it does not, include the transcript and say so in the index.
 
-### 4.6 PDF structure (keep what exists)
+### 4.7 PDF structure (keep what exists)
 
 Cover / Export Summary → Conversation Timeline (both hashes per record) → Attachment Index → Chain of Custody with Export Hash. This is the current generator's structure; keep it, just add the "Current SHA-256" line where it is missing and the MISMATCH handling.
 
@@ -186,6 +204,13 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] ZIP contains every attachment in scope with names and SHA-256 matching the attachment index.
 - [ ] Filing, unfiling, renaming a contact and adding a note never change any ingestion hash.
 - [ ] Theme button cycles System, Light, Dark; the choice survives an app restart; every screen is readable in both themes.
+- [ ] Filter chips sum: texts + calls + voicemails + emails = items. "People not filed yet" equals the number of non-spam contacts with no item in any folder.
+- [ ] × on a row's folder chip removes every item of that contact from that folder; × on an item's chip removes only that item.
+- [ ] Folders sheet: create, rename, delete; deleting a folder with N items leaves all N items in Everything with their hashes unchanged.
+- [ ] With 15 folders the bottom block is still two rows and the list keeps its height; the open folder is always visible in the block.
+- [ ] Every popover and sheet (⋯ menu, folder list, export destinations, Folders sheet, Export page) renders inside the phone frame; nothing extends past its edges.
+- [ ] Export destination menu offers this phone, Google Drive, Dropbox, Email, More; PDF and ZIP arrive together at the destination.
+- [ ] An imported .eml appears as an Email item with subject, from, to, body and attachments, hashed at import.
 
 ## 7. Out of scope for this pass
 
