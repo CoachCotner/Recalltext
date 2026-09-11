@@ -52,7 +52,7 @@ Rules:
 
 ### 3.1 Everything (home)
 
-- Header: CommLocker mark and wordmark (orange COMM, white LOCKER; the tagline appears on the printed cover sheet, not in the header), a round theme button that cycles System → Light → Dark on each tap (persisted, toast names the new theme), **Show me** tour button (optional in production).
+- Header: CommLocker wordmark only, no mark: COMM orange, L white, O orange, CKER white, ™ (the tagline appears on the printed cover sheet, not in the header), a round theme button that cycles System → Light → Dark on each tap (persisted, toast names the new theme), **Show me** tour button (optional in production).
 - Title "Everything · N conversations · M items", search field, filter chips: All, Texts, Calls, Voicemails, Not filed yet (each with a count).
 - Row per contact: avatar, name, role · number, latest item with a type chip (Text / Call / No answer / Voicemail) and preview, counts by type, lock chip "N hashed", folder chips or "not filed", a **⋯** button. Spam rows dimmed.
 - Tap row → expands in place: date dividers, texts as bubbles, calls and voicemails as cards, each with `hashed at ingestion <time> · sha256:<16 hex>…`, attachments as chips, agent note in an amber strip, folder chips. Header line of the thread has **Pick messages**.

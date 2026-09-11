@@ -48,12 +48,11 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 
 /* ---------- top bar ---------- */
 .top{height:50px;background:var(--hd);color:var(--hd-ink);display:flex;align-items:center;gap:12px;padding:0 14px}
-.brand{display:flex;align-items:center;gap:8px;white-space:nowrap;flex:none}
-.brand .mark{width:28px;height:28px;flex:none}
-.wm{font-family:'Michroma','Plus Jakarta Sans',sans-serif;font-size:13.5px;letter-spacing:.01em;color:#B95722;line-height:1}
-.wm span{color:#EDEDED}
-.tg{font-size:6.5px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;color:#EDEDED;margin-top:4px;font-weight:700}
-.tg i{color:#B95722;font-style:normal}
+.brand{display:flex;align-items:center;white-space:nowrap;flex:none}
+.wm{font-family:'Michroma','Plus Jakarta Sans',sans-serif;font-size:15px;letter-spacing:.02em;line-height:1;font-weight:400}
+.wm .o{color:#C56230;background:linear-gradient(180deg,#C56230,#B95722);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.wm .w{color:#EDEDED}
+.wm sup{font-family:'Plus Jakarta Sans',sans-serif;font-size:7px;color:#EDEDED;vertical-align:top;margin-left:2px;font-weight:700}
 .tag{font-size:12px;color:var(--hd-dim);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .seg{display:flex;background:var(--hd-field);border-radius:8px;padding:3px;gap:2px;flex:none}
 .seg button{padding:5px 11px;border-radius:6px;font-size:12px;font-weight:700;color:var(--hd-dim)}
@@ -331,7 +330,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 
 <div id="app">
   <header class="top">
-    <div class="brand"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M31 6H14a8 8 0 0 0-8 8v12a8 8 0 0 0 8 8h17" stroke="#B95722" stroke-width="7" fill="none" stroke-linecap="round"/><rect x="26" y="17" width="9" height="6" rx="1.5" fill="#B95722"/><path d="M16 19v-3.5a4 4 0 0 1 8 0V19" stroke="#2B2F36" stroke-width="3" fill="none"/><rect x="12.5" y="18" width="15" height="12.5" rx="3" fill="#2B2F36"/><circle cx="20" cy="23" r="1.9" fill="#B95722"/><rect x="19.1" y="23" width="1.8" height="4" fill="#B95722"/></svg><div class="wm">COMM<span>LOCKER</span></div></div>
+    <div class="brand"><div class="wm" aria-label="CommLocker"><span class="o">COMM</span><span class="w">L</span><span class="o">O</span><span class="w">CKER</span><sup>™</sup></div></div>
     <span class="grow"></span>
     <button class="thm" id="thm" onclick="cycleTheme()" title="Theme: system, light or dark" aria-label="Switch theme"></button>
     <button class="tourbtn" onclick="tourStart()">▶ Show me</button>
@@ -466,7 +465,7 @@ function renderPreview(){
   const entry=({i,c})=>{ const h=fullHash(itemSeed(i)); const who=i.dir==='out'?'This device':c.name; const line=i.type==='text'?'SMS':i.type==='vm'?'Voicemail':'Call log';
     return `<p><b>${fmtDivider(i.t).replace(/^\w+, /,'')} ${fmtTime(i.t)}</b><br>${line} - ${esc(who)}<br>${esc(c.name)} | ${i.dir==='out'?'To':'From'} carrier #: ${esc(c.number)}${i.dir==='out'?' · Device line: '+EXPORTER.line:''}<br>${esc(i.text||i.transcript||i.note||'')}<br><span class="mono">Ingestion record hash (SHA-256): ${h}<br>Current record hash (SHA-256): ${h}</span><br>Verification: <span class="m">MATCH</span></p>`; };
   return `<div class="preview">
-    <div class="brand" style="font-family:'Michroma',sans-serif;font-size:13px;letter-spacing:.01em;color:#B95722">COMM<em style="color:#071B42;font-style:normal">LOCKER</em></div><div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#111C32;font-weight:700;margin-bottom:6px">Logged<span style="color:#B95722">.</span> Secure<span style="color:#B95722">.</span> Tamper-evident<span style="color:#B95722">.</span></div><h5>Tamper-evident communication record</h5>
+    <div class="brand" style="font-family:'Michroma',sans-serif;font-size:13px;letter-spacing:.02em"><span style="color:#B95722">COMM</span><span style="color:#071B42">L</span><span style="color:#B95722">O</span><span style="color:#071B42">CKER</span><sup style="font-size:6px;font-family:sans-serif">™</sup></div><div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#111C32;font-weight:700;margin-bottom:6px">Logged<span style="color:#B95722">.</span> Secure<span style="color:#B95722">.</span> Tamper-evident<span style="color:#B95722">.</span></div><h5>Tamper-evident communication record</h5>
     <div class="row2"><span>File:</span><span>${esc(title)}</span><span>Scope:</span><span>${sc.kind==='conv'?'Single conversation/thread':'Folder record'}</span><span>Export ID:</span><span>${id}</span><span>Generated:</span><span>${fmtFull(now)}</span><span>Exporter:</span><span>${EXPORTER.name} · ${EXPORTER.lic} · ${EXPORTER.org}</span><span>Date range:</span><span>${first} – ${last}</span><span>Messages:</span><span>${k.text}</span><span>Calls:</span><span>${k.call}</span><span>Voicemails:</span><span>${k.vm}</span><span>Attachments:</span><span>${files.length}</span><span>Participants:</span><span>${parties.length+1}</span>${parties.map(c=>`<span>Participant (party):</span><span>${esc(c.name)} · ${esc(c.number)}</span>`).join('')}</div>
     <hr><h5>Conversation timeline (first ${Math.min(2,n)} of ${n})</h5>${list.slice(0,2).map(entry).join('')}${n>2?`<p style="color:#666">… ${n-2} more records, each with both hashes and a MATCH line …</p>`:''}
     <hr><h5>Attachment index</h5>${files.length?files.map(f=>`<p class="mono">${esc(f.name)} · sha256:${fullHash(f.seed)}</p>`).join(''):'<p>No attachments in scope.</p>'}
