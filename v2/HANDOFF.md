@@ -175,7 +175,24 @@ Not a merged file. The same single export, run once per person, delivered togeth
 - Settings › Exports keeps every export with its folder name, so a closed folder's record is always findable.
 - Implementation: `Folder.status` and `closedAt`; the strip query is `WHERE status = ACTIVE ORDER BY lastItemAt DESC`; the Add-to-folder popover lists ACTIVE only; nothing in the hashing or export code changes.
 
-### 3.12 Search
+### 3.12 Group texts
+
+A group thread is a **room**, not a contact. Android already gives you what is needed: the thread's recipient list (`Telephony.Threads` / `canonical_addresses`) and each MMS/RCS part's sender address.
+
+- Data: `Contact.isGroup`, `Contact.memberIds` (real contacts, keyed by normalized E.164 number), and `Item.fromContactId` on every inbound group message. Roles live on the members, never on the room. The room has a name only; the phone's group name is the default, ⋯ → **Name this group…** overrides it (stored like a user label).
+- List row: "CommLocker Corp · group text · Bob Bishop, Amber Lee, you". Thread bubbles: "Bob Bishop · Co-founder · (310) 555-0100" above each message.
+- Folder timeline and cover sheet: a group message line reads "SMS (group “CommLocker Corp”) - Bob Bishop · (310) 555-0100 · in group"; a one-to-one call or voicemail reads "Call log - Bob Bishop · (310) 555-0100 · direct". Both can be in the same folder; time order keeps them honest: 1:00 group, 1:03 group (Amber), 1:04 direct call (Bob), 1:08 group (Bob).
+- Participants on the cover sheet are the union of senders, one-to-one contacts and group members, sorted by name, each with role and number, plus a "Group text: “CommLocker Corp” · Bob Bishop, Amber Lee, Lauren Cotner" line per group in scope.
+- Migration: threads ingested as one pseudo-contact ("Group · Paul + Chris") are re-read from the phone to recover senders. Ingestion hashes are unaffected: they cover content and timestamp, not labels.
+
+### 3.13 Unknown and private numbers
+
+- The carrier number is the identifier; the display name is a label. An export never blocks on a missing name.
+- Every record line prints the number next to the name, inbound and outbound ("Lauren → Ace Johnson · (310) 555-0182"). An outbound-only contact is still a participant.
+- A number not in contacts prints as the number. The export page lists it under "N numbers not named · export still works" with a name field, **Save**, or **Leave**.
+- A withheld caller ID has no number: store the call-log row id and print "Private number · caller ID withheld · call log ref <id>". It can be named later like any number; the ref stays on the line.
+
+### 3.14 Search
 
 Search matches the contact name, number and role first (listed first), then whole words inside message text, voicemail transcripts, email subjects and call notes. "ace" finds Ace Johnson and the one person whose text mentions "Ace"; it no longer finds "place". A row that is listed only because of a message match shows why: "mentions “ace” in 1 item". The count line reads "N people match “ace”". Room: `MATCH` on an FTS4 table over `body`, joined to contacts; name matches with `LIKE '%q%'`.
 
@@ -285,6 +302,9 @@ Type: Plus Jakarta Sans 400–800 for the UI, Michroma for the wordmark only. Bo
 - [ ] Folder header shows only non-zero types and the date span; no count pills inside a folder.
 - [ ] Bottom row lists active folders most recent first, no "All" pill; closing a folder removes it from the row and from the Add-to-folder popover; Reopen restores it; items and hashes untouched throughout.
 - [ ] After a folder export the close prompt appears; Keep open changes nothing.
+- [ ] Group thread: each inbound bubble shows the sender's name, role and number; renaming the group changes only the room name; a member's role edited elsewhere shows in the group.
+- [ ] Folder with a group thread and a member's direct call: the timeline shows both in time order, group lines tagged "in group", the call tagged "direct"; the cover sheet lists the group and its members under Participants.
+- [ ] Export with an unnamed number and a private-number call completes without naming; lines print the number, or "caller ID withheld · call log ref"; naming afterwards keeps the number on the line.
 - [ ] Search "ace" lists Ace Johnson first and a message-only match with a "mentions" tag; "place" does not match "ace".
 - [ ] Revoking RCS notification access shows the banner on the list and "1 needs attention" in Settings; Fix opens the notification-access screen; returning to the app clears both without a restart.
 

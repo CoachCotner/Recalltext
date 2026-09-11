@@ -53,6 +53,14 @@ flowchart LR
 - **Inside a folder** the list narrows to what is in it. Items from the same conversation that are not in the folder hide behind "n more, show faded".
 - **The ⋯ menu on every conversation** has two jobs: **Add to folder…** opens the conversation with everything selected so you choose what goes in, then select one or more folders or type a new folder name right there. **Export this conversation…** opens the export sheet.
 
+## Group texts, and the call that happened off the group
+
+- A group text is a room, not a person. Each message in it carries the sender's own name, role and number. Bob is still Bob everywhere else.
+- Name the room once: ⋯ → Name this group… → "CommLocker Corp".
+- Bob's example: 1:00 you text the group, 1:03 Amber texts the group, 1:04 Bob calls you off the group, 1:08 Bob texts the group. The folder timeline shows all four in order; the group messages say *in group "CommLocker Corp"*, the call says *direct*. Everyone can see Amber was not on the call.
+- Every record line prints the carrier number next to the name, because names can be edited. Outbound calls put the other party in Participants, sorted by name.
+- Unknown and private numbers never block an export: the number is the identifier, the name is a label. Name it on the export page, or Leave it.
+
 ## One thing in the current export to fix first
 
 The two sample exports disagree. The single-conversation export (Debt collectors, 8 records) prints **Verification: MATCH** on every record. The transaction export (811 Amapola no 6, 39 records) prints **Verification: MISMATCH** on every record, and the counterparty number appears in two formats inside the same thread. That points at the export re-hashing a re-serialized record after a phone-number normalization change, rather than re-hashing the bytes stored at ingestion.
