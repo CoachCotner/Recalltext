@@ -4,7 +4,7 @@
 
 Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign puts every text, call and voicemail in one stream on the left, folders on the right, and makes filing a single drag or two taps.
 
-- Clickable mockup: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; try dragging Paul Henderson onto a folder, or switch to the Phone view in the top bar)
+- Clickable mockup: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap the ⋯ on Paul Henderson to add him to a folder or export, or switch to the Phone view in the top bar)
 - Before/after drawing: [`v2/before-after.svg`](./before-after.svg)
 
 ![Today versus redesign](./before-after.svg)
@@ -12,7 +12,7 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 ## In plain words
 
 - **A row** is one line in the left list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
-- **Filing a conversation** starts with the **File…** button on its row. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders, Done. On a computer you can also drag the row onto a folder, which files all of it in one motion.
+- **Filing a conversation** starts with the **⋯** on its row, then **Add to folder…**. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders or type a new folder name, Done. On a computer you can also drag the row onto a folder, which files all of it in one motion.
 - **Filing** is a label, not a copy. It says "these records belong to the 1010 Catalina deal." The message, call log or voicemail is not changed, moved or duplicated. One item can carry several labels.
 - **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Filing happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
 
@@ -34,13 +34,13 @@ flowchart LR
 | You want to… | Today | Redesign |
 |---|---|---|
 | See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything filed there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
-| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **3 taps.** File… on the row (everything ticked) → File picked → tap the folder. Untick anything that should stay out first. On a computer, dragging the row onto a folder files all of it in one motion. |
+| File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → pick the record. Repeat per message. | **4 taps.** ⋯ → Add to folder… (everything ticked) → File picked → tap the folder. Untick anything that should stay out first. On a computer, dragging the row onto a folder files all of it in one motion. |
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
 | Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. File it like anything else. |
 | Start a new deal folder | **6 taps + 3 fields.** ＋ New Transaction → name → category → note → Create → Add Conversations → select → Add. | **1 field.** Type a name, press Enter. Or drop a conversation on "New folder" and name it. |
 | File only part of a conversation | **4 taps per message.** Expand the contact, tap 📁 on one message, pick the record, close. Repeat. | **Tick, then file once.** Open the conversation, tap Pick messages, tick any mix of texts, calls and voicemails, then File picked. All or None in one tap. |
 | Put the same messages in two or more deals | **Per message.** Tag each message separately. | **Tick more folders.** The folder list stays open with check marks; tap as many as apply, then Done. Chips on each item show where it lives. |
-| Export a certified record | Transaction → Export → Preview → Download | Export PDF on the folder. Same generator, same hashes. |
+| Export a certified record | Transaction → Export → Preview → Download. PDF only. | **⋯ → Export.** From any conversation or any folder. Readiness checks, then one tap for the PDF and a ZIP of every photo, video and voicemail recording. |
 
 ## What the left pane shows
 
@@ -50,6 +50,16 @@ flowchart LR
 - **Pick messages.** Inside any open conversation, tap Pick messages and checkboxes appear on every text, call and voicemail. Tick what belongs to the deal (or All, then untick the personal ones). A bar at the bottom files the picked set to one or more folders in a single move. Unpicked items stay out of the folder.
 - **Inside a folder** the list narrows to what is filed there. Items from the same conversation that are not in the folder hide behind "n more, show faded".
 - **Checkboxes for bulk filing.** Tick several rows, a bar appears, "File selected to…".
+- **The ⋯ menu on every conversation** has two jobs: **Add to folder…** opens the conversation with everything ticked so you choose what goes in, then pick one or more folders or type a new folder name right there. **Export this conversation…** opens the export sheet.
+
+## What an export contains
+
+The export sheet mirrors the Review & Export screen and the PDF the current build produces, from any conversation or any folder. Three checks run first: every record verified, every party labeled (an unlabeled number can be named in the sheet, carrier number kept), exporter identity set.
+
+- **Matching hash on every record.** Under each text, call and voicemail the PDF prints the ingestion record hash, the current record hash, and **Verification: MATCH**.
+- **Export hash.** One SHA-256 over every record hash plus the Export ID and time, printed in the chain-of-custody section. The fingerprint of the export itself.
+- **PDF record.** Cover sheet (file, scope, Export ID, generated, exporter, date range, counts, participants), full timeline, attachment index, chain of custody, export hash.
+- **ZIP of attachments.** Every photo, video, document, voicemail recording and transcript in scope, each listed in the attachment index with its own SHA-256.
 
 ## What the right pane shows
 
@@ -73,7 +83,7 @@ flowchart TD
   G -- yes --> H[Folders become a bottom strip<br/>File → tap a chip]
   G -- no --> I[Panes side by side]
   H --> J
-  I --> J[6 · Reconnect export<br/>Export PDF on the folder calls the existing generatePDF<br/>hashes, Beginning of Record and notes unchanged]
+  I --> J[6 · Export sheet<br/>readiness checks · matching hash per record · export hash<br/>PDF plus ZIP of photos, videos and voicemails]
   J --> K[7 · Remove the old steps<br/>All Texts tab · Add Call Log form · Add Voicemail form<br/>Add Conversations · File This Message picker]
   K --> L[8 · Live phone data<br/>call log and voicemail feed into the stream automatically<br/>replaces the simulated forms for good]
   L --> M([Done: one screen, one move])
