@@ -1,6 +1,6 @@
 # RecallText Filing Desk — redesign plan
 
-**One screen. Left is what's on your phone. Right is where it goes.**
+**One screen. What's on your phone, and where it goes.**
 
 Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to file or export.
 
@@ -12,7 +12,7 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 
 ## In plain words
 
-- **A row** is one line in the left list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
+- **A row** is one line in the list: one person or one number, for example the Paul Henderson line. Tap it and it opens to show every text, call and voicemail with that person.
 - **Filing a conversation** starts with the **⋯** on its row, then **Add to folder…**. The conversation opens with every text, call and voicemail ticked. Untick what should stay out, tap **File picked**, tick one or more folders or type a new folder name, Done.
 - **Filing** is a label, not a copy. It says "these records belong to the 1010 Catalina deal." The message, call log or voicemail is not changed, moved or duplicated. One item can carry several labels.
 - **The hash** is stamped earlier than any of this, the moment the item is pulled off the phone. Filing happens after and cannot touch it. Every item in the mockup shows its "hashed at ingestion" line, and the export carries the same hash.
