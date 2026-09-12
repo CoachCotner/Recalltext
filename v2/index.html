@@ -400,6 +400,30 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .narrow .ifile{opacity:1}
 .narrow .thread{padding:4px 10px 12px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---------- conversations as boxes, messages as phone bubbles ---------- */
+#rows{background:var(--bg);padding:8px 10px 12px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-top:8px;box-shadow:0 1px 2px rgba(7,27,66,.05)}
+.row:first-child{margin-top:0}
+.row.open{border-radius:14px 14px 0 0;border-bottom-color:transparent}
+.thread{background:color-mix(in srgb,var(--line) 35%,var(--bg));border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;margin-bottom:2px}
+.narrow .thread{padding:6px 10px 12px}
+.bubble{background:var(--bubble-in);color:var(--ink);border-radius:18px 18px 18px 6px;padding:9px 13px 7px;box-shadow:0 1px 1px rgba(7,27,66,.06)}
+.out .bubble{background:var(--bubble-out);color:#FFFFFF;border-radius:18px 18px 6px 18px}
+.out .bubble .who,.out .bubble .ts{color:rgba(255,255,255,.72)}
+.out .bubble .hash,.out .bubble .hash b{color:rgba(255,255,255,.7)}
+.out .bubble .hash .ic{color:rgba(255,255,255,.7)}
+.out .bubble .ifolders span{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff}
+.out .bubble .ifolders .fx{color:#fff;background:rgba(255,255,255,.2)}
+.out .bubble .note{background:rgba(255,255,255,.14);color:#fff;border-left-color:rgba(255,255,255,.6)}
+.out .bubble .att{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.3)}
+.card{border:1px solid var(--line);border-left:4px solid var(--call-c);background:var(--card);border-radius:12px;box-shadow:0 1px 1px rgba(7,27,66,.06)}
+.tl{padding:6px 12px 14px}
+.tlsum{padding:12px 12px 4px}
+:root{--bubble-in:#E8ECF3;--bubble-out:#2B4169}
+#app:not([data-theme="light"]) .row{box-shadow:none}
+@media (prefers-color-scheme:dark){#app:not([data-theme="light"]){--bubble-in:#243456;--bubble-out:#3B5A94}}
+#app[data-theme="dark"]{--bubble-in:#243456;--bubble-out:#3B5A94}
+@media (prefers-color-scheme:dark){#app:not([data-theme="light"]) .bubble{box-shadow:none}}
 </style>
 
 </head>
