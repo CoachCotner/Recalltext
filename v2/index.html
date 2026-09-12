@@ -7,35 +7,35 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Michroma&display=swap">
 <style>
 :root{
-  --bg:#F6F5F1;--card:#FFFFFF;--line:#E3E1DB;--ink:#111C32;--ink2:#3A465E;--mute:#6B7688;--ok:#16A34A;
+  --bg:#F5F6F8;--card:#FFFFFF;--line:#E2E5EB;--ink:#0F1B33;--ink2:#3B4864;--mute:#6C7891;--ok:#15803D;
   --hd:#071B42;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.7);--hd-field:rgba(237,237,237,.14);
   --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 10%,#FFFFFF);--orange-line:color-mix(in srgb,#C56230 45%,transparent);
   --eyebrow:#B95722;
   --txt-c:#2B4169;--call-c:#2B4169;--vm-c:#2B4169;--miss-c:#B95722;--mail-c:#2B4169;
   --amber:#B95722;--amber-soft:color-mix(in srgb,#B95722 9%,#FFFFFF);--amber-line:color-mix(in srgb,#B95722 35%,transparent);
-  --in-b:#F1F0EB;--out-b:color-mix(in srgb,#2B4169 9%,#FFFFFF);--hover:#F6F5F1;--drop:color-mix(in srgb,#2B4169 12%,#FFFFFF);--sel:color-mix(in srgb,#2B4169 7%,#FFFFFF);
+  --in-b:#EEF0F4;--out-b:color-mix(in srgb,#2B4169 10%,#FFFFFF);--hover:#F5F6F8;--drop:color-mix(in srgb,#2B4169 12%,#FFFFFF);--sel:color-mix(in srgb,#2B4169 7%,#FFFFFF);
   --shadow:0 6px 24px rgba(7,27,66,.16);
 }
 @media (prefers-color-scheme:dark){
   #app:not([data-theme="light"]){
-    --bg:#01173C;--card:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
+    --bg:#0B1426;--card:#15213A;--line:#33436A;--ink:#F1F4F9;--ink2:#CFD6E3;--mute:#98A4BB;
     --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
     --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
     --eyebrow:#E8793A;
     --txt-c:#9FB3D9;--call-c:#9FB3D9;--vm-c:#9FB3D9;--miss-c:#E8793A;--mail-c:#9FB3D9;--ok:#4ADE80;
     --amber:#E8793A;--amber-soft:color-mix(in srgb,#B95722 22%,#071B42);--amber-line:color-mix(in srgb,#E8793A 40%,transparent);
-    --in-b:#0D2650;--out-b:color-mix(in srgb,#C56230 24%,#071B42);--hover:#0D2650;--drop:color-mix(in srgb,#C56230 24%,#071B42);--sel:color-mix(in srgb,#C56230 16%,#071B42);
+    --in-b:#1D2B4B;--out-b:color-mix(in srgb,#C56230 28%,#15213A);--hover:#1B2745;--drop:#25386A;--sel:#1E2E55;
     --shadow:0 6px 24px rgba(0,0,0,.5);
   }
 }
 #app[data-theme="dark"]{
-    --bg:#01173C;--card:#071B42;--line:#2B4169;--ink:#EDEDED;--ink2:color-mix(in srgb,#EDEDED 82%,#071B42);--mute:color-mix(in srgb,#EDEDED 58%,#071B42);
+    --bg:#0B1426;--card:#15213A;--line:#33436A;--ink:#F1F4F9;--ink2:#CFD6E3;--mute:#98A4BB;
     --hd:#01173C;--hd-ink:#EDEDED;--hd-dim:rgba(237,237,237,.65);--hd-field:rgba(237,237,237,.12);
     --orange:#C56230;--orange-hover:#E8793A;--orange-ink:#EDEDED;--orange-soft:color-mix(in srgb,#C56230 22%,#071B42);--orange-line:color-mix(in srgb,#C56230 55%,transparent);
     --eyebrow:#E8793A;
     --txt-c:#9FB3D9;--call-c:#9FB3D9;--vm-c:#9FB3D9;--miss-c:#E8793A;--mail-c:#9FB3D9;--ok:#4ADE80;
     --amber:#E8793A;--amber-soft:color-mix(in srgb,#B95722 22%,#071B42);--amber-line:color-mix(in srgb,#E8793A 40%,transparent);
-    --in-b:#0D2650;--out-b:color-mix(in srgb,#C56230 24%,#071B42);--hover:#0D2650;--drop:color-mix(in srgb,#C56230 24%,#071B42);--sel:color-mix(in srgb,#C56230 16%,#071B42);
+    --in-b:#1D2B4B;--out-b:color-mix(in srgb,#C56230 28%,#15213A);--hover:#1B2745;--drop:#25386A;--sel:#1E2E55;
     --shadow:0 6px 24px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -58,7 +58,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .seg button[aria-pressed="true"]{background:var(--orange);color:var(--orange-ink)}
 
 /* ---------- shell ---------- */
-#app{position:fixed;top:0;left:0;width:100%;height:100%;max-width:100%;min-width:0;margin:0;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;z-index:1}
+#app{position:fixed;top:0;left:0;width:100%;height:100%;max-width:100%;min-width:0;margin:0;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);overflow:hidden;z-index:1}
 @media (min-width:481px){#app{inset:0;margin:auto;width:360px;height:min(780px,100%);border:1px solid var(--line);border-radius:22px;box-shadow:0 0 60px rgba(0,0,0,.18)} body{background:color-mix(in srgb,var(--bg) 70%,#071B42 30%)}}
 .top{flex:none}
 .top .grow{flex:0 0 2px}
