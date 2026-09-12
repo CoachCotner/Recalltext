@@ -152,6 +152,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .tl .out .who2{flex-direction:row-reverse}
 .tlsum{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px 4px;font-size:12px;color:var(--mute)}
 .tlsum .fchip{max-width:none}
+.fchip.pc{color:color-mix(in srgb,var(--pc) 65%,var(--ink));border-color:color-mix(in srgb,var(--pc) 55%,transparent);background:color-mix(in srgb,var(--pc) 12%,transparent)}
 /* ---------- conversation rows ---------- */
 .row{display:grid;grid-template-columns:22px 40px 1fr auto;gap:12px;align-items:start;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
 .row:hover{background:var(--hover)}
@@ -840,7 +841,7 @@ function renderTimeline(){
   all.sort((a,b)=>a.i.t-b.i.t);
   if(!all.length) return '<div class="empty">Nothing in this folder yet. Go back to Everything, open a conversation, select the messages, and add them to this folder.</div>';
   const people=[...new Set(all.map(x=>x.c))];
-  let html=`<div class="tlsum"><span>${all.length} items from</span>${people.map(c=>`<span class="fchip" style="border-color:${colorOf(c)}66;background:${colorOf(c)}14;color:${colorOf(c)}">${esc(c.name)}</span>`).join('')}</div><div class="tl">`;
+  let html=`<div class="tlsum"><span>${all.length} items from</span>${people.map(c=>`<span class="fchip pc" style="--pc:${colorOf(c)}">${esc(c.name)}</span>`).join('')}</div><div class="tl">`;
   let lastDay='';
   all.forEach(({i,c})=>{ const day=fmtDivider(i.t); if(day!==lastDay){ html+=`<div class="divider"><span>${day}</span></div>`; lastDay=day; } html+=itemHtml(i,c,state.tlPick,true); });
   if(state.tlPick){ const n=[...state.picked].filter(id=>all.some(x=>x.i.id===id)).length; html+=`<div class="pickbar" onclick="event.stopPropagation()"><span style="white-space:nowrap">${n} of ${all.length} selected</span><span class="grow"></span><button class="btn primary" ${n?'':'disabled style="opacity:.5"'} onclick="openPop(event,{kind:'sel'})"><svg class="ic"><use href="#i-folder"/></svg> Add selected to folder…</button><button class="btn" ${n?'':'disabled style="opacity:.5"'} onclick="unfileSel()">Take out of this folder</button><button class="btn ghost" onclick="tlSelect(false)">Done</button></div>`; }
