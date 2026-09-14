@@ -3,7 +3,7 @@
 For the Kotlin/Android build. This is the spec behind the clickable mockup in `index.html`. The mockup is the reference for layout and copy; this file is the reference for behavior, data and acceptance. Where the two disagree, this file wins.
 
 - Mockup (live): https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 — tap **Show me** for the seven-step tour
-- Walkthrough with captures: `v2/walkthrough.html`
+- Walkthrough with captures: `walkthrough.html`
 - Target: portrait phone, 9:19.5 aspect (720 × 1560 class). Every screen, including Export, fits one screen height without scrolling at 360 × 780 dp. Lists scroll; pages do not.
 
 ## 0. What the current build (0.1.29, Android) already has, and what happens to it

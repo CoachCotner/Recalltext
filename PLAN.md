@@ -6,8 +6,8 @@ Today the app splits a deal across two tabs, a detail screen and four forms, and
 
 - Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`HANDOFF.md`](./HANDOFF.md)
 - Clickable mockup, sized for a 9:19.5 portrait phone: [`index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
-- Seven-screen walkthrough with captures: [`v2/walkthrough.html`](./walkthrough.html) · live: https://claude.ai/code/artifact/24840a15-2166-44f8-af48-f918ab4f34ba
-- Before/after drawing: [`v2/before-after.svg`](./before-after.svg)
+- Seven-screen walkthrough with captures: [`walkthrough.html`](./walkthrough.html) · live: https://claude.ai/code/artifact/24840a15-2166-44f8-af48-f918ab4f34ba
+- Before/after drawing: [`before-after.svg`](./before-after.svg)
 
 ![Today versus redesign](./before-after.svg)
 
