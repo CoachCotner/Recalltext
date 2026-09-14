@@ -1,6 +1,6 @@
 # CommLocker v2 — developer handoff
 
-For the Kotlin/Android build. This is the spec behind the clickable mockup in `v2/index.html`. The mockup is the reference for layout and copy; this file is the reference for behavior, data and acceptance. Where the two disagree, this file wins.
+For the Kotlin/Android build. This is the spec behind the clickable mockup in `index.html`. The mockup is the reference for layout and copy; this file is the reference for behavior, data and acceptance. Where the two disagree, this file wins.
 
 - Mockup (live): https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 — tap **Show me** for the seven-step tour
 - Walkthrough with captures: `v2/walkthrough.html`

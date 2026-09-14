@@ -4,8 +4,8 @@
 
 Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to add to a folder or export.
 
-- Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`v2/HANDOFF.md`](./HANDOFF.md)
-- Clickable mockup, sized for a 9:19.5 portrait phone: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
+- Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`HANDOFF.md`](./HANDOFF.md)
+- Clickable mockup, sized for a 9:19.5 portrait phone: [`index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
 - Seven-screen walkthrough with captures: [`v2/walkthrough.html`](./walkthrough.html) · live: https://claude.ai/code/artifact/24840a15-2166-44f8-af48-f918ab4f34ba
 - Before/after drawing: [`v2/before-after.svg`](./before-after.svg)
 
@@ -78,7 +78,7 @@ Three iterations, each shippable on its own: one list (deleting the tabs and for
 
 The two sample exports disagree. The single-conversation export (Debt collectors, 8 records) prints **Verification: MATCH** on every record. The transaction export (811 Amapola no 6, 39 records) prints **Verification: MISMATCH** on every record, and the counterparty number appears in two formats inside the same thread. That points at the export re-hashing a re-serialized record after a phone-number normalization change, rather than re-hashing the bytes stored at ingestion.
 
-Two fixes, both specified in [`v2/HANDOFF.md`](./HANDOFF.md): store the exact canonical bytes hashed at ingestion and verify against those; and never let an export go out quietly with MISMATCH (readiness row red, Export disabled).
+Two fixes, both specified in [`HANDOFF.md`](./HANDOFF.md): store the exact canonical bytes hashed at ingestion and verify against those; and never let an export go out quietly with MISMATCH (readiness row red, Export disabled).
 
 ## What an export contains
 
