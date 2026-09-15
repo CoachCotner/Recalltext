@@ -1,6 +1,6 @@
 # CommLocker v2 — developer handoff
 
-For the Kotlin/Android build. This is the spec behind the clickable mockup in `index.html`. The mockup is the reference for layout and copy; this file is the reference for behavior, data and acceptance. Where the two disagree, this file wins.
+For the Kotlin/Android build. This is the spec behind the clickable mockup in `v2/index.html`. The mockup is the reference for layout and copy; this file is the reference for behavior, data and acceptance. Where the two disagree, this file wins.
 
 - Mockup (live): https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 — tap **Show me** for the seven-step tour
 - Walkthrough with captures: `walkthrough.html`
@@ -267,7 +267,12 @@ The current hash is recomputed over the **stored bytes**, not over a re-serializ
 
 ### 4.5 Email as a record
 
-Emails are items like texts and calls. Sources, in order of preference: the device's mail accounts through the Gmail API or IMAP with the user's consent, and **.eml import** for one-offs (share an .eml to CommLocker). Store subject, from, to, date, plain-text body, Message-ID and attachments. Canonical bytes add three lines: `subject=`, `from=`, `message_id=`. The row and thread show an envelope chip, subject, from/to and the body; attachments go to the ZIP like any other. The PDF prints "Email" as the record type with From/To and Subject above the body, then both hashes.
+Three sources, same Item: `.eml` shared to the app, Outlook via Microsoft Graph, Gmail via the Gmail API. In every case hash the **raw RFC 822 bytes** at ingestion (not parsed fields), then store from, to, subject, date, body and attachments beside them.
+
+- **`.eml` import (ship first).** Register as a share target for `message/rfc822` and `.eml`. No API, no review. Covers "attach this one email to the deal".
+- **Outlook (second).** Azure app registration, delegated `Mail.Read`, MSAL sign-in on Android. Raw bytes from `GET /me/messages/{id}/$value`; incremental sync with delta queries. Publisher verification is a form.
+- **Gmail (last).** Google Cloud project, OAuth consent, scope `gmail.readonly`. Raw bytes from `messages.get?format=raw`; sync with the History API. `gmail.readonly` is a **restricted** scope: past ~100 users Google requires app review plus an annual third-party CASA security assessment. Budget for it, or keep Gmail on `.eml` import.
+- Only fetch messages whose addresses match people already in the user's folders; never mirror a whole mailbox. Read-only scopes only.
 
 ### 4.6 ZIP
 
