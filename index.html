@@ -523,7 +523,7 @@ const state = {
 };
 state.folders.forEach(f=>{ if(!f.status) f.status='active'; });
 /* sample folders carry the new categories */
-(function seedCats(){ const map={1:'Listing',2:'Rental / Tenant',3:'Referral',4:'Listing',5:'Purchase'}; state.folders.forEach(f=>{ const n=map[f.id]; if(n&&!CATS.find(x=>x[0]===f.cat)){ const c=CATS.find(x=>x[0]===n); f.cat=c[0]; f.icon=c[1]; } }); })();
+(function seedCats(){ const map={1:['Listing','🏠'],2:['Rental / Tenant','🏢'],3:['Referral','💼'],4:['Listing','🏠'],5:['Purchase','🏡']}; const known=['Listing','Purchase','Rental / Tenant','Referral','Dispute','Business','Personal','Other']; state.folders.forEach(f=>{ const c=map[f.id]; if(c&&!known.includes(f.cat)){ f.cat=c[0]; f.icon=c[1]; } }); })();
 const activeFolders=()=>state.folders.filter(f=>f.status!=='closed');
 const closedFolders=()=>state.folders.filter(f=>f.status==='closed');
 const folderLast=f=>{ let m=0; state.contacts.forEach(c=>c.items.forEach(i=>{ if(i.folders.includes(f.id)&&i.t>m) m=i.t; })); return m||f.createdAt||0; };
