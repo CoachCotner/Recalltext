@@ -43,7 +43,7 @@ Each iteration ships on its own and is useful on its own. The acceptance checkli
 
 ## Why we are confident it is buildable
 
-- Every screen in the mockup runs on the app's real sample data and is sized for a 360 × 780 dp phone. Nothing in it needs a capability the phone does not give you: the sender of a group message, the participants of a thread, the call log, visual voicemail where the carrier exposes it.
+- Every screen in the mockup runs on the app's real sample data and is sized for a 360 × 780 dp phone. Nothing in it needs a capability the phone does not give you: the sender of a group message, the participants of a thread, the call log including voicemail events, the voicemail transcript from the Phone app's notification. The one exception is voicemail audio, which Android reserves for the default dialer; it arrives by a single Share or by voicemail-to-email, and the spec says so.
 - Nothing in v2 touches the hashed bytes. Roles, notes, folder membership, names and hidden people all live beside the record.
 - The mockup is plain HTML and its source is in the repo; every behavior in the spec can be clicked and compared.
 

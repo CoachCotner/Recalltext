@@ -4,8 +4,8 @@
 
 Today the app splits a deal across two tabs, a detail screen and four forms, and calls and voicemails sit in a block of their own. The redesign is one phone screen: every text, call and voicemail in one list, folders along the bottom, and a ⋯ on each conversation to add to a folder or export.
 
-- Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`HANDOFF.md`](./HANDOFF.md)
-- Clickable mockup, sized for a 9:19.5 portrait phone: [`index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
+- Developer handoff (data model, behavior, hashing rules, acceptance checklist): [`v2/HANDOFF.md`](./HANDOFF.md)
+- Clickable mockup, sized for a 9:19.5 portrait phone: [`v2/index.html`](./index.html) · live preview: https://claude.ai/code/artifact/bf93e84c-06e0-4471-ad9d-4fde737d38c8 (runs on the app's real sample data; tap **Show me** for a guided walk-through)
 - Seven-screen walkthrough with captures: [`walkthrough.html`](./walkthrough.html) · live: https://claude.ai/code/artifact/24840a15-2166-44f8-af48-f918ab4f34ba
 - Before/after drawing: [`before-after.svg`](./before-after.svg)
 
@@ -38,7 +38,7 @@ flowchart LR
 | See one deal's texts, calls and voicemails | **3 taps + scroll.** Home → transaction → scroll past texts to "Phone Records". Calls and voicemails never appear in the By Date view. | **1 tap.** Tap the folder and you get the transaction timeline: everything added there, from every person, in date order, calls and voicemails inline. "By person" groups the same items by contact. |
 | File a text conversation to a deal | **4 taps.** All Texts tab → expand contact → tap 📁 on a message → select the record. Repeat per message. | **4 taps.** ⋯ → Add to folder… (everything selected) → Add selected → tap the folder. Deselect anything that should stay out first. |
 | Record a phone call | **3 taps + 7 fields.** Open transaction → scroll → Add Call Log → type name, number, date, duration, direction, notes. | **0 fields.** The call is already in the left stream from the phone's call log. Drag it to a folder. |
-| Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields.** Voicemail and carrier transcript land in the stream under the caller. Add it like anything else. |
+| Save a voicemail | **3 taps + 6 fields.** Open transaction → scroll → Add Voicemail → paste transcription and details. | **0 fields, 1 share for the audio.** The voicemail record and its transcript arrive on their own (call log + the voicemail notification). The recording arrives when the user shares it once from the Phone app, or by carrier voicemail-to-email. |
 | Start a new deal folder | **6 taps + 3 fields.** ＋ New Transaction → name → category → note → Create → Add Conversations → select → Add. | **1 field.** Type a name, press Enter. Or drop a conversation on "New folder" and name it. |
 | File only part of a conversation | **4 taps per message.** Expand the contact, tap 📁 on one message, select the record, close. Repeat. | **Select, then add once.** Open the conversation, tap Select messages, select any mix of texts, calls and voicemails, then Add selected. All or None in one tap. |
 | Put the same messages in two or more deals | **Per message.** Tag each message separately. | **Select more folders.** The folder list stays open with check marks; tap as many as apply, then Done. Chips on each item show where it lives. |
@@ -78,7 +78,7 @@ Three iterations, each shippable on its own: one list (deleting the tabs and for
 
 The two sample exports disagree. The single-conversation export (Debt collectors, 8 records) prints **Verification: MATCH** on every record. The transaction export (811 Amapola no 6, 39 records) prints **Verification: MISMATCH** on every record, and the counterparty number appears in two formats inside the same thread. That points at the export re-hashing a re-serialized record after a phone-number normalization change, rather than re-hashing the bytes stored at ingestion.
 
-Two fixes, both specified in [`HANDOFF.md`](./HANDOFF.md): store the exact canonical bytes hashed at ingestion and verify against those; and never let an export go out quietly with MISMATCH (readiness row red, Export disabled).
+Two fixes, both specified in [`v2/HANDOFF.md`](./HANDOFF.md): store the exact canonical bytes hashed at ingestion and verify against those; and never let an export go out quietly with MISMATCH (readiness row red, Export disabled).
 
 ## What an export contains
 
@@ -128,7 +128,7 @@ flowchart TD
   E --> F[5 · New folder = one field<br/>name → Enter · drop onto New folder<br/>category optional later]
   F --> J[6 · Export sheet<br/>readiness checks · matching hash per record · export hash<br/>PDF plus ZIP of photos, videos and voicemails]
   J --> K[7 · Remove the old steps<br/>All Texts tab · Add Call Log form · Add Voicemail form<br/>Add Conversations · File This Message picker]
-  K --> L[8 · Live phone data<br/>call log and voicemail feed into the stream automatically<br/>replaces the simulated forms for good]
+  K --> L[8 · Live phone data<br/>call log, voicemail events and transcripts arrive automatically<br/>audio by one Share · replaces the simulated forms for good]
   L --> M([Done: one screen, one move])
   classDef now fill:#F4F1EC,stroke:#071B42,color:#111C32
   classDef step fill:#FFFFFF,stroke:#071B42,color:#111C32
@@ -151,7 +151,7 @@ The app is one file, `index.html`, with sample data and screens in the same scri
 5. **New folder is one field (0.5 day).** Name + Enter; drop on New folder creates and files. Category, icon and notes become an optional edit using the existing category grid.
 6. **Reconnect export (0.5 day).** Export PDF on a folder builds the input `generatePDF` expects from the items tagged to that folder. Hashes, Beginning of Record and notes unchanged.
 7. **Remove the old steps (0.5 day).** Delete `m-call`, `m-vm`, `m-add-convs`, `m-tag`, `switchHomeTab`, `renderAllTexts`, `addCall`, `addVM`. Keep Identify Caller, the annotation sheet and the incoming-call demo.
-8. **Live phone data (native app work).** The forms existed only because the prototype can't read a phone. In the shipped app the call log and voicemail feed fill the stream on their own. iOS does not let third-party apps read call history; Android exposes `CallLog` and visual voicemail providers. Confirm with the mobile developer.
+8. **Live phone data (native app work).** The forms existed only because the prototype can't read a phone. In the shipped app the call log fills the stream on its own, including each voicemail as an event with caller, time and length; the voicemail transcript comes from the Phone app's notification, the same listener that captures RCS. The audio file is the one thing Android keeps behind the default-dialer permission: it arrives by a single Share from the Phone app, or by carrier voicemail-to-email. iOS does not let third-party apps read call history at all.
 
 **Total for the web prototype:** about 6 to 7 working days, shipped at `recalltext.io/v2` first so the current demo stays untouched.
 

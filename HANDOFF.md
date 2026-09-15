@@ -275,11 +275,18 @@ Three sources, same Item: `.eml` shared to the app, Outlook via Microsoft Graph,
 - Only fetch messages whose addresses match people already in the user's folders; never mirror a whole mailbox. Read-only scopes only.
 - **Provenance, share sheet versus API.** Both hand the app the same raw bytes, and both are hashed the same way at ingestion; the share sheet does not weaken the hash. What differs is the step before ingestion: an API fetch comes straight from the mail server, a shared `.eml` passes through the user's hands. Close that gap on import: verify the message's **DKIM signature** against the sender's domain, record the result and the source ("imported from Gmail app, <time>") in the chain of custody, and print **DKIM verified** (or "not verifiable") on the record. A DKIM-verified `.eml` is stronger evidence than a plain API copy, because the sender's own signature covers the headers and body.
 
-### 4.6 ZIP
+### 4.6 Voicemail: what arrives on its own, what needs one Share
+
+- **Automatic, with permissions the app already has.** Every voicemail is a `CallLog.Calls` row of type `VOICEMAIL_TYPE` with number, timestamp and duration: create the Voicemail item from it at ingestion and hash those canonical fields. The transcript comes from the Phone app's voicemail notification (Google Phone and most carrier apps include the transcription text); the existing notification listener that captures RCS catches it and attaches it to that item. Result: the record exists in the folder and on the PDF without any user action.
+- **Not automatic for a third-party app.** The recording itself. `READ_VOICEMAIL` is granted only to the default dialer role; do not plan around it. The audio arrives by (a) the user sharing the voicemail from the Phone app to CommLocker (register `ACTION_SEND` for `audio/*`; match to the open Voicemail item by number and time, hash the bytes, store the file), or (b) carrier voicemail-to-email through the email path (4.5). Becoming the default dialer would unlock it but is out of scope.
+- The PDF prints the Voicemail record either way and states whether the audio is attached; the ZIP includes it when it is. A transcript improved later never changes the record hash, which covers the call-log fields and, when present, the audio bytes.
+- First-run card: "To keep the recording, share the voicemail to CommLocker from your Phone app" with the three taps.
+
+### 4.7 ZIP
 
 One ZIP per export, next to the PDF, containing every attachment in scope: images, videos, documents, voicemail audio, voicemail transcript `.txt`. File names as in the attachment index; each entry's SHA-256 is listed in the index and in the ZIP's own manifest (`manifest.json`: file name, kind, sha256, source item id, timestamp). Voicemail audio comes from the visual-voicemail store where the device exposes it; if it does not, include the transcript and say so in the index.
 
-### 4.7 PDF structure (keep what exists)
+### 4.8 PDF structure (keep what exists)
 
 Cover / Export Summary → Conversation Timeline (both hashes per record) → Attachment Index → Chain of Custody with Export Hash. This is the current generator's structure; keep it, just add the "Current SHA-256" line where it is missing and the MISMATCH handling.
 
