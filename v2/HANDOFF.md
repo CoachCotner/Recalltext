@@ -147,7 +147,7 @@ Implementation: re-check on every `onResume`. Deep links: runtime permissions �
 
 - From the bottom block: **+ New folder** → small popover with a name field and **Create**. Creates and opens the folder.
 - From the folder popover: name field + **Create & add** creates the folder and adds the selected set in one action.
-- Category, icon and notes are optional edits later; not required to create.
+- **Category** is one tap on the same sheet, every place a folder is created (bottom row, Folders sheet, the Create & add box) and in Rename: Listing 🏠, Purchase 🏡, Rental / Tenant 🏢, Referral 💼, Dispute ⚖️, Business 👥, Personal 👨‍👩‍👧, Other 📁. Listing is preselected so a name and Create still works. The category sets the icon, shows in the folder header and the Folders sheet, and is the first field the developer's existing category grid maps to.
 
 ### 3.9 Date range (list, folders and export)
 
@@ -273,6 +273,7 @@ Three sources, same Item: `.eml` shared to the app, Outlook via Microsoft Graph,
 - **Outlook (second).** Azure app registration, delegated `Mail.Read`, MSAL sign-in on Android. Raw bytes from `GET /me/messages/{id}/$value`; incremental sync with delta queries. Publisher verification is a form.
 - **Gmail (last).** Google Cloud project, OAuth consent, scope `gmail.readonly`. Raw bytes from `messages.get?format=raw`; sync with the History API. `gmail.readonly` is a **restricted** scope: past ~100 users Google requires app review plus an annual third-party CASA security assessment. Budget for it, or keep Gmail on `.eml` import.
 - Only fetch messages whose addresses match people already in the user's folders; never mirror a whole mailbox. Read-only scopes only.
+- **Provenance, share sheet versus API.** Both hand the app the same raw bytes, and both are hashed the same way at ingestion; the share sheet does not weaken the hash. What differs is the step before ingestion: an API fetch comes straight from the mail server, a shared `.eml` passes through the user's hands. Close that gap on import: verify the message's **DKIM signature** against the sender's domain, record the result and the source ("imported from Gmail app, <time>") in the chain of custody, and print **DKIM verified** (or "not verifiable") on the record. A DKIM-verified `.eml` is stronger evidence than a plain API copy, because the sender's own signature covers the headers and body.
 
 ### 4.6 ZIP
 
