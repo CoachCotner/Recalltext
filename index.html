@@ -108,6 +108,10 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px so
 .frowx{display:flex;align-items:center;gap:8px}
 .frowx .grow{flex:1}
 .rowact{display:flex;gap:6px;margin-top:6px}
+.cats{display:flex;flex-wrap:wrap;gap:5px;padding:2px 8px 6px}
+.cchip{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink2)}
+.cchip.on{border-color:var(--orange);background:var(--sel);color:var(--ink)}
+.fnew+.cats{padding:0 0 8px}
 .chan{font-size:10px;font-weight:700;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:1px 6px;margin-left:6px;white-space:nowrap}
 .rowact .btn{padding:4px 9px;font-size:11px}
 .frow.closed{opacity:.6}
@@ -712,9 +716,14 @@ function unfileFrom(p,fid){
   saveState(); toast('Removed '+payloadName(p)+' from '+f.name); render();
 }
 function inFolder(p,fid){ const it=payloadItems(p); return it.length>0 && it.every(i=>i.folders.includes(fid)); }
-function createFolder(name){
-  const id=Math.max(0,...state.folders.map(f=>f.id))+1;
-  const f={id,name,cat:'New',icon:'📁',note:'',status:'active',createdAt:Date.now()}; state.folders.push(f); saveState(); return f;
+/* categories: what kind of deal this is. Sets the icon; optional, one tap. */
+const CATS=[['Listing','🏠'],['Purchase','🏡'],['Rental / Tenant','🏢'],['Referral','💼'],['Dispute','⚖️'],['Business','👥'],['Personal','👨‍👩‍👧'],['Other','📁']];
+let newCat='Listing';
+function catChips(sel,fn){ return `<div class="cats">${CATS.map(([n,i])=>`<button class="cchip ${sel===n?'on':''}" onclick="${fn}('${n}')">${i} ${n}</button>`).join('')}</div>`; }
+function pickCat(n){ newCat=n; document.querySelectorAll('.cats .cchip').forEach(b=>b.classList.toggle('on',b.textContent.trim().endsWith(n))); }
+function createFolder(name,cat){
+  const id=Math.max(0,...state.folders.map(f=>f.id))+1; const c=CATS.find(x=>x[0]===(cat||newCat))||CATS[CATS.length-1];
+  const f={id,name,cat:c[0],icon:c[1],note:'',status:'active',createdAt:Date.now()}; state.folders.push(f); saveState(); newCat='Listing'; return f;
 }
 
 /* ---------- popover ---------- */
@@ -723,7 +732,7 @@ function openPop(ev,p){
   state.pop=p; const pop=document.getElementById('pop');
   pop.innerHTML=`<div class="pt">Add ${esc(payloadName(p))} to</div><div class="ps">Tap as many folders as you like. Tap again to remove.</div>`+
     activeFolders().map(f=>`<button class="po ${inFolder(p,f.id)?'in':''}" onclick="togglePop(${f.id})"><span class="fi">${f.icon}</span><span class="fn">${esc(f.name)}</span><span class="ck"><svg class="ic" style="width:11px;height:11px"><use href="#i-check"/></svg></span></button>`).join('')+(closedFolders().length?`<div class="ps">${closedFolders().length} closed folder${closedFolders().length>1?'s':''} not listed · reopen from manage</div>`:'')+
-    `<div class="newrow"><input id="popnew" type="text" placeholder="New folder name" onkeydown="if(event.key==='Enter')popNew()"><button class="btn primary" onclick="popNew()">Create & add</button></div>
+    `<div class="newrow"><input id="popnew" type="text" placeholder="New folder name" onkeydown="if(event.key==='Enter')popNew()"><button class="btn primary" onclick="popNew()">Create & add</button></div>${(newCat='Listing',catChips(newCat,'pickCat'))}
     <div class="done"><button class="btn" onclick="closePop()">Done</button></div>`;
   pop.classList.add('open'); placePop(ev,pop);
 }
@@ -788,7 +797,7 @@ function renderBanner(){
   const f=folderById(state.folder), s=folderStats(f.id); const closed=f.status==='closed';
   const ts=[]; state.contacts.forEach(c=>c.items.forEach(i=>{ if(i.folders.includes(f.id)) ts.push(i.t); })); ts.sort((a,b)=>a-b);
   const span=ts.length?(fmtDay(ts[0])+' – '+fmtDay(ts[ts.length-1])+(yr(ts[ts.length-1])!==yr(LATEST)?', '+yr(ts[ts.length-1]):'')):'';
-  const parts=[s.contacts+' '+(s.contacts===1?'person':'people'),s.texts?s.texts+' text'+(s.texts!==1?'s':''):'',s.calls?s.calls+' call'+(s.calls!==1?'s':''):'',s.vms?s.vms+' voicemail'+(s.vms!==1?'s':''):'',s.emails?s.emails+' email'+(s.emails!==1?'s':''):'',span].filter(Boolean);
+  const parts=[f.cat||'',s.contacts+' '+(s.contacts===1?'person':'people'),s.texts?s.texts+' text'+(s.texts!==1?'s':''):'',s.calls?s.calls+' call'+(s.calls!==1?'s':''):'',s.vms?s.vms+' voicemail'+(s.vms!==1?'s':''):'',s.emails?s.emails+' email'+(s.emails!==1?'s':''):'',span].filter(Boolean);
   el.innerHTML=`<div class="fhead">
     <button class="btn back" onclick="openFolder(null)"><svg class="ic"><use href="#i-back"/></svg> All conversations</button>
     <div class="fttl"><span class="fi">${f.icon}</span><b>${esc(f.name)}</b>${closed?`<span class="fst">Closed</span>`:''}<button class="btn primary" onclick="openExport({kind:'folder',id:${f.id}})"><svg class="ic"><use href="#i-pdf"/></svg> Export</button><button class="more-btn" title="Rename, close or delete this folder" aria-label="Folder options" onclick="openFolderSheet(${f.id})">⋯</button></div>
@@ -915,7 +924,7 @@ function fitStrip(){
   add.hidden=false; if(!fits(add)||!fits(more)) add.hidden=true;
   if(!folders.some(c=>c.hidden)&&!closedFolders().length){ more.hidden=true; add.hidden=false; if(!fits(add)) add.hidden=true; }
 }
-function stripNew(ev){ ev.stopPropagation(); state.pop={kind:'newfolder'}; const pop=document.getElementById('pop'); pop.innerHTML=`<div class="pt">New folder</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" placeholder="Name it, e.g. 1234 Main St" onkeydown="if(event.key==='Enter')stripNewCreate()"><button class="btn primary" onclick="stripNewCreate()">Create</button></div>`; pop.classList.add('open'); placePop(ev,pop); setTimeout(()=>{ const i=document.getElementById('popnew'); if(i) i.focus({preventScroll:true}); },50); }
+function stripNew(ev){ ev.stopPropagation(); state.pop={kind:'newfolder'}; const pop=document.getElementById('pop'); newCat='Listing'; pop.innerHTML=`<div class="pt">New folder</div><div class="newrow" style="border-top:0;margin-top:0"><input id="popnew" type="text" placeholder="Name it, e.g. 1234 Main St" onkeydown="if(event.key==='Enter')stripNewCreate()"><button class="btn primary" onclick="stripNewCreate()">Create</button></div><div class="ps" style="padding-top:6px">What kind of deal?</div>${catChips(newCat,'pickCat')}`; pop.classList.add('open'); placePop(ev,pop); setTimeout(()=>{ const i=document.getElementById('popnew'); if(i) i.focus({preventScroll:true}); },50); }
 function stripNewCreate(){ const el=document.getElementById('popnew'); const n=el.value.trim(); if(!n){ el.focus({preventScroll:true}); return; } const f=createFolder(n); closePop(); toast('Folder created: '+f.name); openFolder(f.id); }
 /* ---------- take out of a folder ---------- */
 function unfileConv(cid,fid){ const c=contactById(cid), f=folderById(fid); c.items.forEach(i=>removeFrom(i,fid)); saveState(); toast('Took '+c.name+' out of '+f.name); render(); }
@@ -926,18 +935,19 @@ let fsEdit=null;
 function openFolderSheet(focus){ fsEdit=focus?{id:focus,mode:'menu'}:null; renderFolderSheet(); document.getElementById('fov').classList.add('open'); }
 function closeFolderSheet(){ fsEdit=null; document.getElementById('fov').classList.remove('open'); render(); }
 function fsMenu(id,mode){ fsEdit=(fsEdit&&fsEdit.id===id&&fsEdit.mode===mode)?null:{id,mode}; renderFolderSheet(); if(mode==='rename'){ const i=document.getElementById('fs-rename'); if(i){ i.focus({preventScroll:true}); i.select(); } } }
+function setCat(id,n){ const f=folderById(id); const c=CATS.find(x=>x[0]===n); if(!c) return; f.cat=c[0]; f.icon=c[1]; saveState(); renderFolderSheet(); render(); }
 function renameFolder(id){ const i=document.getElementById('fs-rename'); const n=i&&i.value.trim(); if(!n){ i.focus({preventScroll:true}); return; } folderById(id).name=n; fsEdit=null; saveState(); toast('Renamed to '+n); renderFolderSheet(); render(); }
 function deleteFolder(id){ const f=folderById(id); if(!f) return; let n=0; state.contacts.forEach(c=>c.items.forEach(i=>{ if(i.folders.includes(id)){ removeFrom(i,id); n++; } })); const k=state.folders.findIndex(x=>x.id===id); if(k>=0) state.folders.splice(k,1); if(state.folder===id) state.folder=null; fsEdit=null; saveState(); toast('Deleted '+f.name+' · '+n+' item'+(n!==1?'s':'')+' stay in Everything'); renderFolderSheet(); render(); }
 function fsNew(){ const i=document.getElementById('fs-new'); const n=i&&i.value.trim(); if(!n){ i.focus({preventScroll:true}); return; } const f=createFolder(n); i.value=''; toast('Folder created: '+f.name); renderFolderSheet(); render(); }
 function renderFolderSheet(){
   const N=state.folders.length;
   document.getElementById('fsheet').innerHTML=`<div class="xh"><button class="btn ghost" onclick="closeFolderSheet()"><svg class="ic"><use href="#i-back"/></svg> Back</button><div class="xt"><b>Folders</b><span>${activeFolders().length} active${closedFolders().length?' · '+closedFolders().length+' closed':''} · open, rename, close or delete</span></div></div>
-    <div class="fnew"><input id="fs-new" type="text" placeholder="New folder name" onkeydown="if(event.key==='Enter')fsNew()"><button class="btn primary" onclick="fsNew()"><svg class="ic"><use href="#i-plus"/></svg> Create</button></div>
+    <div class="fnew"><input id="fs-new" type="text" placeholder="New folder name" onkeydown="if(event.key==='Enter')fsNew()"><button class="btn primary" onclick="fsNew()"><svg class="ic"><use href="#i-plus"/></svg> Create</button></div>${catChips(newCat,'pickCat')}
     <div class="scroll" style="margin:0 -12px;padding:0 12px">`+
     activeFolders().sort((a,b)=>folderLast(b)-folderLast(a)).concat(closedFolders().length?[{div:'Closed · reopen to add items again'}]:[],closedFolders()).map(f=>{ if(f.div) return `<div class="fdiv">${f.div}</div>`; const s=folderStats(f.id); const ed=fsEdit&&fsEdit.id===f.id?fsEdit.mode:null; const cl=f.status==='closed';
-      return `<div class="frow ${cl?'closed':''}"><span class="fi">${f.icon}</span><div class="fm"><b>${esc(f.name)}</b><span>${s.contacts} ${s.contacts===1?'person':'people'} · ${s.items} item${s.items!==1?'s':''}${cl?' · closed '+fmtDay(f.closedAt):''}</span></div><button class="btn" onclick="closeFolderSheet();openFolder(${f.id})">Open</button><button class="more-btn" onclick="fsMenu(${f.id},'menu')">⋯</button></div>`+
+      return `<div class="frow ${cl?'closed':''}"><span class="fi">${f.icon}</span><div class="fm"><b>${esc(f.name)}</b><span>${esc(f.cat||'Other')} · ${s.contacts} ${s.contacts===1?'person':'people'} · ${s.items} item${s.items!==1?'s':''}${cl?' · closed '+fmtDay(f.closedAt):''}</span></div><button class="btn" onclick="closeFolderSheet();openFolder(${f.id})">Open</button><button class="more-btn" onclick="fsMenu(${f.id},'menu')">⋯</button></div>`+
       (ed==='menu'?`<div class="fact"><button class="btn" onclick="fsMenu(${f.id},'rename')"><svg class="ic"><use href="#i-edit"/></svg> Rename</button><button class="btn" onclick="closeFolderSheet();openExport({kind:'folder',id:${f.id}})"><svg class="ic"><use href="#i-pdf"/></svg> Export…</button>${cl?`<button class="btn" onclick="reopenFolder(${f.id})">Reopen</button>`:`<button class="btn" onclick="closeFolder(${f.id})">Close</button>`}<button class="btn danger" onclick="fsMenu(${f.id},'delete')"><svg class="ic"><use href="#i-trash"/></svg> Delete</button></div>`:
-       ed==='rename'?`<div class="fact"><input id="fs-rename" type="text" value="${esc(f.name)}" onkeydown="if(event.key==='Enter')renameFolder(${f.id})"><button class="btn primary" onclick="renameFolder(${f.id})">Save</button><button class="btn ghost" onclick="fsMenu(${f.id},'rename')">Cancel</button></div>`:
+       ed==='rename'?`<div class="fact"><input id="fs-rename" type="text" value="${esc(f.name)}" onkeydown="if(event.key==='Enter')renameFolder(${f.id})"><button class="btn primary" onclick="renameFolder(${f.id})">Save</button><button class="btn ghost" onclick="fsMenu(${f.id},'rename')">Cancel</button></div><div class="fact" style="padding-top:0">${catChips(f.cat,`setCat(${f.id},`).replace(/setCat\((\d+),\('([^']+)'\)/g,"setCat($1,'$2')")}</div>`:
        ed==='delete'?`<div class="fact"><span class="warn">Delete “${esc(f.name)}”? Its ${s.items} item${s.items!==1?'s':''} stay in Everything and in any other folder. Only this label goes.</span><button class="btn danger primary" onclick="deleteFolder(${f.id})"><svg class="ic"><use href="#i-trash"/></svg> Delete folder</button><button class="btn ghost" onclick="fsMenu(${f.id},'delete')">Cancel</button></div>`:'');
     }).join('')+
     `</div><div class="fnote"><span>Your folders and what is in them are saved on this phone.</span><button onclick="resetDemo()">Reset sample data</button></div>`;
