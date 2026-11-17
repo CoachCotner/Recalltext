@@ -9,7 +9,7 @@ and recolors the gold accents to green so the palette is green and white only.
 import base64, os, re, sys
 
 SRC = sys.argv[1]
-OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public")
 P = "[PLACEHOLDER]"
 EMAIL = "southhigh77@gmail.com"
 
