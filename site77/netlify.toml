@@ -1,0 +1,4 @@
+# South High Class of 1977 reunion site: static, no build step.
+[build]
+  publish = "."
+  command = ""
